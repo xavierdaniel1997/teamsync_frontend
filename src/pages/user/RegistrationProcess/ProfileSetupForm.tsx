@@ -48,22 +48,22 @@ const ProfileSetupForm: React.FC = () => {
           password: values.password,
           cpassword: values.cpassword
         }
-        await createProfile.mutateAsync(data, {
+        const response = await createProfile.mutateAsync(data, {
           onSuccess: () => {
             toast.success("User Registration successfully")
             resetForm()
           },
           onError: (error) => {
             console.error("create Profile error", error);
-            const errorMessage = error?.response?.data?.message || "Failed to create profile. Please try again.";
-            toast.error(errorMessage);
           },
         })
-      } catch (error: AxiosError<ErrorResponse>) {
+        sessionStorage.removeItem('userEmail')
+        console.log("response form the createProfile", response)
+      } catch (error) {
         console.log("Profile creation failed:", error);
-        const errorMessage = error?.response?.data?.message ||
-          "Failed to create profile. Please try again.";
-        toast.error(errorMessage);
+        // const errorMessage = error?.response?.data?.message ||
+        //   "Failed to create profile. Please try again.";
+        toast.error("Profile creation failed");
       } finally {
         setSubmitting(false);
       }

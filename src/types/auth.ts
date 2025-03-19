@@ -20,9 +20,21 @@ export interface CreateProfileData {
     avatar?: string; 
 }
 
+export interface LoginData {
+    email: string;
+    password: string;
+}
+
 export interface ErrorResponse {
     success: boolean;
     status: number;
     message: string;
-    data: null;
-  }
+    data?: any;
+}
+
+export interface CreateNewPasswordData {
+    newPassword: string;
+    cpassword: string;
+    token: string; 
+    email: string,
+}

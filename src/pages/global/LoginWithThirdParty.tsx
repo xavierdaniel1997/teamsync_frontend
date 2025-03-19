@@ -1,7 +1,39 @@
+import { useGoogleLogin } from '@react-oauth/google';
+import { FaGithub } from "react-icons/fa";
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
+import api from '../../api/axiosInstance';
+import { useAuthMutations } from '../../hooks/useAuth';
+import { toast } from 'sonner';
 
 const LoginWithThirdParty: React.FC = () => {
+    const {loginWithGoogle} = useAuthMutations()
+
+    // const googleLogin = useGoogleLogin({
+    //     flow: 'implicit',
+    //     onSuccess: async (tokenResponse) => {
+    //       console.log("Access Token:", tokenResponse.access_token);
+      
+    //       try {
+    //         const res = await api.post("auth/google", {
+    //           access_token: tokenResponse.access_token,
+    //         }, { withCredentials: true });
+    //         console.log(res.data);
+    //       } catch (error) {
+    //         console.log("Google login error", error);
+    //       }
+    //     },
+    //     onError: (error) => console.log("Login Failed:", error),
+    //   });
+
+    const googleLogin = useGoogleLogin({
+        onSuccess: (tokenResponse) => {
+            loginWithGoogle.mutate(tokenResponse.access_token);
+            toast.success("Google login successfully")
+        },
+        onError: (error) => console.log("Google Login Failed:", error),
+    });
+      
     return (
         <div>
             <div className="relative mt-2">
@@ -15,21 +47,15 @@ const LoginWithThirdParty: React.FC = () => {
 
             {/* Social login buttons with larger icons and reduced width */}
             <div className="mt-3 space-y-2 flex flex-col items-center">
-                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    {/* Increased icon size from h-4 w-4 to h-6 w-6 */}
+                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-200 hover:shadow-md"
+                onClick={() => googleLogin()}
+                >
                     <FcGoogle className="mr-2 h-6 w-6" />
                     Google
                 </button>
-                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                    {/* Increased icon size from h-4 w-4 to h-6 w-6 */}
-                    {/* <FaMicrosoft className="mr-2 h-6 w-6 text-blue-500" />
-                     */}
-                    <div className='mr-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="25" height="25" viewBox="0 0 48 48">
-                            <path fill="#ff5722" d="M6 6H22V22H6z" transform="rotate(-180 14 14)"></path><path fill="#4caf50" d="M26 6H42V22H26z" transform="rotate(-180 34 14)"></path><path fill="#ffc107" d="M26 26H42V42H26z" transform="rotate(-180 34 34)"></path><path fill="#03a9f4" d="M6 26H22V42H6z" transform="rotate(-180 14 34)"></path>
-                        </svg>
-                    </div>
-                    Microsoft
+                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:shadow-2xl">
+                <FaGithub className='mr-2 h-6 w-6'/>
+                    Github
                 </button>
             </div>
 

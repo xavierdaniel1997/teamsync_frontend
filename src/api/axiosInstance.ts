@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { logout, setCredentials } from '../redux/authSlice';
+import store from '../redux/store';
 
 
 const API_URL = 'http://localhost:5000/api/';
@@ -23,6 +25,35 @@ api.interceptors.request.use(
 )
 
 // create the axios intersepter
+api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+
+        if (error.response.status === 403 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const { data } = await axios.get(`${API_URL}auth/refresh-token`, { withCredentials: true });
+                localStorage.setItem('accessToken', data.accessToken);
+                const user = store.getState().auth.user;
+                if (user) {
+                    store.dispatch(setCredentials({ user, accessToken: data.accessToken }));
+                } else {
+                    store.dispatch(logout());
+                    return Promise.reject(new Error('User is null'));
+                }
+                
+                // Retry the original request with the new token
+                originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
+                return api(originalRequest);
+            } catch (refreshError) {
+                store.dispatch(logout());
+                return Promise.reject(refreshError);
+            }
+        }
+        return Promise.reject(error);
+    }
+);  
 
 
 

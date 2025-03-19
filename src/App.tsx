@@ -6,6 +6,8 @@ import OTPVerificationForm from "./pages/user/RegistrationProcess/OTPVerificatio
 import ProfileSetupForm from "./pages/user/RegistrationProcess/ProfileSetupForm"
 import SignUpForm from "./pages/user/RegistrationProcess/SignUpForm"
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import ForgotPassword from "./pages/global/ForgotPassword";
+import CreateNewPassword from "./components/globa/CreateNewPassword";
 
 
 
@@ -20,6 +22,8 @@ const App: React.FC = () => {
         <Route path="/verify-otp" element={<OTPVerificationForm />} />
         <Route path="/set-up-profile" element={<ProfileSetupForm />} />
         <Route path="/login" element={<LoginForm />} />
+        <Route path="/forgot-password" element={<ForgotPassword/>}/>
+        <Route path="/reset-password/:token/:email" element={<CreateNewPassword/>}/>
 
         <Route>
           <Route path="/dashboard" element={<Dashboard />} />

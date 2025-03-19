@@ -35,7 +35,7 @@ const SignUpForm: React.FC = () => {
     }),
     onSubmit: (values, { setSubmitting, resetForm }) => {
       const data: EmailValidationData = { email: values.email };
-      validateEmail.mutate(data, {
+      validateEmail.mutateAsync(data, {
         onSuccess: (response: EmailValidationResponse) => {
           sessionStorage.setItem("userEmail", values.email)
           toast.success("Email validated successfully!");
@@ -50,9 +50,11 @@ const SignUpForm: React.FC = () => {
           // }, 2000);
           console.log("Validated email:", response);
         },
-        onError: () => {
-          formik.setFieldError("email", "Email validation failed");
-        },
+        onError: (error) => {
+          console.log(error)
+          toast.error("Something went wrong. Please try again.");
+          formik.setFieldError("email", "Invalid email");
+      },
         onSettled: () => {
           setSubmitting(false);
         },
@@ -115,7 +117,7 @@ const SignUpForm: React.FC = () => {
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className={`w-full flex items-center justify-center rounded-sm px-4 py-2 font-medium text-white ${formik.isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              className={`w-11/12 flex items-center justify-center rounded-sm px-4 py-2 font-medium text-white ${formik.isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
                 }`}
             >
               {formik.isSubmitting ? (

@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { OtpValidationData } from "../../../types/auth";
+import { DotStream } from "ldrs/react";
 
 
 const OTPVerificationForm: React.FC = () => {
@@ -17,7 +18,7 @@ const OTPVerificationForm: React.FC = () => {
   const [canResend, setCanResend] = useState<boolean>(false);
   const inputRefs = useRef<HTMLInputElement[] >([]);
 
-  const { validateOtp } = useAuthMutations()
+  const { validateOtp, resendOtp } = useAuthMutations()
   const navigate = useNavigate()
 
 
@@ -69,15 +70,6 @@ const OTPVerificationForm: React.FC = () => {
     inputRefs.current[lastFilledIndex].focus();
   };
 
-  const handleResendOTP = (): void => {
-    setTimer(60);
-    setCanResend(false);
-    setOtp(["", "", "", "", "", ""]);
-    inputRefs.current[0].focus();
-
-    console.log("Resending OTP...");
-  };
-
 
 
 
@@ -124,6 +116,31 @@ const OTPVerificationForm: React.FC = () => {
       }
     },
   })
+
+
+  const handleResendOTP = (): void => {
+    if (!userEmail) {
+      toast.error("Email not found. Please go back and enter your email again.");
+      return;
+    }
+  
+    resendOtp.mutate(
+      { email: userEmail },
+      {
+        onSuccess: (response) => {
+          toast.success(response.message)
+          setTimer(60);
+          setCanResend(false);
+          setOtp(["", "", "", "", "", ""]);
+          inputRefs.current[0]?.focus();
+        },
+        onError: (error: any) => {
+          console.error("Resend OTP failed:", error);
+          toast.error("Failed to resend OTP. Please try again.");
+        },
+      }
+    );
+  };
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -188,13 +205,6 @@ const OTPVerificationForm: React.FC = () => {
           </div>
 
           <div className="flex justify-center">
-            {/* <button
-              type="submit"
-              className="w-11/12 rounded-md bg-blue-600 px-4 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-blue-300"
-              disabled={otp.join("").length !== 6}
-            >
-              Verify
-            </button> */}
             <button
               type="submit"
               className="w-11/12 rounded-md bg-blue-600 px-4 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-blue-300"
@@ -209,15 +219,21 @@ const OTPVerificationForm: React.FC = () => {
         <div className="flex flex-col items-center mt-4">
           <div className="text-sm text-gray-600">
             {timer > 0 ? (
-              <>Resend code in <span className="font-medium">{timer}s</span></>
-            ) : (
-              <button
-                onClick={handleResendOTP}
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                Resend Code
-              </button>
-            )}
+  <>Resend code in <span className="font-medium">{timer}s</span></>
+) : resendOtp.isPending ? (
+  <div className="flex items-center gap-2 text-blue-600">
+    <DotStream size={26} speed={2.5} color="gray" />
+    <span className="text-gray-600">Sending...</span>
+  </div>
+) : (
+  <button
+    onClick={handleResendOTP}
+    className="text-blue-600 hover:text-blue-800 font-medium"
+  >
+    Resend Code
+  </button>
+)}
+
           </div>
         </div>
 

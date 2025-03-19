@@ -1,14 +1,20 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import { authService } from '../services/authService';
-import { CreateProfileData, EmailValidationData, OtpValidationData } from '../types/auth';
-import { error } from 'console';
+import { CreateNewPasswordData, CreateProfileData, EmailValidationData, LoginData, OtpValidationData } from '../types/auth';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../redux/authSlice';
+import { toast } from 'sonner';
+import { AxiosError } from "axios";
+import { data, ErrorResponse } from 'react-router-dom';
+
+
 
 
 
 
 export const useAuthMutations = () => {
     const queryClient = useQueryClient();
-    
+    const dispatch = useDispatch()
 
     const validateEmail = useMutation({
         mutationFn: (data: EmailValidationData) => authService.validateEmail(data),
@@ -17,6 +23,7 @@ export const useAuthMutations = () => {
         },
         onError: (error) => {
             console.error("Email validation error", error)
+            console.log(error)
         }
         
     })
@@ -32,11 +39,21 @@ export const useAuthMutations = () => {
     })
 
     // resendOtp
-
+    const resendOtp = useMutation({
+        mutationFn: (data: EmailValidationData) => authService.resendOtp(data),
+        onSuccess: () => {
+            console.log("OTP resent successfully");
+        },
+        onError: (error) => {
+            console.error("Failed to resend OTP", error);
+        }
+    })
 
     const createProfile = useMutation({
         mutationFn: (data: CreateProfileData) => authService.createProfile(data),
-        onSuccess: () => {
+        onSuccess: (response) => {
+            const {user, accessToken} = response.data
+            dispatch(setCredentials({user, accessToken}))
             queryClient.invalidateQueries({queryKey: ['createProfile']})
         },
         onError: (error) => {
@@ -44,6 +61,50 @@ export const useAuthMutations = () => {
         }
     })
 
+    const loginUser = useMutation({
+        mutationFn: (data: LoginData) => authService.loginUser(data),
+        onSuccess: (response) => {
+            const {user, accessToken} = response.data
+            dispatch(setCredentials({user, accessToken}))
+        },
+        onError: (error) => {
+            console.log("Failed to login", error)
+        }
+    })
 
-    return {validateEmail, validateOtp, createProfile}
+    const loginWithGoogle = useMutation({
+        mutationFn: (accessToken: string) => authService.loginWithGoogle(accessToken),
+        onSuccess: (response) => {
+            const { user, accessToken } = response.data;
+            dispatch(setCredentials({ user, accessToken }));
+        },
+        onError: (error) => {
+            console.log("Google login failed", error);
+        }
+    })
+
+    const forgotPassword = useMutation({
+        mutationFn: (data: EmailValidationData) => authService.forgotPassword(data),
+        onSuccess: (res) => {
+          toast.success(res.message);
+          console.log("Forgot password success:", res);
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message);
+            console.error("Forgot password error:", error);
+          }
+      });
+    
+
+    const createNewPassword = useMutation({
+        mutationFn: (data: CreateNewPasswordData) => authService.createNewPassword(data),
+        onSuccess: (res) => {
+            toast.success(res.message)
+        },
+        onError: (error: any) => {
+            toast.error(error?.response?.data?.message || "Reset failed");
+        }
+    })
+
+    return {validateEmail, validateOtp, createProfile, loginUser, loginWithGoogle, resendOtp, forgotPassword, createNewPassword}
 }
