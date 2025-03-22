@@ -1,56 +1,70 @@
-import {FcGoogle} from "react-icons/fc";
+// components/LoginForm.tsx
+import { FcGoogle } from "react-icons/fc";
 import logImage from "../../assets/teamsync-log.png";
 import leftVector from "../../assets/leftVector.png";
 import rightVector from "../../assets/rightVector.png";
-import {Link} from "react-router-dom";
-import LoginWithThirdParty from "./LoginWithThirdParty";
-import {useFormik} from "formik";
+import { Link } from "react-router-dom";
+import { useFormik } from "formik";
 import * as Yup from "yup";
-import {LoginData} from "../../types/auth";
-import {useAuthMutations} from "../../hooks/useAuth";
-import {toast} from "sonner";
+import { LoginData } from "../../types/auth";
+import { toast } from "sonner";
+import LoginWithThirdParty from "./LoginWithThirdParty";
 
-const LoginForm: React.FC = () => {
-  const {loginUser} = useAuthMutations();
+interface LoginFormProps {
+  title: string;
+  loginMutation: any; 
+  signUpLink: string;
+  forgotPasswordLink?: string;
+  onSuccessRedirect?: () => void; 
+}
 
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(8, "Password must be at least 8 characters"),
-  });
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters"),
+});
 
+const LoginForm: React.FC<LoginFormProps> = ({
+  title,
+  loginMutation,
+  signUpLink,
+  forgotPasswordLink = "/forgot-password",
+  onSuccessRedirect,
+}) => {
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
     validationSchema,
-    onSubmit: async (values, {setSubmitting, resetForm}) => {
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
         const data: LoginData = {
           email: values.email,
           password: values.password,
         };
-        const response = await loginUser.mutateAsync(data, {
-          onSuccess: (response) => {
-            console.log("response form the login page ", response);
-            toast.success(response.message);
+        await loginMutation.mutateAsync(data, {
+          onSuccess: (response: any) => {
+            console.log(`${title} response:`, response);
+            toast.success(response.message || "Logged in successfully");
             resetForm();
+            if (onSuccessRedirect) onSuccessRedirect();
           },
         });
       } catch (error: any) {
-        console.log("Failed to login", error.response.data.message);
-        toast.error(error.response.data.message || "Failed to login")
+        console.log(`Failed to login (${title}):`, error.response?.data?.message);
+        toast.error(error.response?.data?.message || "Failed to login");
+      } finally {
+        setSubmitting(false);
       }
     },
   });
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
-      {/* Background vectors */}
       <img
         src={leftVector}
         alt="Left Vector"
@@ -63,19 +77,18 @@ const LoginForm: React.FC = () => {
       />
 
       <div className="w-full max-w-sm space-y-4 rounded-md bg-white shadow-md sm:p-6 z-10">
-        {/* Logo */}
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center justify-center text-sky-950">
             <img className="w-16 h-16" src={logImage} alt="TeamSync Logo" />
           </div>
           <h2 className="mt-1 text-center text-xl font-semibold text-gray-800">
-            Log in to TeamSync
+            {title}
           </h2>
         </div>
 
-        {/* Login Form */}
-        <form className="mt-4 space-y-3" onSubmit={formik.handleSubmit}>
-          {/* Email */}
+        <form className="mt-4 space-y-3" 
+        onSubmit={formik.handleSubmit}
+        >
           <div className="flex justify-center">
             <div className="w-11/12 space-y-1">
               <input
@@ -95,7 +108,6 @@ const LoginForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Password */}
           <div className="flex justify-center">
             <div className="w-11/12 space-y-1">
               <input
@@ -115,37 +127,32 @@ const LoginForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Forgot Password Link */}
           <div className="flex justify-end w-11/12">
-            <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
+            <Link to={forgotPasswordLink} className="text-sm text-blue-500 hover:underline">
               Forgot password?
             </Link>
           </div>
 
-          {/* Login Button */}
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-11/12 rounded-md bg-blue-600 px-2 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2"
-              disabled={formik.isSubmitting}
+              className="w-11/12 rounded-md bg-blue-600 px-2 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-gray-400"
+              disabled={formik.isSubmitting || loginMutation.isPending}
             >
-              Log in
+              {loginMutation.isPending ? "Logging in..." : "Log in"}
             </button>
           </div>
         </form>
 
-        {/* third party login */}
         <LoginWithThirdParty />
 
-        {/* Sign up link */}
         <div className="mt-4 text-center text-sm">
           <span className="text-gray-600">Don't have an account?</span>{" "}
-          <Link to="/user-sign-up" className="text-blue-500 hover:underline">
+          <Link to={signUpLink} className="text-blue-500 hover:underline">
             Sign up
           </Link>
         </div>
 
-        {/* Footer */}
         <div className="mt-6 border-t border-gray-200 pt-4">
           <div className="flex flex-col items-center justify-center">
             <div className="text-gray-500">TEAMSYNC</div>

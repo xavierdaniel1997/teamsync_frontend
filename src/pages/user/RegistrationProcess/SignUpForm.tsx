@@ -39,15 +39,8 @@ const SignUpForm: React.FC = () => {
         onSuccess: (response: EmailValidationResponse) => {
           sessionStorage.setItem("userEmail", values.email)
           toast.success("Email validated successfully!");
-          // toast.success("Email validated successfully!", {
-          //   duration: 2000, 
-          //   onAutoClose: () => navigate("/verify-otp"), 
-          // });
           resetForm();
           navigate("/verify-otp");
-          // setTimeout(() => {
-          //   navigate("/verify-otp");
-          // }, 2000);
           console.log("Validated email:", response);
         },
         onError: (error) => {

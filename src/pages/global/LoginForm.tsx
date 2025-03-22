@@ -42,7 +42,8 @@ const LoginForm: React.FC = () => {
           },
         });
       } catch (error: any) {
-        console.log("Failed to login");
+        console.log("Failed to login", error.response.data.message);
+        toast.error(error.response.data.message || "Failed to login")
       }
     },
   });

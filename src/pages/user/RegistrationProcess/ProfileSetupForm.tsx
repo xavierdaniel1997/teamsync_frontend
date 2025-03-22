@@ -61,8 +61,6 @@ const ProfileSetupForm: React.FC = () => {
         console.log("response form the createProfile", response)
       } catch (error) {
         console.log("Profile creation failed:", error);
-        // const errorMessage = error?.response?.data?.message ||
-        //   "Failed to create profile. Please try again.";
         toast.error("Profile creation failed");
       } finally {
         setSubmitting(false);

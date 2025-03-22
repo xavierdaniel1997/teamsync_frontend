@@ -4,8 +4,7 @@ import { CreateNewPasswordData, CreateProfileData, EmailValidationData, LoginDat
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../redux/authSlice';
 import { toast } from 'sonner';
-import { AxiosError } from "axios";
-import { data, ErrorResponse } from 'react-router-dom';
+import { data, ErrorResponse, useNavigate } from 'react-router-dom';
 
 
 
@@ -15,6 +14,7 @@ import { data, ErrorResponse } from 'react-router-dom';
 export const useAuthMutations = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch()
+    const navigate = useNavigate();
 
     const validateEmail = useMutation({
         mutationFn: (data: EmailValidationData) => authService.validateEmail(data),
@@ -55,6 +55,7 @@ export const useAuthMutations = () => {
             const {user, accessToken} = response.data
             dispatch(setCredentials({user, accessToken}))
             queryClient.invalidateQueries({queryKey: ['createProfile']})
+            navigate('/dashboard');
         },
         onError: (error) => {
             console.error("create Profile error", error)
@@ -64,8 +65,9 @@ export const useAuthMutations = () => {
     const loginUser = useMutation({
         mutationFn: (data: LoginData) => authService.loginUser(data),
         onSuccess: (response) => {
-            const {user, accessToken} = response.data
-            dispatch(setCredentials({user, accessToken}))
+            const {userData, accessToken} = response.data
+            dispatch(setCredentials({user: userData, accessToken}))
+            navigate('/dashboard');
         },
         onError: (error) => {
             console.log("Failed to login", error)
@@ -77,6 +79,7 @@ export const useAuthMutations = () => {
         onSuccess: (response) => {
             const { user, accessToken } = response.data;
             dispatch(setCredentials({ user, accessToken }));
+            navigate('/dashboard');
         },
         onError: (error) => {
             console.log("Google login failed", error);

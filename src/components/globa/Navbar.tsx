@@ -1,15 +1,22 @@
 import React from "react";
 import { FiBell, FiSettings, FiChevronDown } from "react-icons/fi";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import LogoImage from '../../assets/teamsync-log.png'
 
 const Navbar = () => {
+  const user = useSelector((state: RootState) => state.auth.user)
+  console.log("user detials from the navbar", user)
   return (
     <nav className="bg-[#252B2B] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10">
       {/* Left Side: Brand & Navigation Links */}
-      <div className="flex items-center space-x-6">
+      <div className="flex items-center space-x-10">
         {/* Brand Logo & Name */}
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-blue-500 rounded-full"></div> {/* Placeholder for Brand Icon */}
-          <span className="text-lg font-medium text-white">Techstyles</span>
+        <div className="flex items-center space-x-4">
+          <div className="w-10 h-10">
+            <img src={LogoImage}/>
+            </div> 
+          <span className="text-lg font-medium text-white">Teamsync</span>
         </div>
 
         {/* Navigation Links */}

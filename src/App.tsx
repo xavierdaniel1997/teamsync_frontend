@@ -8,27 +8,53 @@ import SignUpForm from "./pages/user/RegistrationProcess/SignUpForm"
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import ForgotPassword from "./pages/global/ForgotPassword";
 import CreateNewPassword from "./components/globa/CreateNewPassword";
-
+import ProtectUser from "./utils/ProtectUser";
+import AdminRegistrationForm from "./pages/admin/Registration/AdminRegistrationForm";
+import AdminLoginForm from "./pages/admin/Registration/AdminLoginForm";
+import UserLoginForm from "./pages/user/RegistrationProcess/UserLoginForm";
+import AdminDashboard from "./pages/admin/Dashboard/AdminDashboard";
+import ProtectAdmin from "./utils/ProtectAdmin";
+import AdminLayout from "./pages/admin/Layout/AdminLayout";
+import Companies from "./pages/admin/Companies/Companies";
+import UserLayout from "./pages/user/Layout/UserLayout";
+import Backlog from "./pages/user/BackLog/Backlog";
 
 
 
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Toaster position="bottom-center" richColors />
+      <Toaster position="top-center" richColors theme="light" />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/user-sign-up" element={<SignUpForm />} />
         <Route path="/verify-otp" element={<OTPVerificationForm />} />
         <Route path="/set-up-profile" element={<ProfileSetupForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/forgot-password" element={<ForgotPassword/>}/>
-        <Route path="/reset-password/:token/:email" element={<CreateNewPassword/>}/>
+        {/* <Route path="/login" element={<LoginForm />} /> */}
+        <Route path="/login" element={<UserLoginForm />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token/:email" element={<CreateNewPassword />} />
 
-        <Route>
-          <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin/register" element={<AdminRegistrationForm />} />
+        <Route path="/admin/login" element={<AdminLoginForm />} />
+
+        <Route element={<ProtectUser />}>
+          <Route path="/project" element={<UserLayout />} >
+            <Route index element={<Dashboard />} />
+            <Route path="backlog" element={<Backlog />} />
+          </Route>
         </Route>
+
+        <Route element={<ProtectAdmin />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="companies" element={<Companies />} />
+          </Route>
+        </Route>
+
       </Routes>
+
+
     </BrowserRouter>
   )
 }

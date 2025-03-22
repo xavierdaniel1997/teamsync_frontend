@@ -1,6 +1,5 @@
-import { data } from "react-router-dom";
+
 import api from "../api/axiosInstance";
-import { setCredentials } from "../redux/authSlice";
 import { CreateNewPasswordData, CreateProfileData, EmailValidationData, LoginData, OtpValidationData } from "../types/auth";
 
 
