@@ -23,36 +23,7 @@ api.interceptors.request.use(
     },
     (error) => Promise.reject(error)
 )
-
-// create the axios intersepter
-// api.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//         const originalRequest = error.config;
-
-//         if (error.response.status === 403 && !originalRequest._retry) {
-//             originalRequest._retry = true;
-//             try {
-//                 const { data } = await axios.get(`${API_URL}auth/refresh-token`, { withCredentials: true });
-//                 localStorage.setItem('accessToken', data.accessToken);
-//                 const user = store.getState().auth.user;
-//                 if (user) {
-//                     store.dispatch(setCredentials({ user, accessToken: data.accessToken }));
-//                 } else {
-//                     store.dispatch(logout());
-//                     return Promise.reject(new Error('User is null'));
-//                 }
-                
-//                 originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-//                 return api(originalRequest);
-//             } catch (refreshError) {
-//                 store.dispatch(logout());
-//                 return Promise.reject(refreshError);
-//             }
-//         }
-//         return Promise.reject(error);
-//     }
-// );  
+ 
 api.interceptors.response.use(
     (response) => response,
     async (error) => {

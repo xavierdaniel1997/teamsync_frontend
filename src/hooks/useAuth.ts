@@ -79,7 +79,8 @@ export const useAuthMutations = () => {
         onSuccess: (response) => {
             const { user, accessToken } = response.data;
             dispatch(setCredentials({ user, accessToken }));
-            navigate('/dashboard');
+            // navigate('/dashboard');
+            navigate("/create-work-space")
         },
         onError: (error) => {
             console.log("Google login failed", error);

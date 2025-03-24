@@ -18,6 +18,9 @@ import AdminLayout from "./pages/admin/Layout/AdminLayout";
 import Companies from "./pages/admin/Companies/Companies";
 import UserLayout from "./pages/user/Layout/UserLayout";
 import Backlog from "./pages/user/BackLog/Backlog";
+import WorkSpace from "./pages/user/WorkSpace/WorkSpace";
+import AddProjectForm from "./pages/user/Project/AddProjectForm";
+import Plan from "./pages/admin/Plans/Plan";
 
 
 
@@ -38,7 +41,11 @@ const App: React.FC = () => {
         <Route path="/admin/register" element={<AdminRegistrationForm />} />
         <Route path="/admin/login" element={<AdminLoginForm />} />
 
+
+
         <Route element={<ProtectUser />}>
+          <Route path="/create-work-space" element={<WorkSpace />} />
+          <Route path="/create-project" element={<AddProjectForm/>} />
           <Route path="/project" element={<UserLayout />} >
             <Route index element={<Dashboard />} />
             <Route path="backlog" element={<Backlog />} />
@@ -49,6 +56,7 @@ const App: React.FC = () => {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="companies" element={<Companies />} />
+            <Route path="plans" element={<Plan/>}/>
           </Route>
         </Route>
 

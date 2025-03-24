@@ -4,11 +4,15 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import LogoImage from '../../assets/teamsync-log.png'
 
-const Navbar = () => {
+interface NavbarProps {
+  isAdmin: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   const user = useSelector((state: RootState) => state.auth.user)
   console.log("user detials from the navbar", user)
   return (
-    <nav className="bg-[#252B2B] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10">
+    <nav className="bg-[#252B2B] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10 border-b  border-[#5A6060]">
       {/* Left Side: Brand & Navigation Links */}
       <div className="flex items-center space-x-10">
         {/* Brand Logo & Name */}
@@ -20,6 +24,7 @@ const Navbar = () => {
         </div>
 
         {/* Navigation Links */}
+        {!isAdmin &&
         <div className="flex items-center space-x-6">
           <a href="#" className="text-white text-sm flex items-center space-x-1 hover:text-blue-400">
             <span>Project</span> <FiChevronDown className="text-xs" />
@@ -30,7 +35,7 @@ const Navbar = () => {
           <a href="#" className="text-white text-sm flex items-center space-x-1 hover:text-blue-400">
             <span>Plan</span> <FiChevronDown className="text-xs" />
           </a>
-        </div>
+        </div>}
       </div>
 
       {/* Right Side: Icons & Avatar */}

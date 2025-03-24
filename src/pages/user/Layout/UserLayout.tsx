@@ -13,7 +13,7 @@ import {
 } from 'react-icons/fi';
 import { IoChatbubbleOutline } from 'react-icons/io5';
 
-// Define the NavItem interface for type safety
+
 interface NavItem {
   icon: JSX.Element;
   text: string;
@@ -23,7 +23,6 @@ interface NavItem {
 const UserLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
-  // Define navItems with explicit typing
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: 'Summary', path: '/project' },
     { icon: <FiLayers />, text: 'Backlog', path: '/project/backlog' },
@@ -38,7 +37,7 @@ const UserLayout: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       <div className="fixed top-0 left-0 w-full z-50 h-16 bg-white">
-        <Navbar />
+        <Navbar isAdmin={false}/>
       </div>
 
       <div className="flex">
@@ -51,6 +50,7 @@ const UserLayout: React.FC = () => {
             isOpen={isSidebarOpen}
             toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
             navItems={navItems}
+            isAdmin={false}
           />
         </div>
 

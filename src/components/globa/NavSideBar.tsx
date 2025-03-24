@@ -2,30 +2,29 @@ import React, { JSX } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-// Define the NavItem interface
 interface NavItem {
   icon: JSX.Element;
   text: string;
   path: string;
 }
 
-// Define props interface for NavSideBar
 interface NavSideBarProps {
   isOpen: boolean;
   toggleSidebar: () => void;
   navItems: NavItem[];
+  isAdmin: boolean;
 }
 
-const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems }) => {
+const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems, isAdmin }) => {
   const location = useLocation();
 
   return (
     <aside
-      className={`h-full ${
+      className={`h-full border-r-[3px] border-[#5A6060] ${
         isOpen ? 'w-64' : 'w-16'
       } bg-[#252B2B] text-gray-300 flex flex-col transition-all duration-300 relative`}
     >
-      {isOpen && (
+      {!isAdmin && isOpen  && (
         <div className="flex items-center p-4 border-b border-gray-700">
           <div className="w-8 h-8 bg-gray-500 rounded"></div>
           <div className="ml-3">
@@ -35,15 +34,14 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
         </div>
       )}
 
-      {/* Toggle Button */}
+
       <button
         onClick={toggleSidebar}
-        className="absolute top-5 -right-2 bg-gray-700 rounded-full shadow-md p-0.5 text-white hover:bg-gray-600"
+        className="absolute top-5 -right-3 bg-gray-700 rounded-full shadow-md p-0.5 text-white hover:bg-gray-600"
       >
         {isOpen ? <FiChevronLeft size={18} /> : <FiChevronRight size={18} />}
       </button>
 
-      {/* Navigation Links */}
       <div className="flex-1 px-4 py-6">
         {/* {isOpen && (
           <div className="text-xs font-semibold text-gray-500 uppercase mb-4">Planning</div>
