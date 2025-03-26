@@ -32,7 +32,7 @@ const UserLayout: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#252B2B]">
+    <div className="min-h-screen  flex flex-col bg-[#1E1E1E]">
       <div className="fixed top-0 left-0 w-full z-50 h-16 bg-white">
         <Navbar isAdmin={true}/>
       </div>
@@ -52,7 +52,7 @@ const UserLayout: React.FC = () => {
         </div>
 
         <div
-          className={`flex-1 transition-all duration-300 bg-[#252B2B] ${
+          className={`flex-1 transition-all duration-300 bg-[#1E1E1E] ${
             isSidebarOpen ? 'ml-64' : 'ml-16'
           } p-6 mt-16`}
         >

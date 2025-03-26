@@ -23,17 +23,45 @@ const OTPVerificationForm: React.FC = () => {
 
 
 
-  useEffect(() => {
-    if (timer > 0) {
-      const interval = setInterval(() => {
-        setTimer(prev => prev - 1);
-      }, 1000);
-      return () => clearInterval(interval);
-    } else {
-      setCanResend(true);
-    }
-  }, [timer]);
+  // useEffect(() => {
+  //   if (timer > 0) {
+  //     const interval = setInterval(() => {
+  //       setTimer(prev => prev - 1);
+  //     }, 1000);
+  //     return () => clearInterval(interval);
+  //   } else {
+  //     setCanResend(true);
+  //   }
+  // }, [timer]);
 
+  useEffect(() => {
+    const storedTime = sessionStorage.getItem('otpExpiryTime');
+    const expiryTime = storedTime ? parseInt(storedTime, 10) : null;
+    const currentTime = Date.now();
+
+    if(expiryTime && expiryTime > currentTime){
+      setTimer(Math.floor((expiryTime - currentTime)/1000));
+      setCanResend(false);
+    }else{
+      setTimer(60)
+      setCanResend(false);
+      sessionStorage.setItem("otpExpiryTime", (currentTime + 60000).toString())
+    }
+
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if(prev <= 1){
+          clearInterval(interval)
+          setCanResend(true)
+          return 0;
+        }
+        return prev - 1;
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  
   const handleChange = (index: number, value: string): void => {
     if (isNaN(Number(value))) return;
 
@@ -104,13 +132,13 @@ const OTPVerificationForm: React.FC = () => {
             }, 600)
 
           },
-          onError: (error) => {
-            toast.error(error.message || "Invalid OTP. Please try again.");
+          onError: (error: any) => {
+            toast.error(error.response.data.message);
           }
         });
       } catch (error) {
         console.log(error)
-        toast.error("An error occurred. Please try again.");
+        // toast.error("An error occurred. Please try again.");
       } finally {
         setSubmitting(false);
       }

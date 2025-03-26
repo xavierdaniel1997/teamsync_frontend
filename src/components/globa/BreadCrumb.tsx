@@ -37,7 +37,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
       {/* Right Side - Button */}
       <button
         onClick={onButtonClick}
-        className="flex items-center bg-gray-600 opacity-60 text-white px-2.5 py-1.5 rounded-sm shadow hover:bg-gray-500 hover:text-white transition text-sm"
+        className="flex items-center bg-gray-600 text-white px-2.5 py-1.5 rounded-sm shadow hover:bg-gray-500 transition text-sm"
       >
         {buttonText}
         <ButtonIcon size={20} className="ml-2" />

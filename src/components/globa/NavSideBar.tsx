@@ -22,7 +22,7 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
     <aside
       className={`h-full border-r-[3px] border-[#5A6060] ${
         isOpen ? 'w-64' : 'w-16'
-      } bg-[#252B2B] text-gray-300 flex flex-col transition-all duration-300 relative`}
+      } bg-[#1E1E1E] text-gray-300 flex flex-col transition-all duration-300 relative`}
     >
       {!isAdmin && isOpen  && (
         <div className="flex items-center p-4 border-b border-gray-700">

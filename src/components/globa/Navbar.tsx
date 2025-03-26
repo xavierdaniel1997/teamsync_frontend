@@ -12,7 +12,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   const user = useSelector((state: RootState) => state.auth.user)
   console.log("user detials from the navbar", user)
   return (
-    <nav className="bg-[#252B2B] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10 border-b  border-[#5A6060]">
+    <nav className="bg-[#1E1E1E] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10 border-b  border-[#5A6060]">
       {/* Left Side: Brand & Navigation Links */}
       <div className="flex items-center space-x-10">
         {/* Brand Logo & Name */}
