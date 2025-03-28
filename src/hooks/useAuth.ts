@@ -8,9 +8,6 @@ import { data, ErrorResponse, useNavigate } from 'react-router-dom';
 
 
 
-
-
-
 export const useAuthMutations = () => {
     const queryClient = useQueryClient();
     const dispatch = useDispatch()
@@ -55,7 +52,7 @@ export const useAuthMutations = () => {
             const {user, accessToken} = response.data
             dispatch(setCredentials({user, accessToken}))
             queryClient.invalidateQueries({queryKey: ['createProfile']})
-            navigate('/dashboard');
+            navigate('/create-work-space');
         },
         onError: (error) => {
             console.error("create Profile error", error)
@@ -67,7 +64,7 @@ export const useAuthMutations = () => {
         onSuccess: (response) => {
             const {userData, accessToken} = response.data
             dispatch(setCredentials({user: userData, accessToken}))
-            navigate('/subscriptions');
+            navigate('/create-work-space');
         },
         onError: (error) => {
             console.log("Failed to login", error)
@@ -80,7 +77,7 @@ export const useAuthMutations = () => {
             const { user, accessToken } = response.data;
             dispatch(setCredentials({ user, accessToken }));
             // navigate('/dashboard');
-            navigate("/subscriptions")
+            navigate("/create-work-space")
         },
         onError: (error) => {
             console.log("Google login failed", error);

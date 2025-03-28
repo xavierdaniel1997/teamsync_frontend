@@ -28,14 +28,19 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
-  
-      if (error.response?.status === 403 && !originalRequest._retry) {
+      console.log("error form the intersepter", error)
+      if (error.response?.status === 401 || error.response?.status === 403 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
+          console.log("refresh-token going to call")
           const { data } = await axios.get(`${API_URL}auth/refresh-token`, {
             withCredentials: true,
           });
-          
+          console.log("refresh-token called and data", data)
+          if (!data?.accessToken) {
+            throw new Error('No access token in refresh response');
+          }
+          localStorage.setItem("accessToken", data.accessToken);
           const user = store.getState().auth.user;
           if (user) {
             store.dispatch(setCredentials({ user, accessToken: data.accessToken }));

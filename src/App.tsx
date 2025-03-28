@@ -22,6 +22,8 @@ import WorkSpace from "./pages/user/WorkSpace/WorkSpace";
 import AddProjectForm from "./pages/user/Project/AddProjectForm";
 import Plan from "./pages/admin/Plans/Plan";
 import Subscription from "./pages/user/Subscription/Subscription";
+import Payment from "./pages/user/Subscription/Payment";
+import Success from "./pages/user/Subscription/Success";
 
 
 
@@ -46,6 +48,7 @@ const App: React.FC = () => {
 
         <Route element={<ProtectUser />}>
           <Route path="/subscriptions" element={<Subscription/>}/>
+          <Route path="/success" element={<Success/>}/>
           <Route path="/create-work-space" element={<WorkSpace />} />
           <Route path="/create-project" element={<AddProjectForm/>} />
           <Route path="/project" element={<UserLayout />} >

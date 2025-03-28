@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import { useWorkSpaceMutation } from "../../../hooks/useWorkSpace";
 import { createWorkSpace } from "../../../types/workSpace";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   siteName: Yup.string()
@@ -15,6 +16,7 @@ const validationSchema = Yup.object({
 
 const WorkSpace:React.FC = () => {
   const { useCreateWorkSpace } = useWorkSpaceMutation();
+  const navigate = useNavigate()
 
   const formik = useFormik({
     initialValues: { siteName: "avulos-team" },
@@ -26,6 +28,7 @@ const WorkSpace:React.FC = () => {
       useCreateWorkSpace.mutate(data, {
         onSuccess: (response) => {
           console.log("Workspace created successfully", response);
+          navigate("/subscriptions")
         },
         onError: (error: any) => {
           console.log("Failed to create workspace", error);

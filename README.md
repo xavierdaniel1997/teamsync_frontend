@@ -1,168 +1,121 @@
-import {FcGoogle} from "react-icons/fc";
-import logImage from "../../assets/teamsync-log.png";
-import leftVector from "../../assets/leftVector.png";
-import rightVector from "../../assets/rightVector.png";
-import {Link} from "react-router-dom";
-import LoginWithThirdParty from "./LoginWithThirdParty";
-import {useFormik} from "formik";
-import * as Yup from "yup";
-import {LoginData} from "../../types/auth";
-import {useAuthMutations} from "../../hooks/useAuth";
-import {toast} from "sonner";
+import { useNavigate } from "react-router-dom";
+import UserPlanCard from "../../../components/user/UserPlanCard";
+import { usePlanMutation } from "../../../hooks/usePlans";
+import { useWorkSpaceMutation } from "../../../hooks/useWorkSpace";
+import { useSubscriptionMutation } from "../../../hooks/useSubscription"; // New hook
+import ShimmerUserPlanCard from "../../../components/user/ShimmerUserPlanCard";
+import { useEffect, useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 
-const LoginForm: React.FC = () => {
-  const {loginUser} = useAuthMutations();
+const stripePromise = loadStripe('your-stripe-publishable-key'); // Replace with your Stripe publishable key
 
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .required("Password is required")
-      .min(8, "Password must be at least 8 characters"),
-  });
+const SubscriptionPricing = () => {
+  const navigate = useNavigate();
+  const { useGetPlan } = usePlanMutation();
+  const { useGetWorkSpace } = useWorkSpaceMutation();
+  const { useCreateSubscription } = useSubscriptionMutation(); // Use the new hook
+  const { data: plans, isLoading } = useGetPlan();
+  const { data: workspace } = useGetWorkSpace();
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema,
-    onSubmit: async (values, {setSubmitting, resetForm}) => {
-      try {
-        const data: LoginData = {
-          email: values.email,
-          password: values.password,
-        };
-        const response = await loginUser.mutateAsync(data, {
-          onSuccess: (response) => {
-            console.log("response form the login page ", response);
-            toast.success(response.message);
-            resetForm();
-          },
-        });
-      } catch (error: any) {
-        console.log("Failed to login", error.response.data.message);
-        toast.error(error.response.data.message || "Failed to login")
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  // Step 1: Automatically select free plan on load
+  useEffect(() => {
+    if (!isLoading && plans?.data) {
+      const freePlan = plans.data.find((plan) => plan.price === 0);
+      if (freePlan) {
+        setSelectedPlan(freePlan._id);
+      }
+    }
+  }, [plans, isLoading]);
+
+  // Step 2: Use the subscription mutation
+  const subscriptionMutation = useCreateSubscription({
+    onSuccess: async (data) => {
+      if (data.isPaidPlan) {
+        // Step 3a: Handle paid plan - redirect to Stripe checkout
+        const stripe = await stripePromise;
+        if (stripe) {
+          const { error } = await stripe.redirectToCheckout({
+            sessionId: data.sessionId,
+          });
+          if (error) setError(error.message);
+        }
+      } else {
+        // Step 3b: Handle free plan - navigate to dashboard
+        navigate('/dashboard');
       }
     },
+    onError: (error: any) => setError(error.response?.data?.message || 'Failed to create subscription'),
   });
 
+  // Step 4: Handle subscription button click
+  const handleSubscription = () => {
+    if (!selectedPlan || !workspace?.data?.data?._id) return;
+
+    const workspaceId = workspace.data.data._id;
+
+    subscriptionMutation.mutate({
+      planId: selectedPlan,
+      workspaceId,
+    });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
-      {/* Background vectors */}
-      <img
-        src={leftVector}
-        alt="Left Vector"
-        className="absolute bottom-0 left-0 w-90 h-auto z-0"
-      />
-      <img
-        src={rightVector}
-        alt="Right Vector"
-        className="absolute bottom-0 right-0 w-90 h-auto z-0"
-      />
+    <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center justify-center p-4">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-white mb-4">Discover The Plans</h1>
+        <p className="text-gray-400 text-lg">
+          Select from the best plans, ensuring a perfect match. Need more or less?
+          Customize your subscription for a seamless fit!
+        </p>
+      </div>
 
-      <div className="w-full max-w-sm space-y-4 rounded-md bg-white shadow-md sm:p-6 z-10">
-        {/* Logo */}
-        <div className="flex flex-col items-center justify-center">
-          <div className="flex items-center justify-center text-sky-950">
-            <img className="w-16 h-16" src={logImage} alt="TeamSync Logo" />
-          </div>
-          <h2 className="mt-1 text-center text-xl font-semibold text-gray-800">
-            Log in to TeamSync
-          </h2>
+      {error && (
+        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-md mb-6">
+          {error}
         </div>
+      )}
 
-        {/* Login Form */}
-        <form className="mt-4 space-y-3" onSubmit={formik.handleSubmit}>
-          {/* Email */}
-          <div className="flex justify-center">
-            <div className="w-11/12 space-y-1">
-              <input
-                type="email"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                placeholder="Email address"
-                name="email"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.email}
-              />
-              {formik.touched.email && formik.errors.email && (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.email}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Password */}
-          <div className="flex justify-center">
-            <div className="w-11/12 space-y-1">
-              <input
-                type="password"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                placeholder="Password"
-                name="password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-              />
-              {formik.touched.password && formik.errors.password && (
-                <div className="text-red-500 text-sm mt-1">
-                  {formik.errors.password}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Forgot Password Link */}
-          <div className="flex justify-end w-11/12">
-            <Link to="/forgot-password" className="text-sm text-blue-500 hover:underline">
-              Forgot password?
-            </Link>
-          </div>
-
-          {/* Login Button */}
-          <div className="flex justify-center">
+      <div className="flex flex-col gap-7">
+        <div className="flex space-x-6 w-full max-w-5xl">
+          {isLoading
+            ? [...Array(3)].map((_, index) => <ShimmerUserPlanCard key={index} />)
+            : plans?.data?.map((data) => (
+                <UserPlanCard
+                  key={data._id}
+                  data={data}
+                  isSelected={selectedPlan === data._id}
+                  onSelectPlan={() => setSelectedPlan(data._id)}
+                />
+              ))}
+        </div>
+        {!isLoading && (
+          <div className="w-full flex justify-end gap-3">
             <button
-              type="submit"
-              className="w-11/12 rounded-md bg-blue-600 px-2 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2"
-              disabled={formik.isSubmitting}
+              className="text-white py-2 px-4 rounded-md bg-[#555] hover:bg-[#444] transition disabled:opacity-50"
+              disabled={subscriptionMutation.isLoading}
+              onClick={() => navigate('/dashboard')}
             >
-              Log in
+              Skip
+            </button>
+            <button
+              className={`py-2 px-4 rounded-md transition ${
+                selectedPlan && !subscriptionMutation.isLoading
+                  ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
+                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!selectedPlan || subscriptionMutation.isLoading}
+              onClick={handleSubscription}
+            >
+              {subscriptionMutation.isLoading ? 'Processing...' : 'Subscribe'}
             </button>
           </div>
-        </form>
-
-        {/* third party login */}
-        <LoginWithThirdParty />
-
-        {/* Sign up link */}
-        <div className="mt-4 text-center text-sm">
-          <span className="text-gray-600">Don't have an account?</span>{" "}
-          <Link to="/user-sign-up" className="text-blue-500 hover:underline">
-            Sign up
-          </Link>
-        </div>
-
-        {/* Footer */}
-        <div className="mt-6 border-t border-gray-200 pt-4">
-          <div className="flex flex-col items-center justify-center">
-            <div className="text-gray-500">TEAMSYNC</div>
-            <p className="mt-1 text-center text-xs text-gray-500">
-              By logging in, you acknowledge that you understand and agree to
-              the application terms.
-              <a href="#" className="text-blue-500 hover:underline">
-                {" "}
-                more
-              </a>
-              .
-            </p>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default SubscriptionPricing;

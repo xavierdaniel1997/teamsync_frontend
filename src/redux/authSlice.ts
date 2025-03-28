@@ -38,9 +38,6 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       localStorage.removeItem("accessToken");
     },
-    // setRehydrated: (state) => {
-    //     state.isRehydrated = true; 
-    // },
   },
 });
 

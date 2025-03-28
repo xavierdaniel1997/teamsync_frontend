@@ -15,7 +15,7 @@ const UserLoginForm: React.FC = () => {
       loginMutation={loginUser}
       signUpLink="/user-sign-up"
       forgotPasswordLink="/forgot-password"
-      onSuccessRedirect={() => navigate('/subscriptions')}
+      onSuccessRedirect={() => navigate('/create-work-space')}
     />
   );
 };
