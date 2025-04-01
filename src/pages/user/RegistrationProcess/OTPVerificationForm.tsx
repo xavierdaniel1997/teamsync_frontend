@@ -34,6 +34,19 @@ const OTPVerificationForm: React.FC = () => {
   //   }
   // }, [timer]);
 
+  const startTimer = () => {
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setCanResend(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
   useEffect(() => {
     const storedTime = sessionStorage.getItem('otpExpiryTime');
     const expiryTime = storedTime ? parseInt(storedTime, 10) : null;
@@ -58,6 +71,9 @@ const OTPVerificationForm: React.FC = () => {
         return prev - 1;
       })
     }, 1000)
+
+    // startTimer()
+
     return () => clearInterval(interval)
   }, [])
 
@@ -161,6 +177,12 @@ const OTPVerificationForm: React.FC = () => {
           setCanResend(false);
           setOtp(["", "", "", "", "", ""]);
           inputRefs.current[0]?.focus();
+
+        const newExpiryTime = Date.now() + 60000; 
+        sessionStorage.setItem("otpExpiryTime", newExpiryTime.toString());
+        setTimer(60);
+        setCanResend(false);
+        startTimer();
         },
         onError: (error: any) => {
           console.error("Resend OTP failed:", error);

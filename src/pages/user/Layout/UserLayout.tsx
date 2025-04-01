@@ -55,7 +55,7 @@ const UserLayout: React.FC = () => {
         </div>
 
         <div
-          className={`flex-1 transition-all duration-300 ${
+          className={`flex-1 transition-all duration-300 bg-[#1E1E1E] ${
             isSidebarOpen ? 'ml-64' : 'ml-16'
           } p-6 mt-16`}
         >

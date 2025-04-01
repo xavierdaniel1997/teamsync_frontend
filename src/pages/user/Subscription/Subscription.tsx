@@ -89,7 +89,7 @@ const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaN
         }
       } else if (response.data?.subscription) {
         console.log("Free subscription created successfully:", response.data.subscription);
-        navigate("/dashboard");
+        navigate("/create-project");
       } else {
         throw new Error("Invalid response from server");
       }

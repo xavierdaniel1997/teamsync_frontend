@@ -2,9 +2,10 @@ import {useMutation, useQueryClient} from '@tanstack/react-query';
 import { authService } from '../services/authService';
 import { CreateNewPasswordData, CreateProfileData, EmailValidationData, LoginData, OtpValidationData } from '../types/auth';
 import { useDispatch } from 'react-redux';
-import { setCredentials } from '../redux/authSlice';
+import { logout, setCredentials } from '../redux/authSlice';
 import { toast } from 'sonner';
 import { data, ErrorResponse, useNavigate } from 'react-router-dom';
+import { getWorkSpaceApi } from '../services/workSpaceService';
 
 
 
@@ -61,10 +62,19 @@ export const useAuthMutations = () => {
 
     const loginUser = useMutation({
         mutationFn: (data: LoginData) => authService.loginUser(data),
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
             const {userData, accessToken} = response.data
             dispatch(setCredentials({user: userData, accessToken}))
-            navigate('/create-work-space');
+            try{
+                const workspaceResponse = await getWorkSpaceApi()
+                console.log("workspaceResponse", workspaceResponse)
+                const hasWorkSpace = workspaceResponse?.data?.status === 200;
+                console.log("hasWorkSpace", hasWorkSpace)
+                navigate(hasWorkSpace ? "/project": "/create-work-space")
+            }catch(error){
+                console.log("Failed to fetch the workspace", error)
+                navigate("/create-work-space")
+            }
         },
         onError: (error) => {
             console.log("Failed to login", error)
@@ -73,11 +83,19 @@ export const useAuthMutations = () => {
 
     const loginWithGoogle = useMutation({
         mutationFn: (accessToken: string) => authService.loginWithGoogle(accessToken),
-        onSuccess: (response) => {
+        onSuccess: async (response) => {
             const { user, accessToken } = response.data;
             dispatch(setCredentials({ user, accessToken }));
-            // navigate('/dashboard');
-            navigate("/create-work-space")
+            try{
+                const workspaceResponse = await getWorkSpaceApi()
+                console.log("workspaceResponse", workspaceResponse)
+                const hasWorkSpace = workspaceResponse?.data?.status === 200;
+                console.log("hasWorkSpace", hasWorkSpace)
+                navigate(hasWorkSpace ? "/project": "/create-work-space")
+            }catch(error){
+                console.log("Failed to fetch the workspace", error)
+                navigate("/create-work-space")
+            }
         },
         onError: (error) => {
             console.log("Google login failed", error);
@@ -107,5 +125,17 @@ export const useAuthMutations = () => {
         }
     })
 
-    return {validateEmail, validateOtp, createProfile, loginUser, loginWithGoogle, resendOtp, forgotPassword, createNewPassword}
+    const logoutUser = useMutation({
+        mutationFn: async () => authService.logoutUserApi,
+        onSuccess: (res) => {
+            dispatch(logout())
+            console.log("logout successfully", res)
+        },
+        onError: (error) => {
+            console.log("faied to login")
+        }
+        
+    })
+
+    return {validateEmail, validateOtp, createProfile, loginUser, loginWithGoogle, resendOtp, forgotPassword, createNewPassword, logoutUser}
 }

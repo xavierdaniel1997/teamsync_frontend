@@ -47,5 +47,10 @@ export const authService = {
             email, newPassword, cpassword
         })
         return response.data;
+    },
+
+    logoutUserApi: async() => {
+        const response = await api.post("auth/logout")
+        return response.data;
     }
 }

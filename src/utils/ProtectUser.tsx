@@ -5,7 +5,6 @@ import { RootState } from "../redux/store";
 
 const ProtectUser: React.FC = () => {
   const { isAuthenticated, user } = useSelector((state: RootState) => state.auth);
-  console.log("user detials", user)
   if (!isAuthenticated ||  !user) {
     return <Navigate to="/login" replace />;
   }

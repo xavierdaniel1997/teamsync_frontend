@@ -22,8 +22,9 @@ import WorkSpace from "./pages/user/WorkSpace/WorkSpace";
 import AddProjectForm from "./pages/user/Project/AddProjectForm";
 import Plan from "./pages/admin/Plans/Plan";
 import Subscription from "./pages/user/Subscription/Subscription";
-import Payment from "./pages/user/Subscription/Payment";
+import PaymentCancel from "./pages/user/Subscription/PaymentCancel";
 import Success from "./pages/user/Subscription/Success";
+import PageNotFound from "./components/globa/PageNotFound";
 
 
 
@@ -32,6 +33,7 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Toaster position="top-center" richColors theme="light" />
       <Routes>
+        <Route path="*" element={<PageNotFound/>}/>
         <Route path="/" element={<LandingPage />} />
         <Route path="/user-sign-up" element={<SignUpForm />} />
         <Route path="/verify-otp" element={<OTPVerificationForm />} />
@@ -49,6 +51,7 @@ const App: React.FC = () => {
         <Route element={<ProtectUser />}>
           <Route path="/subscriptions" element={<Subscription/>}/>
           <Route path="/success" element={<Success/>}/>
+          <Route path="/cancel" element={<PaymentCancel/>}/>
           <Route path="/create-work-space" element={<WorkSpace />} />
           <Route path="/create-project" element={<AddProjectForm/>} />
           <Route path="/project" element={<UserLayout />} >
