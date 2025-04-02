@@ -21,7 +21,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
     <div className="flex justify-between items-center p-4">
       {/* Left Side - Breadcrumb */}
       <div>
-        <h2 className="text-xl font-semibold text-gray-400">{pageName}</h2>
+        <h2 className="text-xl font-semibold text-gray-200">{pageName}</h2>
         <nav className="text-sm text-gray-400">
           {paths.map((path, index) => (
             <span key={index}>

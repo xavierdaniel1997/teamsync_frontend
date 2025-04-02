@@ -25,6 +25,9 @@ import Subscription from "./pages/user/Subscription/Subscription";
 import PaymentCancel from "./pages/user/Subscription/PaymentCancel";
 import Success from "./pages/user/Subscription/Success";
 import PageNotFound from "./components/globa/PageNotFound";
+import AcceptInvitation from "./pages/user/TeamAndInvitation/AcceptInvitation";
+import TeamMembers from "./pages/user/TeamAndInvitation/TeamMembers";
+
 
 
 
@@ -45,6 +48,7 @@ const App: React.FC = () => {
 
         <Route path="/admin/register" element={<AdminRegistrationForm />} />
         <Route path="/admin/login" element={<AdminLoginForm />} />
+        <Route path="/invite/accept" element={<AcceptInvitation/>}/>
 
 
 
@@ -57,6 +61,7 @@ const App: React.FC = () => {
           <Route path="/project" element={<UserLayout />} >
             <Route index element={<Dashboard />} />
             <Route path="backlog" element={<Backlog />} />
+            <Route path="team-members" element={<TeamMembers/>} />
           </Route>
         </Route>
 

@@ -29,7 +29,7 @@ const UserLayout: React.FC = () => {
     { icon: <FiCalendar />, text: 'Board', path: '/board' },
     { icon: <FiBell />, text: 'Notification', path: '/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Chat', path: '/chats' },
-    { icon: <FiEdit />, text: 'Teams & Members', path: '/teams' },
+    { icon: <FiEdit />, text: 'Teams & Members', path: '/project/team-members' },
     { icon: <FiTarget />, text: 'Projects', path: '/allprojects' },
     { icon: <FiAlertCircle />, text: 'Settings', path: '/settings' },
   ];

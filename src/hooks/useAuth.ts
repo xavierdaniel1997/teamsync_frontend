@@ -14,6 +14,9 @@ export const useAuthMutations = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate();
 
+
+   
+
     const validateEmail = useMutation({
         mutationFn: (data: EmailValidationData) => authService.validateEmail(data),
         onSuccess: () => {
@@ -52,6 +55,11 @@ export const useAuthMutations = () => {
         onSuccess: (response) => {
             const {user, accessToken} = response.data
             dispatch(setCredentials({user, accessToken}))
+            const inviteToken = sessionStorage.getItem("inviteToken")
+            if (inviteToken) {
+                navigate(`/invite/accept?token=${inviteToken}`);
+                return;
+            }
             queryClient.invalidateQueries({queryKey: ['createProfile']})
             navigate('/create-work-space');
         },
@@ -65,6 +73,11 @@ export const useAuthMutations = () => {
         onSuccess: async (response) => {
             const {userData, accessToken} = response.data
             dispatch(setCredentials({user: userData, accessToken}))
+            const inviteToken = sessionStorage.getItem("inviteToken")
+            if (inviteToken) {
+                navigate(`/invite/accept?token=${inviteToken}`);
+                return;
+            }
             try{
                 const workspaceResponse = await getWorkSpaceApi()
                 console.log("workspaceResponse", workspaceResponse)
@@ -86,14 +99,18 @@ export const useAuthMutations = () => {
         onSuccess: async (response) => {
             const { user, accessToken } = response.data;
             dispatch(setCredentials({ user, accessToken }));
+            const inviteToken = sessionStorage.getItem("inviteToken")
+            if (inviteToken) {
+                navigate(`/invite/accept?token=${inviteToken}`);
+                return;
+            }
             try{
                 const workspaceResponse = await getWorkSpaceApi()
-                console.log("workspaceResponse", workspaceResponse)
+                console.log("workspaceResponse and invitationToke", workspaceResponse)
                 const hasWorkSpace = workspaceResponse?.data?.status === 200;
-                console.log("hasWorkSpace", hasWorkSpace)
                 navigate(hasWorkSpace ? "/project": "/create-work-space")
             }catch(error){
-                console.log("Failed to fetch the workspace", error)
+                // console.log("Failed to fetch the workspace", error)
                 navigate("/create-work-space")
             }
         },

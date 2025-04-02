@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import LogoImage from "../../assets/teamsync-log.png";
 import UserDropdownList from "./UserDropdownList";
+import ProjectDropdownList from "../user/ProjectDropdownList";
 
 interface NavbarProps {
   isAdmin: boolean;
@@ -14,18 +15,24 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   console.log("User details from the navbar", user);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isProjectDropdownOpen, setProjectDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const projectDropdownRef = useRef<HTMLDivElement>(null);
 
   // Toggle dropdown
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
+  const toggleProjectDropdown = () => {
+    setProjectDropdownOpen((prev) => !prev);
+    setDropdownOpen(false); // Close user dropdown if open
+  };
+
   return (
     <nav className="bg-[#1E1E1E] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10 border-b border-[#5A6060]">
-      {/* Left Side: Brand & Navigation Links */}
+
       <div className="flex items-center space-x-10">
-        {/* Brand Logo & Name */}
         <div className="flex items-center space-x-4">
           <div className="w-10 h-10">
             <img src={LogoImage} alt="Logo" />
@@ -33,12 +40,20 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
           <span className="text-lg font-medium text-white">Teamsync</span>
         </div>
 
-        {/* Navigation Links */}
         {!isAdmin && (
           <div className="flex items-center space-x-6">
-            <a href="#" className="text-white text-sm hover:text-blue-400">
-              Project
-            </a>
+            <div className="relative" ref={projectDropdownRef}>
+              <div
+                className="text-white text-sm hover:text-blue-400 cursor-pointer"
+                onClick={toggleProjectDropdown}
+              >
+                Project
+              </div>
+              <ProjectDropdownList
+                isOpen={isProjectDropdownOpen}
+                setIsOpen={setProjectDropdownOpen}
+              />
+            </div>
             <a href="#" className="text-white text-sm hover:text-blue-400">
               Team
             </a>

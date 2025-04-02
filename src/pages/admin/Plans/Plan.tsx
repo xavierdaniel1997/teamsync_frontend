@@ -23,11 +23,6 @@ const Plan: React.FC = () => {
           ButtonIcon={FiPlus}
         />
       </div>
-      {/* <div className="mt-8 pl-8 flex flex-wrap gap-6 justify-center">
-        {plans?.data?.map((data: any) => (
-          <PlanCard data={data}/>
-        ))}
-      </div> */}
 
 
       {isLoading ? (
