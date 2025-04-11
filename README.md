@@ -1,115 +1,225 @@
-import { useNavigate } from "react-router-dom";
+// useEffect(() => {
+  //   if (isSubscriptionLoading || isLoading) return;
+
+  //   if (subscriptionPlan?.data?.plan?._id) {
+  //     setSelectedPlan(subscriptionPlan.data.plan._id);
+  //   } else if (plans?.data) {
+  //     const freePlan = plans.data.find((plan: any) => plan.price === 0);
+  //     if (freePlan) {
+  //       setSelectedPlan(freePlan._id);
+  //     }
+  //   }
+  // }, [plans, isLoading, subscriptionPlan, isSubscriptionLoading]);
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   // const handleSubscription = async () => {
+
+  //   console.log(("from the handleSubscription"))
+  //   if(!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
+  //   // const selectedPlanData = plans.data.find((plan: any) => plan._id === selectedPlan)  
+  //   const workspaceId = workspace?.data?.data?._id
+  //   console.log("data that is going to backend", workspaceId, selectedPlan, user.email)
+  //   try {
+  //     const response = await useCreateSubscription.mutateAsync({
+  //       planId: selectedPlan,
+  //       workspaceId,
+  //       email: user.email
+  //     });
+  //     console.log("response form the useCreateSubscription", response)
+
+  //     if (response.sessionId) {
+  //       const stripe = await stripePromise;
+  //       if (stripe) {
+  //         await stripe.redirectToCheckout({ sessionId: response.sessionId });
+  //       }
+  //     } else if (response.subscription) {
+  //       console.log("success")
+  //     }
+  //   } catch (error) {
+  //     console.error("Subscription error:", error);
+  //   }
+    
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  import { Link, useNavigate } from "react-router-dom";
 import UserPlanCard from "../../../components/user/UserPlanCard";
 import { usePlanMutation } from "../../../hooks/usePlans";
-import { useWorkSpaceMutation } from "../../../hooks/useWorkSpace";
-import { useSubscriptionMutation } from "../../../hooks/useSubscription"; // New hook
 import ShimmerUserPlanCard from "../../../components/user/ShimmerUserPlanCard";
 import { useEffect, useState } from "react";
+import { Button } from "@mui/material";
+import { useWorkSpaceMutation } from "../../../hooks/useWorkSpace";
+import { useSubscriptionMutation } from "../../../hooks/useSubscription";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = loadStripe('your-stripe-publishable-key'); // Replace with your Stripe publishable key
+
 
 const SubscriptionPricing = () => {
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.auth.user)
   const { useGetPlan } = usePlanMutation();
-  const { useGetWorkSpace } = useWorkSpaceMutation();
-  const { useCreateSubscription } = useSubscriptionMutation(); // Use the new hook
-  const { data: plans, isLoading } = useGetPlan();
-  const { data: workspace } = useGetWorkSpace();
+  // const {useGetMySubscription} = useSubscriptionMutation()
+  const {useGetWorkSpace} = useWorkSpaceMutation();
+  const {useCreateSubscription} = useSubscriptionMutation()
+  const { data: plans, isLoading } = useGetPlan;
+  const {data: workspace} = useGetWorkSpace;
+  // const {data: subscriptionPlan, isLoading: isSubscriptionLoading} = useGetMySubscription
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  // Step 1: Automatically select free plan on load
   useEffect(() => {
-    if (!isLoading && plans?.data) {
-      const freePlan = plans.data.find((plan) => plan.price === 0);
-      if (freePlan) {
-        setSelectedPlan(freePlan._id);
+    if(!isLoading && plans.data){
+      const freePlan = plans.data.find((plan: any) => plan.price === 0)
+      if(freePlan){
+        setSelectedPlan(freePlan._id)
       }
     }
-  }, [plans, isLoading]);
+  }, [plans, isLoading])
 
-  // Step 2: Use the subscription mutation
-  const subscriptionMutation = useCreateSubscription({
-    onSuccess: async (data) => {
-      if (data.isPaidPlan) {
-        // Step 3a: Handle paid plan - redirect to Stripe checkout
+
+  
+
+
+const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaNzajrheVaaiVhuUcGA1MHvPJoOxfM6M2DnoJesTxGcWTVWwxZmZo00hRWbyXoV"); 
+
+ 
+
+
+  const handleSubscription = async () => {
+    if (!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
+    const workspaceId = workspace?.data?.data?._id;
+    console.log("data that is sending to server", selectedPlan, workspaceId, user.email)
+    try {
+      const response = await useCreateSubscription.mutateAsync({
+        planId: selectedPlan,
+        workspaceId,
+        email: user.email,
+      });
+      console.log("response of the useCreateSubscription", response)
+      if (response.data?.sessionId) {
         const stripe = await stripePromise;
-        if (stripe) {
-          const { error } = await stripe.redirectToCheckout({
-            sessionId: data.sessionId,
-          });
-          if (error) setError(error.message);
+        if (!stripe) throw new Error("Stripe failed to initialize");
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: response.data.sessionId,
+        });
+        if (error) {
+          console.error("Stripe Checkout error:", error.message);
         }
+      } else if (response.data?.subscription) {
+        console.log("Free subscription created successfully:", response.data.subscription);
+        navigate("/create-project");
       } else {
-        // Step 3b: Handle free plan - navigate to dashboard
-        navigate('/dashboard');
+        throw new Error("Invalid response from server");
       }
-    },
-    onError: (error: any) => setError(error.response?.data?.message || 'Failed to create subscription'),
-  });
-
-  // Step 4: Handle subscription button click
-  const handleSubscription = () => {
-    if (!selectedPlan || !workspace?.data?.data?._id) return;
-
-    const workspaceId = workspace.data.data._id;
-
-    subscriptionMutation.mutate({
-      planId: selectedPlan,
-      workspaceId,
-    });
+    } catch (error) {
+      console.error("Subscription error:", error);
+    } 
   };
+
+  // console.log("this is from the subscription plan card", subscriptionPlan)
 
   return (
     <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center justify-center p-4">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">Discover The Plans</h1>
+        <h1 className="text-4xl font-bold text-white mb-4">
+          Discover The Plans
+        </h1>
         <p className="text-gray-400 text-lg">
           Select from the best plans, ensuring a perfect match. Need more or less?
           Customize your subscription for a seamless fit!
         </p>
       </div>
 
-      {error && (
-        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-md mb-6">
-          {error}
-        </div>
-      )}
-
       <div className="flex flex-col gap-7">
         <div className="flex space-x-6 w-full max-w-5xl">
           {isLoading
             ? [...Array(3)].map((_, index) => <ShimmerUserPlanCard key={index} />)
-            : plans?.data?.map((data) => (
+            : plans?.data?.map((data: any) => (
                 <UserPlanCard
                   key={data._id}
                   data={data}
                   isSelected={selectedPlan === data._id}
                   onSelectPlan={() => setSelectedPlan(data._id)}
+                  // isCurrentPlan={subscriptionPlan?.data?.plan?._id === data._id}
                 />
               ))}
         </div>
         {!isLoading && (
           <div className="w-full flex justify-end gap-3">
-            <button
-              className="text-white py-2 px-4 rounded-md bg-[#555] hover:bg-[#444] transition disabled:opacity-50"
-              disabled={subscriptionMutation.isLoading}
-              onClick={() => navigate('/dashboard')}
+            <Link to="/project"
+              // to="/create-work-space"
+              className="text-white py-2 px-4 rounded-md bg-[#555] hover:bg-[#444] transition"
             >
               Skip
-            </button>
-            <button
+            </Link>
+            {/* {!subscriptionPlan?.data?.plan?._id && <button
               className={`py-2 px-4 rounded-md transition ${
-                selectedPlan && !subscriptionMutation.isLoading
+                selectedPlan
                   ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
                   : "bg-gray-600 text-gray-400 cursor-not-allowed"
               }`}
-              disabled={!selectedPlan || subscriptionMutation.isLoading}
+              disabled={!selectedPlan}
               onClick={handleSubscription}
             >
-              {subscriptionMutation.isLoading ? 'Processing...' : 'Subscribe'}
+              Next
+            </button>} */}
+            <button
+              className={`py-2 px-4 rounded-md transition ${
+                selectedPlan
+                  ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
+                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
+              }`}
+              disabled={!selectedPlan}
+              onClick={handleSubscription}
+            >
+              Next
             </button>
           </div>
         )}
@@ -119,3 +229,4 @@ const SubscriptionPricing = () => {
 };
 
 export default SubscriptionPricing;
+

@@ -11,6 +11,7 @@ import {
   FiTarget,
   FiAlertCircle,
 } from 'react-icons/fi';
+import { FaRegUser } from "react-icons/fa";
 import { IoChatbubbleOutline } from 'react-icons/io5';
 
 
@@ -26,6 +27,7 @@ const UserLayout: React.FC = () => {
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: 'Dashbaord', path: '/admin' },
     { icon: <FiLayers />, text: 'Workspaces', path: '/admin/companies' },
+    {icon: <FaRegUser/>, text: 'Users', path: '/admin/user-details'},
     { icon: <FiCalendar />, text: 'Plans', path: '/admin/plans' },
     { icon: <FiBell />, text: 'Report', path: '/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Settings', path: '/chats' },

@@ -16,6 +16,7 @@ const UserLoginForm: React.FC = () => {
       signUpLink="/user-sign-up"
       forgotPasswordLink="/forgot-password"
       // onSuccessRedirect={() => navigate('/create-work-space')}
+      isAdmin={false}
     />
   );
 };

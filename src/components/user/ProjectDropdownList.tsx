@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { IoAddSharp } from "react-icons/io5";
+import { useWorkSpaceMutation } from "../../hooks/useWorkSpace";
+import { useProject } from "../../hooks/useProject";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface ProjectDropdownProps {
   isOpen: boolean;
@@ -9,12 +13,15 @@ interface ProjectDropdownProps {
 
 const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
 
-  const projects = [
-    { id: 1, name: "Project Alpha" },
-    { id: 2, name: "Project Beta" },
-    { id: 3, name: "Project Gamma" },
-  ];
+
+  const { useGetProjects } = useProject()
+  const { data: projectData } = useGetProjects(workspaceId ?? undefined);
+
+  console.log("project detilas data", projectData)
+
+
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,17 +37,23 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
 
   if (!isOpen) return null;
 
+
+  const handleProjectSelect = (projectId: string) => {
+    console.log("selected project is", projectId)
+  }
+
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-full mt-5 w-52 bg-[#1E1E1E] border border-[#5A6060] rounded-sm shadow-lg"
+      className="absolute top-full mt-[22px] w-52 bg-[#1E1E1E] border border-[#5A6060] rounded-sm shadow-lg"
     >
       {/* Project List */}
-      <div className="max-h-40 overflow-y-auto">
-        {projects.length > 0 ? (
-          projects.map((project) => (
+      <div className="max-h-80 overflow-y-auto">
+        {projectData?.data?.data?.length > 0 ? (
+          projectData?.data?.data?.map((project: any) => (
             <button
-              key={project.id}
+              key={project._id}
+              onClick={() => handleProjectSelect(project._id)}
               className="block w-full text-left px-4 py-3 text-sm text-white hover:bg-[#2E2E2E]"
             >
               {project.name}
@@ -55,7 +68,7 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
       <Link to="/create-project" onClick={() => setIsOpen(false)}>
         <div className="flex items-center gap-4 w-full px-4 py-3 text-sm text-white hover:bg-[#2E2E2E] border-t border-[#5A6060]">
           <span>Create Project</span>
-          <IoAddSharp className="mr-2" /> 
+          <IoAddSharp className="mr-2" />
         </div>
       </Link>
     </div>

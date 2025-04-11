@@ -2,6 +2,8 @@ import {configureStore} from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import authReducer from './authSlice';
+import workspaceReducer from "./workspaceSlice";
+import projectReducer from "./projectSlice"
 
 const persistConfig = {
     key: 'root',
@@ -9,12 +11,19 @@ const persistConfig = {
     whitelist: ['user']
 }
 
+const workspacePersistConfig = {
+    key: 'workspace',
+    storage,
+    whitelist: ['selectWorkspaceId', 'selectWorkspace']
+  };
+
 const persistedReducer = persistReducer(persistConfig, authReducer);
-// console.log("persistedReducr", persistReducer)
+const workspacePersistedReducer =  persistReducer(workspacePersistConfig, workspaceReducer)
 const store = configureStore({
     reducer: {
         auth: persistedReducer,
-        // auth: authReducer
+        workspace: workspacePersistedReducer,
+        project: projectReducer
     },
     middleware: (getDefaultMiddleware) => 
         getDefaultMiddleware({

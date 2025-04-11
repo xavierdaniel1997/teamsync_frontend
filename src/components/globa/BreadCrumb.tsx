@@ -3,8 +3,8 @@ import { useLocation } from "react-router-dom";
 
 interface BreadCrumbProps {
   pageName: string;
-  buttonText: string;
-  onButtonClick: () => void;
+  buttonText?: string;
+  onButtonClick?: () => void;
   ButtonIcon?: any;
 }
 
@@ -35,13 +35,15 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
       </div>
 
       {/* Right Side - Button */}
-      <button
-        onClick={onButtonClick}
-        className="flex items-center bg-gray-600 text-white px-2.5 py-1.5 rounded-sm shadow hover:bg-gray-500 transition text-sm"
-      >
-        {buttonText}
-        <ButtonIcon size={20} className="ml-2" />
-      </button>
+      {buttonText && onButtonClick && (
+        <button
+          onClick={onButtonClick}
+          className="flex items-center bg-gray-600 text-white px-2.5 py-1.5 rounded-sm shadow hover:bg-gray-500 transition text-sm"
+        >
+          {buttonText}
+          {ButtonIcon && <ButtonIcon size={20} className="ml-2" />}
+        </button>
+      )}
     </div>
   );
 };

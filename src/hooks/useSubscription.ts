@@ -1,5 +1,5 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { createSubscriptionApi } from "../services/subscriptionAuthService"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { createSubscriptionApi, getMySubscriptionApi,  } from "../services/subscriptionAuthService"
 
 export const useSubscriptionMutation = () => {
     const queryClient = useQueryClient()
@@ -15,5 +15,10 @@ export const useSubscriptionMutation = () => {
         }
     })
 
-    return {useCreateSubscription}
+    const useGetMySubscription = useQuery({
+        queryKey: ["subscription"],
+        queryFn: getMySubscriptionApi
+    })
+
+    return {useCreateSubscription, useGetMySubscription}
 }

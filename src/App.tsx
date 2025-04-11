@@ -27,6 +27,8 @@ import Success from "./pages/user/Subscription/Success";
 import PageNotFound from "./components/globa/PageNotFound";
 import AcceptInvitation from "./pages/user/TeamAndInvitation/AcceptInvitation";
 import TeamMembers from "./pages/user/TeamAndInvitation/TeamMembers";
+import WorkSpaceSetting from "./pages/user/WorkSpace/WorkSpaceSetting";
+import UserDetials from "./pages/admin/UserManagment/UserDetials";
 
 
 
@@ -57,6 +59,7 @@ const App: React.FC = () => {
           <Route path="/success" element={<Success/>}/>
           <Route path="/cancel" element={<PaymentCancel/>}/>
           <Route path="/create-work-space" element={<WorkSpace />} />
+          <Route path="/workspace-setting" element={<WorkSpaceSetting/>} />
           <Route path="/create-project" element={<AddProjectForm/>} />
           <Route path="/project" element={<UserLayout />} >
             <Route index element={<Dashboard />} />
@@ -69,6 +72,7 @@ const App: React.FC = () => {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
             <Route path="companies" element={<Companies />} />
+            <Route path="user-details" element={<UserDetials/>} />
             <Route path="plans" element={<Plan/>}/>
           </Route>
         </Route>

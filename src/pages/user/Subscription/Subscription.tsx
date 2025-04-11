@@ -16,66 +16,57 @@ const SubscriptionPricing = () => {
   const navigate = useNavigate();
   const user = useSelector((state: RootState) => state.auth.user)
   const { useGetPlan } = usePlanMutation();
-  const {useGetWorkSpace} = useWorkSpaceMutation();
-  const {useCreateSubscription} = useSubscriptionMutation()
+  const { useGetWorkSpace } = useWorkSpaceMutation();
   const { data: plans, isLoading } = useGetPlan;
-  const {data: workspace} = useGetWorkSpace;
+  const { data: workspace } = useGetWorkSpace;
+  const { useCreateSubscription, useGetMySubscription } = useSubscriptionMutation()
+  const { data: subscriptionPlan, isLoading: isSubscriptionLoading } = useGetMySubscription
+  console.log("mySubscription", subscriptionPlan)
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   if(!isLoading && plans.data){
+  //     const freePlan = plans.data.find((plan: any) => plan.price === 0)
+  //     if(freePlan){
+  //       setSelectedPlan(freePlan._id)
+  //     }
+  //   }
+  // }, [plans, isLoading])
+
 
   useEffect(() => {
-    if(!isLoading && plans.data){
-      const freePlan = plans.data.find((plan: any) => plan.price === 0)
-      if(freePlan){
-        setSelectedPlan(freePlan._id)
+    if (isSubscriptionLoading || isLoading) return;
+
+    if (subscriptionPlan?.data?.plan?._id) {
+      setSelectedPlan(subscriptionPlan.data.plan._id);
+    } else if (plans?.data) {
+      const freePlan = plans.data.find((plan: any) => plan.price === 0);
+      if (freePlan) {
+        setSelectedPlan(freePlan._id);
       }
     }
-  }, [plans, isLoading])
+  }, [plans, isLoading, subscriptionPlan, isSubscriptionLoading]);
 
 
-const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaNzajrheVaaiVhuUcGA1MHvPJoOxfM6M2DnoJesTxGcWTVWwxZmZo00hRWbyXoV"); 
 
-  // const handleSubscription = async () => {
-  //   if(!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
-  //   const selectedPlanData = plans.data.find((plan: any) => plan._id === selectedPlan)
-  //   const workspaceId = workspace?.data?.data?._id
-  //   console.log("data that is going to backend", workspaceId, selectedPlanData)
-  //   try {
-  //     const response = await useCreateSubscription.mutateAsync({
-  //       planId: selectedPlan,
-  //       workspaceId,
-  //       email: user.email
-  //     });
+  const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaNzajrheVaaiVhuUcGA1MHvPJoOxfM6M2DnoJesTxGcWTVWwxZmZo00hRWbyXoV");
 
-  //     if (response.sessionId) {
-  //       const stripe = await stripePromise;
-  //       if (stripe) {
-  //         await stripe.redirectToCheckout({ sessionId: response.sessionId });
-  //       }
-  //     } else if (response.subscription) {
-  //       console.log("success")
-  //     }
-  //   } catch (error) {
-  //     console.error("Subscription error:", error);
-  //   }
-    
-  // }
+
+  console.log("workspaceeeeeeeeeeeeeeeeeeeeeee", workspace)
 
   const handleSubscription = async () => {
     if (!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
-
     // setIsSubmitting(true);
     const workspaceId = workspace?.data?.data?._id;
-
     try {
       const response = await useCreateSubscription.mutateAsync({
         planId: selectedPlan,
         workspaceId,
         email: user.email,
       });
-
       console.log("API Response:", response);
-
       if (response.data?.sessionId) {
         const stripe = await stripePromise;
         if (!stripe) throw new Error("Stripe failed to initialize");
@@ -95,8 +86,11 @@ const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaN
       }
     } catch (error) {
       console.error("Subscription error:", error);
-    } 
+    }
   };
+
+
+
 
   return (
     <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center justify-center p-4">
@@ -115,29 +109,42 @@ const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaN
           {isLoading
             ? [...Array(3)].map((_, index) => <ShimmerUserPlanCard key={index} />)
             : plans?.data?.map((data: any) => (
-                <UserPlanCard
-                  key={data._id}
-                  data={data}
-                  isSelected={selectedPlan === data._id}
-                  onSelectPlan={() => setSelectedPlan(data._id)}
-                />
-              ))}
+              <UserPlanCard
+                key={data._id}
+                data={data}
+                isSelected={selectedPlan === data._id}
+                onSelectPlan={() => setSelectedPlan(data._id)}
+                isCurrentPlan={subscriptionPlan?.data?.plan?._id === data._id}
+                currentPlanPrice={subscriptionPlan?.data?.plan?.price}
+              />
+            ))}
         </div>
         {!isLoading && (
           <div className="w-full flex justify-end gap-3">
-            <button
-              // to="/create-work-space"
+            <Link to="/project"
               className="text-white py-2 px-4 rounded-md bg-[#555] hover:bg-[#444] transition"
             >
               Skip
-            </button>
-            <button
+            </Link>
+            {/* <button
               className={`py-2 px-4 rounded-md transition ${
                 selectedPlan
                   ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
                   : "bg-gray-600 text-gray-400 cursor-not-allowed"
               }`}
               disabled={!selectedPlan}
+              onClick={handleSubscription}
+            >
+              Next
+            </button> */}
+            <button
+              className={`py-2 px-4 rounded-md transition ${selectedPlan && selectedPlan !== subscriptionPlan?.data?.plan?._id
+                  ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
+                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                }`}
+              disabled={
+                !selectedPlan || selectedPlan === subscriptionPlan?.data?.plan?._id
+              }
               onClick={handleSubscription}
             >
               Next
@@ -150,3 +157,7 @@ const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaN
 };
 
 export default SubscriptionPricing;
+
+
+
+

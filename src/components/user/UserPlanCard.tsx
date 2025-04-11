@@ -12,9 +12,11 @@ interface UserPlanCardProps {
   data: UserPlanProps;
   isSelected: boolean;
   onSelectPlan: () => void;
+  isCurrentPlan?: boolean;
+  currentPlanPrice: string;
 }
 
-const UserPlanCard: React.FC<UserPlanCardProps> = ({ data, isSelected, onSelectPlan }) => {
+const UserPlanCard: React.FC<UserPlanCardProps> = ({ data, isSelected, onSelectPlan, isCurrentPlan, currentPlanPrice }) => {
   return (
     <div
       className={`w-64 relative p-6 rounded-md border 
@@ -48,10 +50,11 @@ const UserPlanCard: React.FC<UserPlanCardProps> = ({ data, isSelected, onSelectP
       </ul>
 
       <button
-        className={`w-full mt-6 py-1.5 rounded-md font-medium transition text-gray-200 bg-[#0052CC]`}
+        className={`w-full mt-6 py-1.5 rounded-md font-medium transition  ${isCurrentPlan ? "text-black bg-white" : "text-gray-200 bg-[#0052CC]"}`}
         onClick={onSelectPlan}
+        disabled={isCurrentPlan}
       >
-        {isSelected ? "Selected" : "Get Start"}
+        {isCurrentPlan? "Current Plan" : isSelected ? "Selected" : "Get Start"}
       </button>
     </div>
   );

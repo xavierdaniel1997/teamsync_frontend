@@ -16,6 +16,7 @@ interface LoginFormProps {
   signUpLink: string;
   forgotPasswordLink?: string;
   onSuccessRedirect?: () => void; 
+  isAdmin: boolean;
 }
 
 const validationSchema = Yup.object({
@@ -33,6 +34,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   signUpLink,
   forgotPasswordLink = "/forgot-password",
   onSuccessRedirect,
+  isAdmin
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -144,7 +146,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </div>
         </form>
 
-        <LoginWithThirdParty />
+        {!isAdmin && <LoginWithThirdParty />}
 
         <div className="mt-4 text-center text-sm">
           <span className="text-gray-600">Don't have an account?</span>{" "}

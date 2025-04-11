@@ -11,9 +11,10 @@ const AdminLoginForm: React.FC = () => {
         <LoginForm
         title="Log in to TeamSync (Admin)"
         loginMutation={adminLogin}
-        signUpLink="/admin-sign-up"
+        signUpLink="/admin/register"
         forgotPasswordLink="/admin-forgot-password"
         onSuccessRedirect={() => navigate('/admin')}
+        isAdmin={true}
         />
     </div>
   )

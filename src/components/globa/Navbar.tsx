@@ -5,6 +5,7 @@ import { RootState } from "../../redux/store";
 import LogoImage from "../../assets/teamsync-log.png";
 import UserDropdownList from "./UserDropdownList";
 import ProjectDropdownList from "../user/ProjectDropdownList";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   isAdmin: boolean;
@@ -12,21 +13,20 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   const user = useSelector((state: RootState) => state.auth.user);
-  console.log("User details from the navbar", user);
+  // console.log("User details from the navbar", user);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isProjectDropdownOpen, setProjectDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const projectDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Toggle dropdown
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
 
   const toggleProjectDropdown = () => {
     setProjectDropdownOpen((prev) => !prev);
-    setDropdownOpen(false); // Close user dropdown if open
+    setDropdownOpen(false); 
   };
 
   return (
@@ -42,6 +42,9 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
         {!isAdmin && (
           <div className="flex items-center space-x-6">
+            <Link to="/workspace-setting" className="text-white text-sm hover:text-blue-400">
+              Workspaces
+            </Link>
             <div className="relative" ref={projectDropdownRef}>
               <div
                 className="text-white text-sm hover:text-blue-400 cursor-pointer"
@@ -57,9 +60,9 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
             <a href="#" className="text-white text-sm hover:text-blue-400">
               Team
             </a>
-            <a href="#" className="text-white text-sm hover:text-blue-400">
+            <Link to="/subscriptions" className="text-white text-sm hover:text-blue-400">
               Plan
-            </a>
+            </Link>
           </div>
         )}
       </div>

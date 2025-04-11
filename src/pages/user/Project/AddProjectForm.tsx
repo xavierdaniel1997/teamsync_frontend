@@ -20,7 +20,7 @@ const AddProjectForm: React.FC = () => {
 
   const { data: workspace } = useGetWorkSpace;
 
-  console.log("workspace detials", workspace)
+  // console.log("workspace detials", workspace)
 
   
   const handleAddEmail = (e: React.KeyboardEvent<HTMLInputElement>) => {

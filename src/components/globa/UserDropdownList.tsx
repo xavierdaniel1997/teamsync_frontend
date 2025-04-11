@@ -32,7 +32,7 @@ const UserDropdownList: React.FC<UserDropdownProps> = ({ isOpen, setIsOpen }) =>
     return (
         <div
             ref={dropdownRef}
-            className="absolute top-full right-0  mt-2 w-52 bg-[#1E1E1E] border border-[#5A6060] rounded-sm shadow-lg"
+            className="absolute top-full right-0 mt-4 w-52 bg-[#1E1E1E] border border-[#5A6060] rounded-sm shadow-lg"
         >
             <div className="p-4 flex gap-2 border-b border-[#5A6060]">
                 <div className="">

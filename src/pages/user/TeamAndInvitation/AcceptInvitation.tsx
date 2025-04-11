@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import logImage from "../../../assets/teamsync-log.png";
 import leftVector from "../../../assets/leftVector.png";
 import rightVector from "../../../assets/rightVector.png";
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useInvitationTeamMutation } from '../../../hooks/useInvitationAndTeam';
 
 const AcceptInvitation: React.FC = () => {
   const {useAcceptInvitation} = useInvitationTeamMutation()
   const location = useLocation();
+  const navigate = useNavigate()
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get("token");
 
@@ -30,6 +31,7 @@ const AcceptInvitation: React.FC = () => {
       onSuccess: (response) => {
         console.log("invitation accept successfully", response)
         sessionStorage.removeItem("inviteToken")
+        navigate("/project")
       },
       onError: (error: any) => {
         console.log("error ", error)

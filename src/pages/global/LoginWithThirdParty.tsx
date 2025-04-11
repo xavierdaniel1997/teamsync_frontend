@@ -53,10 +53,10 @@ const LoginWithThirdParty: React.FC = () => {
                     <FcGoogle className="mr-2 h-6 w-6" />
                     Google
                 </button>
-                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:shadow-2xl">
+                {/* <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:shadow-2xl">
                 <FaGithub className='mr-2 h-6 w-6'/>
                     Github
-                </button>
+                </button> */}
             </div>
 
         </div>
