@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createProjectWithTeamApi, getAllProjectsApi } from "../services/projectService"
 import { toast } from "sonner"
+import { ProjectResponse } from "../types/project"
 
 export const useProject = () => {
     const queryClient = useQueryClient()
@@ -18,14 +19,22 @@ export const useProject = () => {
     })
 
 
+    // const useGetProjects = (workspaceId?: string) => {
+    //     return useQuery<{ data: any[] }, Error>({
+    //         queryKey: ["project", workspaceId],
+    //         queryFn: () =>
+    //             workspaceId ? getAllProjectsApi(workspaceId) : Promise.resolve({ data: [] }),
+    //         enabled: !!workspaceId,
+    //     });
+    // };
     const useGetProjects = (workspaceId?: string) => {
-        return useQuery<{ data: any[] }, Error>({
-            queryKey: ["project", workspaceId],
-            queryFn: () =>
-                workspaceId ? getAllProjectsApi(workspaceId) : Promise.resolve({ data: [] }),
-            enabled: !!workspaceId,
+        return useQuery<ProjectResponse, Error>({
+          queryKey: ["project", workspaceId],
+          queryFn: () =>
+            workspaceId ? getAllProjectsApi(workspaceId) : Promise.resolve({ data: [], message: "", status: 200, success: true }),
+          enabled: !!workspaceId,
         });
-    };
+      };
 
     return { useCreateProjectWithTeam, useGetProjects }
 }

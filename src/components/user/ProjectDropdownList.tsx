@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { IoAddSharp } from "react-icons/io5";
-import { useWorkSpaceMutation } from "../../hooks/useWorkSpace";
-import { useProject } from "../../hooks/useProject";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useProject } from "../../hooks/useProject";
+import { useUserDetailsMutation } from "../../hooks/useUserDetails";
+import { IProject } from "../../types/project"; 
 
 interface ProjectDropdownProps {
   isOpen: boolean;
@@ -13,15 +14,17 @@ interface ProjectDropdownProps {
 
 const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
+  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
 
+  console.log("workspaceId", workspaceId);
 
-  const { useGetProjects } = useProject()
+  const { useGetProjects } = useProject();
   const { data: projectData } = useGetProjects(workspaceId ?? undefined);
+  const { getUserDetials } = useUserDetailsMutation();
+  const { data: userDetails, isLoading } = getUserDetials;
 
-  console.log("project detilas data", projectData)
-
-
+  const ownedWorkspace = userDetails?.data?.workspaceOwn;
+  console.log("project details data projectData", projectData);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,10 +40,9 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
 
   if (!isOpen) return null;
 
-
   const handleProjectSelect = (projectId: string) => {
-    console.log("selected project is", projectId)
-  }
+    console.log("selected project is", projectId);
+  };
 
   return (
     <div
@@ -49,8 +51,8 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
     >
       {/* Project List */}
       <div className="max-h-80 overflow-y-auto">
-        {projectData?.data?.data?.length > 0 ? (
-          projectData?.data?.data?.map((project: any) => (
+        {(projectData?.data ?? []).length > 0 ? (
+          projectData?.data.map((project: IProject) => (
             <button
               key={project._id}
               onClick={() => handleProjectSelect(project._id)}

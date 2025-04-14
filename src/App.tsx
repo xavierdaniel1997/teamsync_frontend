@@ -29,6 +29,8 @@ import AcceptInvitation from "./pages/user/TeamAndInvitation/AcceptInvitation";
 import TeamMembers from "./pages/user/TeamAndInvitation/TeamMembers";
 import WorkSpaceSetting from "./pages/user/WorkSpace/WorkSpaceSetting";
 import UserDetials from "./pages/admin/UserManagment/UserDetials";
+import UserSettings from "./pages/user/UserSettings/UserSettings";
+import ProjectSetting from "./pages/user/Project/ProjectSetting";
 
 
 
@@ -65,6 +67,8 @@ const App: React.FC = () => {
             <Route index element={<Dashboard />} />
             <Route path="backlog" element={<Backlog />} />
             <Route path="team-members" element={<TeamMembers/>} />
+            <Route path="project-setting" element={<ProjectSetting/>} />
+            <Route path="settings" element={<UserSettings/>}/>
           </Route>
         </Route>
 

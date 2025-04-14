@@ -10,6 +10,7 @@ import {
   FiEdit,
   FiTarget,
   FiAlertCircle,
+  FiSettings,
 } from 'react-icons/fi';
 import { IoChatbubbleOutline } from 'react-icons/io5';
 
@@ -30,8 +31,8 @@ const UserLayout: React.FC = () => {
     { icon: <FiBell />, text: 'Notification', path: '/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Chat', path: '/chats' },
     { icon: <FiEdit />, text: 'Teams & Members', path: '/project/team-members' },
-    { icon: <FiTarget />, text: 'Projects', path: '/allprojects' },
-    { icon: <FiAlertCircle />, text: 'Settings', path: '/settings' },
+    { icon: <FiTarget />, text: 'Projects', path: '/project/project-setting' },
+    { icon: <FiSettings />, text: 'Settings', path: '/project/settings' },
   ];
 
   return (
@@ -44,7 +45,7 @@ const UserLayout: React.FC = () => {
         <div
           className={`fixed top-16 left-0 ${
             isSidebarOpen ? 'w-64' : 'w-16'
-          } h-[calc(100vh-4rem)] transition-all duration-300 bg-[#252B2B]`}
+          } h-[calc(100vh-4rem)] transition-all duration-300`}
         >
           <NavSideBar
             isOpen={isSidebarOpen}
@@ -55,9 +56,9 @@ const UserLayout: React.FC = () => {
         </div>
 
         <div
-          className={`flex-1 transition-all duration-300 bg-[#1E1E1E] ${
+          className={`flex-1 transition-all duration-300 bg-[#202020] ${
             isSidebarOpen ? 'ml-64' : 'ml-16'
-          } p-6 mt-16`}
+          }  mt-16`}
         >
           <Outlet />
         </div>

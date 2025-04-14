@@ -6,6 +6,7 @@ import LogoImage from "../../assets/teamsync-log.png";
 import UserDropdownList from "./UserDropdownList";
 import ProjectDropdownList from "../user/ProjectDropdownList";
 import { Link } from "react-router-dom";
+import { getInitials, getRandomColor } from "../../utils/userHelpers";
 
 interface NavbarProps {
   isAdmin: boolean;
@@ -13,7 +14,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   const user = useSelector((state: RootState) => state.auth.user);
-  // console.log("User details from the navbar", user);
+  console.log("User details from the navbar", user);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isProjectDropdownOpen, setProjectDropdownOpen] = useState(false);
@@ -26,11 +27,11 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
   const toggleProjectDropdown = () => {
     setProjectDropdownOpen((prev) => !prev);
-    setDropdownOpen(false); 
+    setDropdownOpen(false);
   };
 
   return (
-    <nav className="bg-[#1E1E1E] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10 border-b border-[#5A6060]">
+    <nav className="bg-[#191919] text-white flex items-center justify-between py-3 px-6 fixed top-0 left-0 w-full z-10 border-b border-[#2E2E2E]">
 
       <div className="flex items-center space-x-10">
         <div className="flex items-center space-x-4">
@@ -74,7 +75,28 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
         {/* Avatar (Click to open dropdown) */}
         <button onClick={toggleDropdown} className="relative flex items-center  focus:outline-none">
-          <div className="w-8 h-8 bg-gray-500 rounded-full cursor-pointer"></div> 
+          {user && user.fullName ? (
+            user.avatar ? (
+              <img
+                src={user.avatar}
+                alt="User avatar"
+                className="w-8 h-8 object-cover rounded-full"
+              />
+            ) : (
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-sm"
+                style={{ backgroundColor: getRandomColor(user?._id || "") }}
+              >
+                {getInitials(user.fullName, user.secondName || '')}
+              </div>
+            )
+          ) : (
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-gray-500"
+            >
+              ?
+            </div>
+          )}
         </button>
 
         {/* Dropdown Component */}

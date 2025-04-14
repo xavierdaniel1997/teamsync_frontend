@@ -17,9 +17,8 @@ const WorkSpaceSetting: React.FC = () => {
   const [selectedWorkspace, setSelectedWorkspace] = useState<any>(null);
 
 
-  const ownedWorkspace = userDetails?.data?.data?.workspaceOwn;
-  // const invitedWorkspaces = userDetails?.data?.data?.invitedWorkspace || [];
-  const invitedWorkspaces = (userDetails?.data?.data?.invitedWorkspace || []).filter(
+  const ownedWorkspace = userDetails?.data?.workspaceOwn;
+  const invitedWorkspaces = (userDetails?.data?.invitedWorkspace || []).filter(
     (workspace: any) => workspace._id !== ownedWorkspace?._id
   );
 

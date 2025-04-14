@@ -9,10 +9,10 @@ export const createProjectWithTeamApi = async (data: ProjectTeamData) => {
 
 export const getAllProjectsApi = async (workspaceId: string) => {
     const response = await api.get("project/all-projects", { params: { workspaceId } })
-    return response
+    return response.data
 }
 
 export const getProjectByIdApi = async (projectId: string) => {
     const response = await api.get(`project/project-by-id/${projectId}`)
-    return response;
+    return response.data;
 }

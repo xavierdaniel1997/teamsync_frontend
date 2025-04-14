@@ -1,6 +1,7 @@
 import React, { JSX } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 
 interface NavItem {
   icon: JSX.Element;
@@ -20,12 +21,12 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
 
   return (
     <aside
-      className={`h-full border-r-[3px] border-[#5A6060] ${
+      className={`h-full border-r border-[#2E2E2E] ${
         isOpen ? 'w-64' : 'w-16'
-      } bg-[#1E1E1E] text-gray-300 flex flex-col transition-all duration-300 relative`}
+      } bg-[#191919] text-gray-300 flex flex-col transition-all duration-300 relative`}
     >
       {!isAdmin && isOpen  && (
-        <div className="flex items-center p-4 border-b border-gray-700">
+        <div className="flex items-center p-4 border-b border-[#2E2E2E]">
           <div className="w-8 h-8 bg-gray-500 rounded"></div>
           <div className="ml-3">
             <span className="text-sm font-medium text-white">My Scrum Project</span>
@@ -37,9 +38,9 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
 
       <button
         onClick={toggleSidebar}
-        className="absolute top-5 -right-3 bg-gray-700 rounded-full shadow-md p-0.5 text-white hover:bg-gray-600"
+        className="absolute top-5 -right-2 bg-[#2E2E2E] rounded-full shadow-md p-0.5 text-white hover:bg-[##2E2E2E]"
       >
-        {isOpen ? <FiChevronLeft size={18} /> : <FiChevronRight size={18} />}
+        {isOpen ? <FiChevronLeft size={15} /> : <FiChevronRight size={15} />}
       </button>
 
       <div className="flex-1 px-4 py-6">
@@ -55,8 +56,8 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
                   isOpen ? 'px-4' : 'px-0 justify-center'
                 } py-2 text-sm rounded transition-colors duration-200 hover:text-white ${
                   location.pathname === item.path
-                    ? 'bg-[#0052CC] text-white'
-                    : 'text-gray-400 hover:bg-gray-700'
+                    ? 'bg-[#0052cc57]  text-white '
+                    : 'text-gray-400 hover:bg-[#1e1e1e]'
                 }`}
               >
                 <span

@@ -85,18 +85,9 @@ export const useAuthMutations = () => {
         return;
       }
       try {
-        // const userWorkSpace = await getuserDetilasApi();
-        // const invitedWorkspace = userWorkSpace?.data?.data?.invitedWorkspace;
-        // const myworkspace = userWorkSpace?.data?.data?.workspaceOwn;
-        // if (myworkspace) {
-        //   dispatch(setSelectWorkspaceId(myworkspace._id));
-        //   dispatch(setSelectWorkspace(myworkspace));
-        // } else if (invitedWorkspace.length > 0) {
-        //   dispatch(setSelectWorkspaceId(invitedWorkspace[0]._id));
-        //   dispatch(setSelectWorkspace(invitedWorkspace[0]));
-        // }
-        // navigate(myworkspace || invitedWorkspace.length > 0 ? "/project" : "/create-work-space")
+        console.log("check workspace")
         await handleWorkspaceSelection(dispatch, navigate);
+        console.log("checked workspace")
       } catch (error) {
         console.log("Failed to fetch the workspace", error);
         navigate("/create-work-space");
