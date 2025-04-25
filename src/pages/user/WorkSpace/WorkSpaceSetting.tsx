@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { setSelectWorkspace, setSelectWorkspaceId } from "../../../redux/workspaceSlice";
+import { setSelectProject, setSelectProjectId } from "../../../redux/projectSlice";
 
 const WorkSpaceSetting: React.FC = () => {
   const { getUserDetials } = useUserDetailsMutation();
@@ -55,6 +56,8 @@ const WorkSpaceSetting: React.FC = () => {
     setSelectedWorkspace(selected);
     dispatch(setSelectWorkspaceId(workspaceId));
     dispatch(setSelectWorkspace(selected));
+    dispatch(setSelectProject(null))
+    dispatch(setSelectProjectId(null))
   };
 
 

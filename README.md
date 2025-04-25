@@ -1,232 +1,374 @@
-// useEffect(() => {
-  //   if (isSubscriptionLoading || isLoading) return;
-
-  //   if (subscriptionPlan?.data?.plan?._id) {
-  //     setSelectedPlan(subscriptionPlan.data.plan._id);
-  //   } else if (plans?.data) {
-  //     const freePlan = plans.data.find((plan: any) => plan.price === 0);
-  //     if (freePlan) {
-  //       setSelectedPlan(freePlan._id);
-  //     }
-  //   }
-  // }, [plans, isLoading, subscriptionPlan, isSubscriptionLoading]);
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   // const handleSubscription = async () => {
-
-  //   console.log(("from the handleSubscription"))
-  //   if(!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
-  //   // const selectedPlanData = plans.data.find((plan: any) => plan._id === selectedPlan)  
-  //   const workspaceId = workspace?.data?.data?._id
-  //   console.log("data that is going to backend", workspaceId, selectedPlan, user.email)
-  //   try {
-  //     const response = await useCreateSubscription.mutateAsync({
-  //       planId: selectedPlan,
-  //       workspaceId,
-  //       email: user.email
-  //     });
-  //     console.log("response form the useCreateSubscription", response)
-
-  //     if (response.sessionId) {
-  //       const stripe = await stripePromise;
-  //       if (stripe) {
-  //         await stripe.redirectToCheckout({ sessionId: response.sessionId });
-  //       }
-  //     } else if (response.subscription) {
-  //       console.log("success")
-  //     }
-  //   } catch (error) {
-  //     console.error("Subscription error:", error);
-  //   }
-    
-  // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  import { Link, useNavigate } from "react-router-dom";
-import UserPlanCard from "../../../components/user/UserPlanCard";
-import { usePlanMutation } from "../../../hooks/usePlans";
-import ShimmerUserPlanCard from "../../../components/user/ShimmerUserPlanCard";
-import { useEffect, useState } from "react";
-import { Button } from "@mui/material";
-import { useWorkSpaceMutation } from "../../../hooks/useWorkSpace";
-import { useSubscriptionMutation } from "../../../hooks/useSubscription";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
-import { loadStripe } from "@stripe/stripe-js";
-
-
-
-const SubscriptionPricing = () => {
-  const navigate = useNavigate();
-  const user = useSelector((state: RootState) => state.auth.user)
-  const { useGetPlan } = usePlanMutation();
-  // const {useGetMySubscription} = useSubscriptionMutation()
-  const {useGetWorkSpace} = useWorkSpaceMutation();
-  const {useCreateSubscription} = useSubscriptionMutation()
-  const { data: plans, isLoading } = useGetPlan;
-  const {data: workspace} = useGetWorkSpace;
-  // const {data: subscriptionPlan, isLoading: isSubscriptionLoading} = useGetMySubscription
-
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-
-  useEffect(() => {
-    if(!isLoading && plans.data){
-      const freePlan = plans.data.find((plan: any) => plan.price === 0)
-      if(freePlan){
-        setSelectedPlan(freePlan._id)
-      }
-    }
-  }, [plans, isLoading])
-
-
-  
-
-
-const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaNzajrheVaaiVhuUcGA1MHvPJoOxfM6M2DnoJesTxGcWTVWwxZmZo00hRWbyXoV"); 
-
- 
-
-
-  const handleSubscription = async () => {
-    if (!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
-    const workspaceId = workspace?.data?.data?._id;
-    console.log("data that is sending to server", selectedPlan, workspaceId, user.email)
-    try {
-      const response = await useCreateSubscription.mutateAsync({
-        planId: selectedPlan,
-        workspaceId,
-        email: user.email,
-      });
-      console.log("response of the useCreateSubscription", response)
-      if (response.data?.sessionId) {
-        const stripe = await stripePromise;
-        if (!stripe) throw new Error("Stripe failed to initialize");
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: response.data.sessionId,
-        });
-        if (error) {
-          console.error("Stripe Checkout error:", error.message);
-        }
-      } else if (response.data?.subscription) {
-        console.log("Free subscription created successfully:", response.data.subscription);
-        navigate("/create-project");
-      } else {
-        throw new Error("Invalid response from server");
-      }
-    } catch (error) {
-      console.error("Subscription error:", error);
-    } 
-  };
-
-  // console.log("this is from the subscription plan card", subscriptionPlan)
-
-  return (
-    <div className="bg-[#1E1E1E] min-h-screen flex flex-col items-center justify-center p-4">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-white mb-4">
-          Discover The Plans
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Select from the best plans, ensuring a perfect match. Need more or less?
-          Customize your subscription for a seamless fit!
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-7">
-        <div className="flex space-x-6 w-full max-w-5xl">
-          {isLoading
-            ? [...Array(3)].map((_, index) => <ShimmerUserPlanCard key={index} />)
-            : plans?.data?.map((data: any) => (
-                <UserPlanCard
-                  key={data._id}
-                  data={data}
-                  isSelected={selectedPlan === data._id}
-                  onSelectPlan={() => setSelectedPlan(data._id)}
-                  // isCurrentPlan={subscriptionPlan?.data?.plan?._id === data._id}
-                />
-              ))}
-        </div>
-        {!isLoading && (
-          <div className="w-full flex justify-end gap-3">
-            <Link to="/project"
-              // to="/create-work-space"
-              className="text-white py-2 px-4 rounded-md bg-[#555] hover:bg-[#444] transition"
-            >
-              Skip
-            </Link>
-            {/* {!subscriptionPlan?.data?.plan?._id && <button
-              className={`py-2 px-4 rounded-md transition ${
-                selectedPlan
-                  ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
-                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
-              }`}
-              disabled={!selectedPlan}
-              onClick={handleSubscription}
-            >
-              Next
-            </button>} */}
-            <button
-              className={`py-2 px-4 rounded-md transition ${
-                selectedPlan
-                  ? "bg-[#0052CC] text-white hover:bg-[#0047B3]"
-                  : "bg-gray-600 text-gray-400 cursor-not-allowed"
-              }`}
-              disabled={!selectedPlan}
-              onClick={handleSubscription}
-            >
-              Next
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+import { IoAdd } from 'react-icons/io5';
+import { FaLink, FaPaperclip } from 'react-icons/fa';
+import { BsListNested } from 'react-icons/bs';
+import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import { useState } from 'react';
+import { Formik, Form, Field } from 'formik';
+import EditableTextField from './EditableTextField';
+import TaskPreview from './TaskPreview';
+import StatusInput from './StatusInput';
+import CommonTextField from './CommonTextField';
+import useFileHandler from '../../hooks/useFileHandler';
+
+interface TaskFormProps {
+    epicTitle: string;
+    onClose: () => void;
+}
+
+interface TaskFormValues {
+    title: string;
+    description: string;
+}
+
+const statusOptions = {
+    'To Do': {
+        textColor: 'text-gray-400',
+        bgColor: 'bg-gray-800',
+        hoverBg: 'hover:bg-gray-700',
+    },
+    'In Progress': {
+        textColor: 'text-blue-400',
+        bgColor: 'bg-blue-900',
+        hoverBg: 'hover:bg-blue-800',
+    },
+    'Done': {
+        textColor: 'text-green-400',
+        bgColor: 'bg-green-900',
+        hoverBg: 'hover:bg-green-800',
+    },
 };
 
-export default SubscriptionPricing;
 
+
+const handleTaskSubmit = (
+    values: TaskFormValues,
+    taskStatus: string,
+    onClose: () => void
+) => {
+    console.log('Form submitted with values:', { ...values, status: taskStatus });
+    onClose();
+};
+
+const TaskForm: React.FC<TaskFormProps> = ({ epicTitle, onClose }) => {
+    const [openAddTasks, setOpenAddTasks] = useState(false);
+    const [openStatusDropdown, setOpenStatusDropdown] = useState(false);
+    const [taskStatus, setTaskStatus] = useState('To Do');
+    const [showChildIssueFields, setShowChildIssueFields] = useState(false);
+    const [showWebLink, setShowWebLink] = useState(false);
+    const [showDetails, setShowDetails] = useState(true)
+    const [status, setStatus] = useState('TO_DO');
+    const [task, setTask] = useState('');
+    const { attachments, fileUrls, uploadError, handleFileChange, handleDeleteAttachment } = useFileHandler(() => {
+        setOpenAddTasks(false);
+    });
+
+
+    const handleOpenAddTasks = () => {
+        setOpenAddTasks(!openAddTasks);
+    };
+
+    const toggleStatusDropdown = () => {
+        setOpenStatusDropdown(!openStatusDropdown);
+    };
+
+    const handleStatusChange = (status: string) => {
+        setTaskStatus(status);
+        setOpenStatusDropdown(false);
+    };
+
+
+
+    const initialValues = {
+        title: epicTitle,
+        description: '',
+    };
+
+    const handleTaskSubmit = () => {
+
+    }
+
+    return (
+        // <Formik
+        //     initialValues={initialValues}
+        //     onSubmit={(values) => handleTaskSubmit(values, taskStatus, onClose)}
+        // >
+   
+                <Form className="flex flex-col gap-3.5">
+                    <Field name="title">
+                        {({ field }: any) => (
+                            <EditableTextField
+                                {...field}
+                                placeholder="Project Name"
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                                // sx={commonInputStyles}
+                                displayClassName="text-2xl font-semibold cursor-pointer"
+                            />
+                        )}
+                    </Field>
+
+                    <div className="relative">
+                        <button
+                            type="button"
+                            className="flex items-center gap-1 bg-[#0D0F11] py-1.5 px-3 rounded-sm cursor-pointer"
+                            onClick={handleOpenAddTasks}
+                        >
+                            <span>
+                                <IoAdd size={20} />
+                            </span>
+                            <span>Add</span>
+                        </button>
+                        {openAddTasks && (
+                            <div className="absolute left-0 top-full mt-1 bg-[#262626] py-1 rounded shadow-sm min-w-[180px] z-50 animate-fadeIn">
+                                <ul>
+                                    <li className="flex items-center gap-3 px-4 py-2 hover:bg-[#333] cursor-pointer transition-colors duration-150 relative">
+                                        <label className="flex items-center gap-3 w-full cursor-pointer">
+                                            <FaPaperclip className="text-blue-400" />
+                                            <span>Attachment</span>
+                                            <input
+                                                type="file"
+                                                multiple
+                                                accept="image/jpeg,image/png,application/pdf"
+                                                onChange={handleFileChange}
+                                                className="hidden"
+                                                aria-label="Upload attachments"
+                                            />
+                                        </label>
+                                    </li>
+                                    <li
+                                        className="flex items-center gap-3 px-4 py-2 hover:bg-[#333] cursor-pointer transition-colors duration-150"
+                                        onClick={() => {
+                                            setShowChildIssueFields(true);
+                                            setOpenAddTasks(false);
+                                        }}
+                                    >
+                                        <BsListNested className="text-green-400" />
+                                        <span>Child Issue</span>
+                                    </li>
+                                    <li
+                                        className="flex items-center gap-3 px-4 py-2 hover:bg-[#333] cursor-pointer transition-colors duration-150"
+                                        onClick={() => {
+                                            setShowWebLink(true);
+                                            setOpenAddTasks(false);
+                                        }}
+                                    >
+                                        <FaLink className="text-purple-400" />
+                                        <span>Web Link</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+
+                    {uploadError && (
+                        <div className="text-red-500 text-sm">{uploadError}</div>
+                    )}
+
+                    <div className="relative">
+                        <button
+                            type="button"
+                            className="flex items-center gap-1 bg-[#0D0F11] py-1.5 px-3 rounded-sm cursor-pointer justify-between"
+                            onClick={toggleStatusDropdown}
+                        >
+                            <span>{taskStatus}</span>
+                            <RiArrowDownSLine size={18} />
+                        </button>
+                        {openStatusDropdown && (
+                            <div className="absolute left-0 top-full mt-1 bg-[#262626] py-1 rounded shadow-sm z-50">
+                                {Object.entries(statusOptions).map(
+                                    ([status, styles]) => (
+                                        <div
+                                            key={status}
+                                            onClick={() => handleStatusChange(status)}
+                                            className="px-4 py-2 cursor-pointer transition-colors duration-150 hover:bg-[#333]"
+                                        >
+                                            <p
+                                                className={`${styles.textColor} ${styles.bgColor} px-2 rounded-full text-center`}
+                                            >
+                                                {status}
+                                            </p>
+                                        </div>
+                                    )
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                        <label>Description</label>
+                        <Field name="description">
+                            {({ field }: any) => (
+                                <EditableTextField
+                                    {...field}
+                                    placeholder="Enter task description"
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    multiline
+                                    rows={4}
+                                    displayClassName="bg-[#0D0F11] p-2 rounded-sm cursor-pointer"
+                                />
+                            )}
+                        </Field>
+                    </div>
+
+
+                    {attachments.length > 0 && <div>Attachments</div>}
+                    <TaskPreview
+                        attachments={attachments}
+                        fileUrls={fileUrls}
+                        handleDeleteAttachment={handleDeleteAttachment}
+                    />
+
+
+                    {showChildIssueFields && (
+                        <>
+                            <div>Child Issue</div>
+                            <div className='flex gap-2'>
+
+                                <StatusInput
+                                    statusValue={status}
+                                    taskValue={task}
+                                    onStatusChange={setStatus}
+                                    onTaskChange={setTask}
+                                    placeholder="Enter task details"
+                                    statusOptions={[
+                                        { value: 'STORY', label: 'Story' },
+                                        { value: 'TASK', label: 'Task' },
+                                        { value: 'BUG', label: 'Bug'}
+                                    ]}
+                                />
+                            </div>
+                            <div className='flex gap-2 justify-end'>
+                                <button className='bg-blue-400 px-2 py-0.5 rounded-xs cursor-pointer'>Create</button>
+                                <button className='bg-[#43414197] px-2 py-0.5 rounded-xs cursor-pointer' onClick={() => {
+                                    setShowChildIssueFields(false)
+                                    setOpenAddTasks(false)
+                                }
+                                }>Cancel</button>
+                            </div>
+                        </>
+                    )}
+
+                    {showWebLink && (
+                        <>
+                            <div>Web Link</div>
+                            <div className='flex gap-2'>
+                                <CommonTextField textTitle="URL" placeholder="https://example.con" />
+                                <CommonTextField textTitle={"Link text"} placeholder="Add description" />
+                            </div>
+                            <div className='flex gap-2 justify-end'>
+                                <button className='bg-blue-400 px-2 py-0.5 rounded-xs cursor-pointer'>Create</button>
+                                <button className='bg-[#43414197] px-2 py-0.5 rounded-xs cursor-pointer' onClick={() => {
+                                    setShowWebLink(false)
+                                    setOpenAddTasks(false)
+                                }
+                                }>Cancel</button>
+                            </div>
+                        </>
+                    )}
+
+                    {/*  */}
+                    <div className='border border-neutral-700 p-4 rounded-sm'>
+                        <div>
+                            <div className='flex justify-between items-center' onClick={() => setShowDetails(!showDetails)}>
+                                <h2>Details</h2>
+                                <span>{showDetails ? <RiArrowUpSLine /> : <RiArrowDownSLine />}</span>
+                            </div>
+                            {showDetails && <div className='mt-3'>
+                                <div className='flex items-center'>
+                                    <label className='w-40'>Assigne</label>
+                                    <Field name="description">
+                                        {({ field }: any) => (
+                                            <EditableTextField
+                                                {...field}
+                                                placeholder="None"
+                                                variant="outlined"
+                                                fullWidth
+                                                size="small"
+                                                multiline
+                                                displayClassName="p-2 rounded-sm cursor-pointer"
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+
+                                <div className='flex items-center'>
+                                    <label className='w-40'>Parent</label>
+                                    <Field name="description">
+                                        {({ field }: any) => (
+                                            <EditableTextField
+                                                {...field}
+                                                placeholder="None"
+                                                variant="outlined"
+                                                fullWidth
+                                                size="small"
+                                                multiline
+                                                displayClassName="p-2 rounded-sm cursor-pointer"
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+
+                                <div className='flex items-center'>
+                                    <label className='w-40'>Start Date</label>
+                                    <Field name="description">
+                                        {({ field }: any) => (
+                                            <EditableTextField
+                                                {...field}
+                                                placeholder="None"
+                                                variant="outlined"
+                                                fullWidth
+                                                size="small"
+                                                multiline
+                                                displayClassName="p-2 rounded-sm cursor-pointer"
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+
+                                <div className='flex items-center'>
+                                    <label className='w-40'>Due Date</label>
+                                    <Field name="description">
+                                        {({ field }: any) => (
+                                            <EditableTextField
+                                                {...field}
+                                                placeholder="None"
+                                                variant="outlined"
+                                                fullWidth
+                                                size="small"
+                                                multiline
+                                                displayClassName="p-2 rounded-sm cursor-pointer"
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+
+                                <div className='flex items-center'>
+                                    <label className='w-40'>Reporter</label>
+                                    <Field name="description">
+                                        {({ field }: any) => (
+                                            <EditableTextField
+                                                {...field}
+                                                placeholder="None"
+                                                variant="outlined"
+                                                fullWidth
+                                                size="small"
+                                                multiline
+                                                displayClassName="p-2 rounded-sm cursor-pointer"
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+
+                            </div>}
+                        </div>
+                    </div>
+                </Form>
+           
+        // </Formik>
+    );
+};
+
+export default TaskForm;

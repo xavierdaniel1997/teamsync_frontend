@@ -18,6 +18,7 @@ import {
 } from "../redux/workspaceSlice";
 import { getuserDetilasApi } from "../services/profileDetilasService";
 import { handleWorkspaceSelection } from "../utils/workspaceUtils";
+import { setSelectProjectId } from "../redux/projectSlice";
 
 export const useAuthMutations = () => {
   const queryClient = useQueryClient();
@@ -58,9 +59,9 @@ export const useAuthMutations = () => {
 
   const createProfile = useMutation({
     mutationFn: (data: CreateProfileData) => authService.createProfile(data),
-    onSuccess: (response) => {
-      const { user, accessToken } = response.data;
-      dispatch(setCredentials({ user, accessToken }));
+    onSuccess: async (response) => {
+      const { userDetial, accessToken } = response.data;
+      dispatch(setCredentials({ user: userDetial, accessToken }));
       const inviteToken = sessionStorage.getItem("inviteToken");
       if (inviteToken) {
         navigate(`/invite/accept?token=${inviteToken}`);
@@ -110,17 +111,6 @@ export const useAuthMutations = () => {
         return;
       }
       try {
-        // const userWorkSpace = await getuserDetilasApi();
-        // const invitedWorkspace = userWorkSpace?.data?.data?.invitedWorkspace;
-        // const myworkspace = userWorkSpace?.data?.data?.workspaceOwn;
-        // if (myworkspace) {
-        //   dispatch(setSelectWorkspaceId(myworkspace._id));
-        //   dispatch(setSelectWorkspace(myworkspace));
-        // } else if (invitedWorkspace.length > 0) {
-        //   dispatch(setSelectWorkspaceId(invitedWorkspace[0]._id));
-        //   dispatch(setSelectWorkspace(invitedWorkspace[0]));
-        // }
-        // navigate(myworkspace || invitedWorkspace.length > 0 ? "/project" : "/create-work-space")
         await handleWorkspaceSelection(dispatch, navigate);
       } catch (error) {
         navigate("/create-work-space");
@@ -160,6 +150,7 @@ export const useAuthMutations = () => {
       dispatch(logout());
       dispatch(setSelectWorkspaceId(null));
       dispatch(setSelectWorkspace(null));
+      dispatch(setSelectProjectId(null))
       console.log("logout successfully", res);
     },
     onError: (error) => {

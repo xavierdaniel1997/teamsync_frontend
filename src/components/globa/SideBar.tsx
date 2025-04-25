@@ -11,8 +11,13 @@ import {
   FiAlertCircle
 } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const SideBar = () => {
+
+  const currentProject = useSelector((state: RootState) => state.project.selectedProject)
+  console.log("from the side bar current project ", currentProject)
   return (
     <aside className="fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-[#252B2B] text-gray-300 flex flex-col">
       {/* Project Header */}

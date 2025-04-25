@@ -10,6 +10,9 @@ import { projectValidationSchema } from './projectValidationSchema';
 import { useProject } from '../../../hooks/useProject';
 import { useWorkSpaceMutation } from '../../../hooks/useWorkSpace';
 import { Tailspin } from 'ldrs/react'
+import { handleWorkspaceSelection } from '../../../utils/workspaceUtils';
+import { useDispatch } from 'react-redux';
+import { generateUniqueId } from '../../../utils/generateId';
 
 
 
@@ -17,6 +20,7 @@ const AddProjectForm: React.FC = () => {
   const { useCreateProjectWithTeam } = useProject()
   const { useGetWorkSpace } = useWorkSpaceMutation();
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const { data: workspace } = useGetWorkSpace;
 
@@ -55,9 +59,10 @@ const AddProjectForm: React.FC = () => {
         console.log("check the value workspaceId", values.workspaceId)
       }
       useCreateProjectWithTeam.mutate(values, {
-        onSuccess: () => {
+        onSuccess: async () => {
           resetForm()
           navigate("/project")
+          // await handleWorkspaceSelection(dispatch, navigate);
         }
       })
     }

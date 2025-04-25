@@ -27,7 +27,7 @@ const UserLayout: React.FC = () => {
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: 'Summary', path: '/project' },
     { icon: <FiLayers />, text: 'Backlog', path: '/project/backlog' },
-    { icon: <FiCalendar />, text: 'Board', path: '/board' },
+    { icon: <FiCalendar />, text: 'Board', path: '/project/kanban' },
     { icon: <FiBell />, text: 'Notification', path: '/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Chat', path: '/chats' },
     { icon: <FiEdit />, text: 'Teams & Members', path: '/project/team-members' },
@@ -56,7 +56,7 @@ const UserLayout: React.FC = () => {
         </div>
 
         <div
-          className={`flex-1 transition-all duration-300 bg-[#202020] ${
+          className={`flex-1 transition-all duration-300 bg-[#202020] text-gray-300 ${
             isSidebarOpen ? 'ml-64' : 'ml-16'
           }  mt-16`}
         >

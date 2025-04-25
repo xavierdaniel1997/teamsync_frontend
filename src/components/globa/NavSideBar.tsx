@@ -2,6 +2,7 @@ import React, { JSX } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 interface NavItem {
   icon: JSX.Element;
@@ -18,6 +19,8 @@ interface NavSideBarProps {
 
 const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems, isAdmin }) => {
   const location = useLocation();
+  const currentProject = useSelector((state: RootState) => state.project.selectedProject)
+    console.log("from the side bar current project ", currentProject)
 
   return (
     <aside
@@ -25,12 +28,12 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
         isOpen ? 'w-64' : 'w-16'
       } bg-[#191919] text-gray-300 flex flex-col transition-all duration-300 relative`}
     >
-      {!isAdmin && isOpen  && (
+      {!isAdmin && isOpen && currentProject && (
         <div className="flex items-center p-4 border-b border-[#2E2E2E]">
           <div className="w-8 h-8 bg-gray-500 rounded"></div>
           <div className="ml-3">
-            <span className="text-sm font-medium text-white">My Scrum Project</span>
-            <span className="text-xs text-gray-500 block">Software project</span>
+            <span className="text-sm font-medium text-white">{currentProject?.name}</span>
+            <span className="text-xs text-gray-500 block">{currentProject?.description}</span>
           </div>
         </div>
       )}

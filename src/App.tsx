@@ -31,6 +31,7 @@ import WorkSpaceSetting from "./pages/user/WorkSpace/WorkSpaceSetting";
 import UserDetials from "./pages/admin/UserManagment/UserDetials";
 import UserSettings from "./pages/user/UserSettings/UserSettings";
 import ProjectSetting from "./pages/user/Project/ProjectSetting";
+import Kanban from "./pages/user/Kanban/Kanban";
 
 
 
@@ -66,6 +67,7 @@ const App: React.FC = () => {
           <Route path="/project" element={<UserLayout />} >
             <Route index element={<Dashboard />} />
             <Route path="backlog" element={<Backlog />} />
+            <Route path="kanban" element={<Kanban/>} />
             <Route path="team-members" element={<TeamMembers/>} />
             <Route path="project-setting" element={<ProjectSetting/>} />
             <Route path="settings" element={<UserSettings/>}/>

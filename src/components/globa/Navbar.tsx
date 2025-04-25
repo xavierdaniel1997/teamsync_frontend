@@ -7,6 +7,7 @@ import UserDropdownList from "./UserDropdownList";
 import ProjectDropdownList from "../user/ProjectDropdownList";
 import { Link } from "react-router-dom";
 import { getInitials, getRandomColor } from "../../utils/userHelpers";
+import UserAvatar from "./UserAvatar";
 
 interface NavbarProps {
   isAdmin: boolean;
@@ -14,7 +15,7 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
   const user = useSelector((state: RootState) => state.auth.user);
-  console.log("User details from the navbar", user);
+  // console.log("User details from the navbar", user);
 
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isProjectDropdownOpen, setProjectDropdownOpen] = useState(false);
@@ -75,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
         {/* Avatar (Click to open dropdown) */}
         <button onClick={toggleDropdown} className="relative flex items-center  focus:outline-none">
-          {user && user.fullName ? (
+          {/* {user && user.fullName ? (
             user.avatar ? (
               <img
                 src={user.avatar}
@@ -96,7 +97,8 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
             >
               ?
             </div>
-          )}
+          )} */}
+          <UserAvatar user={user || undefined} getRandomColor={getRandomColor} getInitials={getInitials} />
         </button>
 
         {/* Dropdown Component */}

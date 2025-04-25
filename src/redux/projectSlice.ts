@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IProject } from "../types/project";
 
 interface Project {
     _id: string;
@@ -12,7 +13,7 @@ interface Project {
 }
 
 interface ProjectState {
-    selectedProject: Project | null;
+    selectedProject: IProject | null;
     selectedProjectId: string | null;
     allProjects: Project[];
 }
@@ -28,10 +29,10 @@ const projectSlice = createSlice({
     name: "project",
     initialState,
     reducers: {
-        setSelectProject: (state, action: PayloadAction<Project>) => {
+        setSelectProject: (state, action: PayloadAction<IProject | null>) => {
             state.selectedProject = action.payload;
         },
-        setSelectProjectId: (state, action: PayloadAction<string>) => {
+        setSelectProjectId: (state, action: PayloadAction<string | null>) => {
             state.selectedProjectId = action.payload;
         },
         setAllProjects: (state, action: PayloadAction<Project[]>) => {

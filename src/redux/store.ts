@@ -17,13 +17,20 @@ const workspacePersistConfig = {
     whitelist: ['selectWorkspaceId', 'selectWorkspace']
   };
 
+const projectPersistConfig = {
+    key: 'project',
+    storage,
+    whitelist: ['selectedProject', 'selectedProjectId']
+}
+
 const persistedReducer = persistReducer(persistConfig, authReducer);
 const workspacePersistedReducer =  persistReducer(workspacePersistConfig, workspaceReducer)
+const projectPersistedReducer = persistReducer(projectPersistConfig, projectReducer)
 const store = configureStore({
     reducer: {
         auth: persistedReducer,
         workspace: workspacePersistedReducer,
-        project: projectReducer
+        project: projectPersistedReducer
     },
     middleware: (getDefaultMiddleware) => 
         getDefaultMiddleware({

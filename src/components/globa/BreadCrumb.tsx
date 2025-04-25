@@ -1,18 +1,22 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { ImEnlarge2 } from "react-icons/im";
+import { BsThreeDots } from "react-icons/bs";
 
 interface BreadCrumbProps {
   pageName: string;
   buttonText?: string;
   onButtonClick?: () => void;
   ButtonIcon?: any;
+  isBackLog?: boolean;
 }
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({
   pageName,
   buttonText,
   onButtonClick,
-  ButtonIcon
+  ButtonIcon,
+  isBackLog
 }) => {
   const location = useLocation();
   const paths = location.pathname.split("/").filter(Boolean);
@@ -44,6 +48,14 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
           {ButtonIcon && <ButtonIcon size={20} className="ml-2" />}
         </button>
       )}
+      {isBackLog && <div className="flex gap-3">
+        <button className="text-gray-200">
+          <ImEnlarge2 size={15}/>
+        </button>
+        <button className="text-gray-200 bg-gray-600 p-1 rounded-xs">
+          <BsThreeDots size={16}/>
+        </button>
+      </div>}
     </div>
   );
 };

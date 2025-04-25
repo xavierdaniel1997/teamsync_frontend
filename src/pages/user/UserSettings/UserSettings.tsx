@@ -135,15 +135,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string)
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            // onChange={(e) => {
-                            //     const file = e.target.files?.[0];
-                            //     if (file) {
-                            //         console.log('Avatar selected:', file.name, file.type, file.size);
-                            //         formik.setFieldValue('avatar', file);
-                            //     } else {
-                            //         console.log('No avatar selected');
-                            //     }
-                            // }}
                             onChange={(e) => handleFileChange(e, 'avatar')}
                         />
                         <label

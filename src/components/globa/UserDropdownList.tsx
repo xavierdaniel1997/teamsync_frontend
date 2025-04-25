@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { useAuthMutations } from '../../hooks/useAuth';
 import { getInitials, getRandomColor } from '../../utils/userHelpers';
+import UserAvatar from './UserAvatar';
 
 interface UserDropdownProps {
   isOpen: boolean;
@@ -38,11 +39,11 @@ const UserDropdownList: React.FC<UserDropdownProps> = ({ isOpen, setIsOpen }) =>
   return (
     <div
       ref={dropdownRef}
-      className="absolute top-full right-0 mt-4 w-52 bg-[#1E1E1E] border border-[#5A6060] rounded-sm shadow-lg"
+      className="absolute top-full right-0 mt-4 w-52 bg-[#1E1E1E] border border-[#2C2C2C] rounded-xs shadow-lg"
     >
       <div className="p-4 flex gap-2 border-b border-[#5A6060] items-center">
         <div className="flex-shrink-0">
-          {user.avatar ? (
+          {/* {user.avatar ? (
             <img
               src={user.avatar}
               alt="User avatar"
@@ -55,7 +56,8 @@ const UserDropdownList: React.FC<UserDropdownProps> = ({ isOpen, setIsOpen }) =>
             >
               {getInitials(user.fullName, user.secondName || '')}
             </div>
-          )}
+          )} */}
+          <UserAvatar user={user || undefined} getRandomColor={getRandomColor} getInitials={getInitials} />
         </div>
         <div className="min-w-0">
           <p className="text-sm text-white truncate">{user.fullName}</p>

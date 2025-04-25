@@ -88,14 +88,6 @@ const WorkSpace:React.FC = () => {
               something your team will recognize.
             </p>
           )}
-{/* 
-          {useCreateWorkSpace.isError && (
-            <p className="text-xs text-red-500 mt-2">
-              {useCreateWorkSpace.error?.message ||
-                "Failed to create workspace"}
-            </p>
-          )} */}
-
           <button
             type="submit"
             disabled={formik.isSubmitting || useCreateWorkSpace.isPending}
