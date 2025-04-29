@@ -20,7 +20,7 @@ interface NavSideBarProps {
 const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems, isAdmin }) => {
   const location = useLocation();
   const currentProject = useSelector((state: RootState) => state.project.selectedProject)
-    console.log("from the side bar current project ", currentProject)
+    // console.log("from the side bar current project ", currentProject)
 
   return (
     <aside

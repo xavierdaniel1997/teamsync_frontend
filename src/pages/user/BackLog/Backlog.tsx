@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import BreadCrumb from '../../../components/globa/BreadCrumb';
 import BackLogTopBar from '../../../components/user/BackLogTopBar';
 import EpicSection from '../../../components/user/EpicSection';
@@ -7,18 +7,33 @@ import BacklogSection from '../../../components/user/BacklogSection';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { useProject } from '../../../hooks/useProject';
+import { ISprint } from '../../../types/sprint';
 
 const Backlog: React.FC = () => {
   const [showEpic, setShowEpic] = useState(true);
-  const { useGetEpic } = useProject();
+  const { useGetEpic, useGetSprints, useGetBacklogTasks } = useProject();
+  const [selectedEpicId, setSelectedEpicId] = useState<string | null>(null);
 
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
-  const {data: epicData, isLoading} = useGetEpic(projectId || "")
+  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
+  const { data: epicData, isLoading } = useGetEpic(projectId || "")
+  const {data: backlogData, isLoading: backlogLoading} = useGetBacklogTasks(projectId || "")
+  const { data: sprintData, isLoading: sprintLoading } = useGetSprints(projectId || "")
   const epicTitle = epicData?.data
 
+  useEffect(() => {
+    if (epicData?.data && epicData.data.length > 0 && !selectedEpicId) {
+      const firstEpicId = epicData.data[0]?._id;
+      if (firstEpicId) {
+        setSelectedEpicId(firstEpicId);
+      }
+    }
+  }, [epicData, selectedEpicId]);
+
+  console.log("backlog details  form the backlogaaaaaaaaaaaaaaaa", backlogData)
 
   return (
-    <div className="p-5 bg-[#191919] min-h-screen text-white">
+    <div className="p-5 bg-[#191919] min-h-screen">
       <BreadCrumb
         pageName="Backlog"
         buttonText="Add Member"
@@ -26,10 +41,15 @@ const Backlog: React.FC = () => {
       />
       <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} />
       <div className="flex p-5">
-        {showEpic && <EpicSection isLoading={isLoading} showEpic={showEpic} setShowEpic={setShowEpic} epicHeading={epicTitle}/>}
+        {showEpic && <EpicSection isLoading={isLoading} showEpic={showEpic} setShowEpic={setShowEpic} epicHeading={epicTitle}
+          selectedEpicId={selectedEpicId}
+          setSelectedEpicId={setSelectedEpicId}
+        />}
         <div className="flex-1 ml-4 space-y-4">
-          <SprintSection />
-          <BacklogSection />
+          {sprintData?.data?.map((sprint: ISprint, index: number) => (
+            <SprintSection key={sprint._id} sprintName={sprint.name} sprintOrder={index} sprintId={sprint._id} workspaceId={workspaceId || ""} projectId={projectId || ""} epicId={selectedEpicId || ""}/>
+          ))}
+          <BacklogSection epicId={selectedEpicId || ""} backlogTasks={backlogData?.data} backlogLoading={backlogLoading}/>
         </div>
       </div>
     </div>

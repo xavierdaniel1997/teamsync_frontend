@@ -3,6 +3,7 @@
 export enum TaskType {
     EPIC = "EPIC",
     STORY = "STORY",
+    TASK = "TASK",
     SUBTASK = "SUBTASK",
     BUG = "BUG",
   }
@@ -45,6 +46,9 @@ export enum TaskType {
     sprint?: string;
     storyPoints?: number;
     files?: IFile;
+    startDate: string;
+    dueDate: string;
+    taskStatus?: string;
     createdAt: string;
     updatedAt: string;
   }

@@ -9,9 +9,10 @@ interface TaskModalProps {
   epicId: string;
   epicTitle: string;
   taskCount: number;
+  members: [];
 }
 
-const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskCount, epicId }) => {
+const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskCount, epicId, members}) => {
   return (
     <Dialog
       open={isOpen}
@@ -22,7 +23,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
         '& .MuiDialog-paper': {
           backgroundColor: '#191919',
           color: 'white',
-        //   padding: 1,
+          pt: 1,
+          pb: 1,
           borderRadius: 1,
           overflow: 'hidden',
           maxHeight: '80vh'
@@ -44,7 +46,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
               <IoClose size={20} />
             </button>
           </div>
-          <TaskForm epicId={epicId} epicTitle={epicTitle} onClose={onClose} />
+          <TaskForm epicId={epicId} epicTitle={epicTitle} onClose={onClose} members={members}/>
         </div>
       </DialogContent>
     </Dialog>

@@ -7,14 +7,16 @@ interface EditableTextFieldProps extends Omit<TextFieldProps, 'value' | 'onChang
   displayComponent?: React.ReactNode;
   displayClassName?: string;
   showButtons?: boolean;
+  onConfirm?: (value: string) => void;
+  onCancel?: () => void; 
 }
 
 const commonInputStyles = {
   '& .MuiOutlinedInput-root': {
+    width: '100%',
     backgroundColor: '#222',
     color: '#DDD',
     '& fieldset': { borderColor: '#444' },
-    // CHANGED: Added hover effect for TextField
     '&:hover': {
       backgroundColor: '#222',
       '& fieldset': { borderColor: '#666' },
@@ -37,24 +39,50 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
   showButtons,
   displayComponent,
   displayClassName = '',
+  onConfirm,
+  onCancel,
   ...textFieldProps
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [tempValue, setTempValue] = useState(value); 
 
-  const handleStartEditing = () => setIsEditing(true);
+  const handleStartEditing = () => {
+    setTempValue(value);
+    setIsEditing(true);
+  };
 
   const handleBlur = () => {
-    setIsEditing(false);
+    if (!showButtons) {
+      setIsEditing(false);
+      onConfirm?.(tempValue); 
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && !textFieldProps.multiline) {
       setIsEditing(false);
+      onConfirm?.(tempValue); 
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTempValue(e.target.value); 
+    onChange(e); 
+  };
+
+  const handleConfirm = () => {
+    setIsEditing(false);
+    onConfirm?.(tempValue); 
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setTempValue(value); 
+    onCancel?.(); 
+  };
+
   const baseDisplayStyles = {
-    whiteSpace: 'nowrap',
+    whiteSpace: textFieldProps.multiline ? 'pre-wrap' : 'nowrap', 
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '100%',
@@ -64,11 +92,11 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
   const displayClasses = `${displayClassName} hover:bg-[#0D0F11] hover:text-white transition-colors duration-150`;
 
   return isEditing ? (
-    <>
+    <div className="flex flex-col gap-2 w-full">
       <TextField
         {...textFieldProps}
-        value={value}
-        onChange={onChange}
+        value={tempValue}
+        onChange={handleChange}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
         sx={commonInputStyles}
@@ -76,11 +104,23 @@ const EditableTextField: React.FC<EditableTextFieldProps> = ({
       />
       {showButtons && (
         <div className="flex gap-2 items-center">
-          <button className="bg-blue-400 px-2 py-0.5 rounded-xs cursor-pointer">Create</button>
-          <button className="bg-[#43414197] px-2 py-0.5 rounded-xs cursor-pointer">Cancel</button>
+          <button
+            type="button"
+            onClick={handleConfirm}
+            className="bg-blue-400 px-2 py-0.5 rounded-xs cursor-pointer text-white"
+          >
+            Create
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="bg-[#43414197] px-2 py-0.5 rounded-xs cursor-pointer text-white"
+          >
+            Cancel
+          </button>
         </div>
       )}
-    </>
+    </div>
   ) : displayComponent ? (
     <div onClick={handleStartEditing} className={displayClasses}>
       {displayComponent}

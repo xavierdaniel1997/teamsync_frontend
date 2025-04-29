@@ -10,9 +10,11 @@ interface EpicBlockProps {
   title: string;
   statusColor?: string; 
   taskCount: number;
+  isSelected: boolean;
+  onSelect: () => void;
 }
 
-const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#56c661', taskCount}) => {
+const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#56c661', taskCount, isSelected, onSelect}) => {
 
   const [openEpicDetails, setOpenEpicDetails] = useState<boolean>(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState<boolean>(false);
@@ -23,9 +25,10 @@ const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#56c
   };
 
   // console.log("project details from the EpicBlock", projectDetails)
+ 
 
   return (
-    <div className="flex flex-col gap-3 bg-[#1a1a1a] text-white px-2 py-2 rounded-md hover:bg-[#2a2a2a] transition-colors cursor-pointer">
+    <div className="flex flex-col gap-3 bg-[#1a1a1a] text-white px-2 py-2 rounded-md hover:bg-[#2a2a2a] transition-colors cursor-pointer" onClick={onSelect}>
       <div className="flex items-center gap-2" onClick={() => setOpenEpicDetails(!openEpicDetails)}>
         <button >
         {/* <FiChevronRight size={16} className="text-gray-300" /> */}
@@ -43,7 +46,7 @@ const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#56c
         <button className='bg-[#1D2125] p-0.5 text-gray-400 rounded-sm cursor-pointer'
         onClick={handleViewDetails}>View Details</button>
         </div>}
-        <TaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} epicTitle={title} taskCount={taskCount} epicId={epicId}/>
+        <TaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} epicTitle={title} taskCount={taskCount} epicId={epicId} members={projectDetails?.members as [] || []}/>
     </div>
   );
 };

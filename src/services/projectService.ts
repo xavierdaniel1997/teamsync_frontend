@@ -1,5 +1,6 @@
 import api from "../api/axiosInstance"
 import { ProjectTeamData } from "../types/projectTeamData";
+import { CreateSprintData } from "../types/sprint";
 import { ITask } from "../types/task";
 
 export const createProjectWithTeamApi = async (data: ProjectTeamData) => {
@@ -37,5 +38,28 @@ export const getEpicsByProjectApi = async (projectId: string) => {
 
 export const updateTaskApi = async (taskId: string, task: Partial<ITask>) => {
     const response = await api.put(`project/update-task/${taskId}`, task)
+    return response.data;
+}
+
+export const getBacklogTasksApi = async (projectId: string) => {
+    const response = await api.get(`project/backlog-tasks/${projectId}`)
+    return response.data;
+}
+
+
+// sprint related apis
+
+export const createSprintApi = async (data: CreateSprintData) => {
+    const response = await api.post("project/create-sprint", data)
+    return response.data;
+} 
+
+export const getSprintApi = async (projectId: string) => {
+    const response = await api.get(`project/sprints/${projectId}`)
+    return response.data
+}
+
+export const deleteSprintApi = async (sprintId: string) => {
+    const response = await api.delete(`project/delete-sprint/${sprintId}`)
     return response.data;
 }

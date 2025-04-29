@@ -2,24 +2,33 @@ import React, { useState, useRef, useEffect } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import { BiBug } from 'react-icons/bi';
 import { BsBookmarkCheck } from 'react-icons/bs';
+import { RiTaskLine } from "react-icons/ri";
+import { useProject } from '../../hooks/useProject';
+import { TaskType } from '../../types/task';
+
 
 interface TaskInputProps {
   onCancel: () => void;
+  sprintId?: string;
+  workspaceId: string;
+  projectId: string;
+  epicId?: string;
 }
 
 const issueTypes = [
-    { id: 'story', label: 'Story', icon: <BsBookmarkCheck className="text-green-400" /> },
-  { id: 'bug', label: 'Bug', icon: <BiBug className="text-red-400" /> },
+    { id: TaskType.STORY, label: 'Story', icon: <BsBookmarkCheck className="text-green-400" /> },
+    { id: TaskType.TASK, label: 'Task', icon: <RiTaskLine className="text-blue-400" /> },
+  { id: TaskType.BUG, label: 'Bug', icon: <BiBug className="text-red-400" /> },
 ];
 
-const TaskInput: React.FC<TaskInputProps> = ({ onCancel }) => {
+const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, workspaceId, projectId, epicId }) => {
   const [title, setTitle] = useState('');
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(issueTypes[0]);
+  const { useCreateTask } = useProject();
 
   const inputRef = useRef<HTMLDivElement>(null);
 
-  // Detect outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
@@ -38,12 +47,27 @@ const TaskInput: React.FC<TaskInputProps> = ({ onCancel }) => {
       console.log('Creating issue:', { title, type: selectedType.id });
       setTitle('');
       onCancel();
+      handleSubmit()
     }
 
     if (e.key === 'Escape') {
       onCancel();
     }
   };
+
+  const handleSubmit = () => {
+    if (!title.trim()|| !projectId || !workspaceId) return;
+    useCreateTask.mutate({
+      title: title,
+      project: projectId,
+      workspace: workspaceId,
+      epic: epicId,
+      sprint: sprintId,
+      type: selectedType.id,
+      parent: epicId,
+    })
+
+  }
 
   return (
     <div ref={inputRef} className="relative p-2 rounded-sm border border-[#4C9AFF]">

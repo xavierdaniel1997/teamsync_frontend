@@ -10,12 +10,16 @@ import EpicBlockShimmer from './EpicBlockShimmer';
 
 interface Props {
   isLoading?: boolean;
-  epicHeading?: { _id: string; title: string; taskKey?: number, }[];
+  epicHeading?: { _id: string; title: string; taskKey?: number }[];
   showEpic: boolean;
   setShowEpic: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedEpicId: string | null;
+  setSelectedEpicId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHeading }) => {
+const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHeading, selectedEpicId,
+  setSelectedEpicId, }) => {
+
   const { useCreateTask } = useProject();
   const [isCreating, setIsCreating] = useState(false);
   const [showEpicBlock, setShowEpicBlock] = useState(true)
@@ -36,7 +40,7 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
     setIsCreating(false);
   };
 
-  console.log("poject Id details form the epicSection..........", projectId)
+  // console.log("poject Id details form the epicSection..........", epicHeading) 
 
   return (
     <div className="w-64 bg-[#202020] p-4 rounded shadow h-96 flex flex-col">
@@ -60,7 +64,10 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
         ) : (epicHeading ?? []).length > 0 ? (
           <div className="flex flex-col gap-1">
             {epicHeading?.map((epic) => (
-              <EpicBlock key={epic._id} title={epic.title} epicId={epic._id} taskCount={epic.taskKey ?? 0}/>
+              <EpicBlock key={epic._id} title={epic.title} epicId={epic._id} taskCount={epic.taskKey ?? 0} 
+              isSelected={selectedEpicId === epic._id} 
+                onSelect={() => setSelectedEpicId(epic._id)}
+              />
             ))}
           </div>
         ) : (

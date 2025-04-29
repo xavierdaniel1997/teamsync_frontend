@@ -31,7 +31,7 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
   
   const { data: selectedProject, isLoading: isProjectLoading, error: projectError } = useGetProjectById(selectedProjectId);
   // console.log("selected project details data projectData dropdown from redux", projectId);
-  console.log("selectedProject data", selectedProject)
+  // console.log("selectedProject data", selectedProject)
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
