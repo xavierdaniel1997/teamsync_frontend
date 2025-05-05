@@ -39,8 +39,7 @@ const UserSettings: React.FC = () => {
         },
     });
 
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-
+const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
   const file = e.target.files?.[0];
   if (file) {
@@ -57,11 +56,10 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string)
 };
 
     useEffect(() => {
-        // console.log('Avatar effect triggered. Formik avatar:', formik.values.avatar, 'User avatar:', user?.avatar);
+  
         if (formik.values.avatar instanceof File) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                // console.log('Avatar FileReader result:', reader.result);
                 setAvatarPreview(reader.result as string);
             };
             reader.readAsDataURL(formik.values.avatar);
@@ -71,11 +69,9 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string)
     }, [formik.values.avatar, user?.avatar]);
 
     useEffect(() => {
-        // console.log('Cover effect triggered. Formik cover:', formik.values.coverPhoto, 'User cover:', user?.coverPhoto);
         if (formik.values.coverPhoto instanceof File) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                // console.log('Cover FileReader result:', reader.result);
                 setCoverPreview(reader.result as string);
             };
             reader.readAsDataURL(formik.values.coverPhoto);
@@ -102,14 +98,6 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string)
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        // onChange={(e) => {
-                        //     const file = e.target.files?.[0];
-                        //     if (file) {
-                        //         formik.setFieldValue('coverPhoto', file);
-                        //     } else {
-                        //         console.log('No cover photo selected');
-                        //     }
-                        // }}
                         onChange={(e) => handleFileChange(e, 'coverPhoto')}
                     />
                     <label htmlFor="cover-upload" className="cursor-pointer">

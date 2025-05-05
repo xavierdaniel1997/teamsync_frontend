@@ -20,7 +20,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ user, getRandomColor, getInitia
     if (user.avatar) {
       return (
         <img
-          src={user.avatar}
+          src={user?.avatar}
           alt="User avatar"
           className={`w-${width} h-${height} object-cover rounded-full`}
         />

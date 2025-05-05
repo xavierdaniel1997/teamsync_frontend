@@ -66,8 +66,9 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
       ref={dropdownRef}
       className="absolute top-full mt-[22px] w-52 bg-[#1E1E1E] border border-[#2C2C2C] rounded-xs shadow-lg"
     >
+      {/* className="dialog-scrollbar" */}
       {/* Project List */}
-      <div className="max-h-80 overflow-y-auto">
+      <div className="max-h-80 overflow-y-auto custom-scrollbar">
         {(projectData?.data ?? []).length > 0 ? (
           projectData?.data.map((project: IProject) => (
             <button

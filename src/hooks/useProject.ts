@@ -1,11 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, getAllProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, updateTaskApi } from "../services/projectService"
+import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, getAllProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
-import { ProjectResponse } from "../types/project"
+import { IProject, ProjectResponse } from "../types/project"
 import { ITask, TaskResponse } from "../types/task"
+import { setSelectProject } from "../redux/projectSlice"
+import { useDispatch } from "react-redux"
 
 export const useProject = () => {
   const queryClient = useQueryClient()
+  const dispatch = useDispatch()
 
   const useCreateProjectWithTeam = useMutation({
     mutationFn: createProjectWithTeamApi,
@@ -18,6 +21,22 @@ export const useProject = () => {
       toast.error(error?.response?.data?.message)
     }
   })
+
+  const useUpdateProject = useMutation({
+    mutationFn: ({ projectId, workspaceId, data }: { projectId: string; workspaceId: string; data: FormData }) =>
+      updateProjectApi(projectId, workspaceId, data),
+    onSuccess: (response) => {
+      console.log("Project updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projectById"] });
+      dispatch(setSelectProject(response?.data))
+      toast.success("Project updated successfully");
+    },
+    onError: (error: any) => {
+      console.log("Failed to update the project", error);
+      toast.error(error?.response?.data?.message || "Failed to update project");
+    },
+  });
 
 
   const useGetProjects = (workspaceId?: string) => {
@@ -42,8 +61,8 @@ export const useProject = () => {
 
   const useCreateTask = useMutation({
     mutationFn: createTaskApi,
-    onSuccess: (response, variables) => {
-      console.log("task created successfully variables", variables)
+    onSuccess: (response) => {
+      console.log("task created successfully variables", response)
       queryClient.invalidateQueries({ queryKey: ["project"] })
       queryClient.invalidateQueries({ queryKey: ["task"] });
     },
@@ -119,5 +138,5 @@ export const useProject = () => {
   })
 
 
-  return { useCreateProjectWithTeam, useGetProjects, useGetProjectById, useCreateTask, useGetEpic, useUpdateTask, useCreateSprint, useGetSprints, useDeleteSprint, useGetBacklogTasks}
+  return { useCreateProjectWithTeam, useUpdateProject, useGetProjects, useGetProjectById, useCreateTask, useGetEpic, useUpdateTask, useCreateSprint, useGetSprints, useDeleteSprint, useGetBacklogTasks}
 }

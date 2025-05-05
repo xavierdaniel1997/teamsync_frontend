@@ -21,19 +21,12 @@ const SubscriptionPricing = () => {
   const { data: workspace } = useGetWorkSpace;
   const { useCreateSubscription, useGetMySubscription } = useSubscriptionMutation()
   const { data: subscriptionPlan, isLoading: isSubscriptionLoading } = useGetMySubscription
-  console.log("mySubscription", subscriptionPlan)
+  // console.log("mySubscription", subscriptionPlan)
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if(!isLoading && plans.data){
-  //     const freePlan = plans.data.find((plan: any) => plan.price === 0)
-  //     if(freePlan){
-  //       setSelectedPlan(freePlan._id)
-  //     }
-  //   }
-  // }, [plans, isLoading])
+
 
 
   useEffect(() => {
@@ -54,9 +47,10 @@ const SubscriptionPricing = () => {
   const stripePromise = loadStripe("pk_test_51R62P9ACrGKndsnVqBzsVUyikpGpj89R8bJaNzajrheVaaiVhuUcGA1MHvPJoOxfM6M2DnoJesTxGcWTVWwxZmZo00hRWbyXoV");
 
 
-  console.log("workspaceeeeeeeeeeeeeeeeeeeeeee", workspace)
+  // console.log("workspaceeeeeeeeeeeeeeeeeeeeeee", workspace)
 
   const handleSubscription = async () => {
+    console.log("click subscription")
     if (!selectedPlan || !workspace?.data?.data?._id || !user?.email) return;
     // setIsSubmitting(true);
     const workspaceId = workspace?.data?.data?._id;

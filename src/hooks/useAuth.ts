@@ -18,7 +18,7 @@ import {
 } from "../redux/workspaceSlice";
 import { getuserDetilasApi } from "../services/profileDetilasService";
 import { handleWorkspaceSelection } from "../utils/workspaceUtils";
-import { setSelectProjectId } from "../redux/projectSlice";
+import { setSelectProject, setSelectProjectId } from "../redux/projectSlice";
 
 export const useAuthMutations = () => {
   const queryClient = useQueryClient();
@@ -151,6 +151,7 @@ export const useAuthMutations = () => {
       dispatch(setSelectWorkspaceId(null));
       dispatch(setSelectWorkspace(null));
       dispatch(setSelectProjectId(null))
+      dispatch(setSelectProject(null))
       console.log("logout successfully", res);
     },
     onError: (error) => {

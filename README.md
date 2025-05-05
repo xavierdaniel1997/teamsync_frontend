@@ -1,39 +1,32 @@
-import { FaUserCircle } from "react-icons/fa";
-import { PiDotsThreeBold } from "react-icons/pi";
-
-
-const TaskCard: React.FC = () => {
-  return (
-    <div className="flex items-center justify-between px-6 py-2 border-b border-[#2E2E2E] hover:bg-[#2a2a2a] transition-colors duration-150">
-
-      <div className="flex items-center gap-2 ">
-        <input
-          type="checkbox"
-          className="w-4 h-4 accent-blue-500 bg-gray-700 rounded border-gray-600"
-        />
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-400">{"keyName"}</span>
-          <span className="text-sm font-medium text-white">
-            {"title"}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-12">
-
-        <div className="rounded-full flex items-center justify-center text-white">
-          <div className="flex items-center gap-1">
-            <button>
-              <FaUserCircle size={24} />
-            </button>
-            <button className="p-1 hover:bg-gray-600 rounded">
-              <PiDotsThreeBold size={20} />
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default TaskCard;
+    <table className="">
+            <thead className=" border-b border-t border-[#333] text-center">
+              <tr className="text-left p-2">
+                <th className="p-2 font-medium text-gray-400">Full name</th>
+                <th className="p-2 font-medium text-gray-400">Display name</th>
+                <th className="p-2 font-medium text-gray-400">Account type</th>
+                <th className="p-2 font-medium text-gray-400">Joining date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {project?.members.map((member : any) => (
+                <tr className="border-b border-[#333]">
+                <td className="p-2">
+                  <div className="flex items-center">
+                    <div className="w-8 h-8 rounded-full bg-[#444] mr-3 overflow-hidden">
+                      <img src="/placeholder.svg?height=32&width=32" alt="User avatar" />
+                    </div>
+                    <span>{member.user.fullName} {member.user.secondName}</span>
+                  </div>
+                </td>
+                <td className="p-2 text-gray-300">danielcx532</td>
+                <td className="p-2">
+                  <div className="flex items-center">
+                    <span>Admin</span>
+                    <FiChevronDown className="ml-2 text-gray-400" />
+                  </div>
+                </td>
+                <td className="p-2 text-gray-300">April 12, 2025</td>
+              </tr>
+              ))}
+            </tbody>
+          </table>

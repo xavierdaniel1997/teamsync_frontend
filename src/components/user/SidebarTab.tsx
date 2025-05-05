@@ -13,7 +13,7 @@ interface SidebarTabProps {
 
 const SidebarTab: React.FC<SidebarTabProps> = ({ tabs, selectedTab, onSelect }) => {
   return (
-    <div className="w-64 bg-[#191919] text-white py-6 px-5">
+    <div className="w-72 bg-[#191919] text-white py-6 pl-5 pr-2">
       <h2 className="text-sm text-gray-400 font-medium mb-4">Project Settings</h2>
       <ul className="space-y-1">
         {tabs.map((tab) => (

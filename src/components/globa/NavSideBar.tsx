@@ -30,10 +30,11 @@ const NavSideBar: React.FC<NavSideBarProps> = ({ isOpen, toggleSidebar, navItems
     >
       {!isAdmin && isOpen && currentProject && (
         <div className="flex items-center p-4 border-b border-[#2E2E2E]">
-          <div className="w-8 h-8 bg-gray-500 rounded"></div>
+          {currentProject?.projectCoverImg ? <img className="w-8 h-8 rounded object-cover" src={currentProject?.projectCoverImg}/> : <div className="w-8 h-8 bg-gray-500 rounded"></div>}
+          
           <div className="ml-3">
             <span className="text-sm font-medium text-white">{currentProject?.name}</span>
-            <span className="text-xs text-gray-500 block">{currentProject?.description}</span>
+            <span className="text-xs text-gray-500 block">{currentProject?.title}</span>
           </div>
         </div>
       )}

@@ -14,7 +14,7 @@ interface EpicBlockProps {
   onSelect: () => void;
 }
 
-const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#56c661', taskCount, isSelected, onSelect}) => {
+const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#323232', taskCount, isSelected, onSelect}) => {
 
   const [openEpicDetails, setOpenEpicDetails] = useState<boolean>(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState<boolean>(false);

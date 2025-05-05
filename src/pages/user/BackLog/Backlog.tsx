@@ -30,17 +30,19 @@ const Backlog: React.FC = () => {
     }
   }, [epicData, selectedEpicId]);
 
-  console.log("backlog details  form the backlogaaaaaaaaaaaaaaaa", backlogData)
+  // console.log("backlog details  form the backlogaaaaaaaaaaaaaaaa", backlogData)
 
   return (
     <div className="p-5 bg-[#191919] min-h-screen">
+      <div className='m-5'>
       <BreadCrumb
         pageName="Backlog"
         buttonText="Add Member"
         isBackLog={true}
       />
+      </div>
       <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} />
-      <div className="flex p-5">
+      <div className="flex p-4">
         {showEpic && <EpicSection isLoading={isLoading} showEpic={showEpic} setShowEpic={setShowEpic} epicHeading={epicTitle}
           selectedEpicId={selectedEpicId}
           setSelectedEpicId={setSelectedEpicId}

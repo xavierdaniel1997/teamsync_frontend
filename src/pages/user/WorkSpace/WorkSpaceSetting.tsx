@@ -1,31 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+import {
+  IoAddOutline,
+  IoSettingsSharp,
+  IoStatsChart,
+  IoCalendar,
+  IoTime,
+} from "react-icons/io5";
+import { FaChevronDown } from "react-icons/fa6";
+import { FiUsers, FiPackage, FiPlus } from "react-icons/fi";
 import { useUserDetailsMutation } from "../../../hooks/useUserDetails";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../redux/store";
-import { setSelectWorkspace, setSelectWorkspaceId } from "../../../redux/workspaceSlice";
-import { setSelectProject, setSelectProjectId } from "../../../redux/projectSlice";
+import {
+  setSelectWorkspace,
+  setSelectWorkspaceId,
+} from "../../../redux/workspaceSlice";
+import {
+  setSelectProject,
+  setSelectProjectId,
+} from "../../../redux/projectSlice";
+import { useSubscriptionMutation } from "../../../hooks/useSubscription";
+import BreadCrumb from "../../../components/globa/BreadCrumb";
+import WorkspaceOverview from "./WorkspaceOverview";
+import WorkspaceSubscription from "./WorkspaceSubscription";
+import WorkspaceSettingForm from "./WorkspaceSettingForm";
+import { formatDate } from "../../../utils/formatDate";
 
 const WorkSpaceSetting: React.FC = () => {
   const { getUserDetials } = useUserDetailsMutation();
-  const { data: userDetails, isLoading } = getUserDetials
-  const dispatch = useDispatch<AppDispatch>()
-  const currendWorkspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
-  const currendWorkspace = useSelector((state: RootState) => state.workspace.selectWorkspace)
+  const { useGetMySubscription } = useSubscriptionMutation();
+  const { data: userDetails, isLoading } = getUserDetials;
+  const { data: subscriptionPlan } = useGetMySubscription;
+  const dispatch = useDispatch<AppDispatch>();
+  const currendWorkspaceId = useSelector(
+    (state: RootState) => state.workspace.selectWorkspaceId
+  );
+  const currendWorkspace = useSelector(
+    (state: RootState) => state.workspace.selectWorkspace
+  );
 
-  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("")
+  const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>("");
   const [selectedWorkspace, setSelectedWorkspace] = useState<any>(null);
-
+  const [activeTab, setActiveTab] = useState("overview");
+  const navigate = useNavigate();
 
   const ownedWorkspace = userDetails?.data?.workspaceOwn;
   const invitedWorkspaces = (userDetails?.data?.invitedWorkspace || []).filter(
     (workspace: any) => workspace._id !== ownedWorkspace?._id
   );
-
-  console.log("complete userDetails :", userDetails)
-  console.log("selectedWorkspace form the workspace settings selectedworkspace : ", selectedWorkspace)
-
 
   useEffect(() => {
     if (currendWorkspaceId && currendWorkspace) {
@@ -42,8 +66,13 @@ const WorkSpaceSetting: React.FC = () => {
       dispatch(setSelectWorkspaceId(invitedWorkspaces[0]._id));
       dispatch(setSelectWorkspace(invitedWorkspaces[0]));
     }
-  }, [currendWorkspaceId, currendWorkspace, ownedWorkspace, invitedWorkspaces, dispatch]);
-  
+  }, [
+    currendWorkspaceId,
+    currendWorkspace,
+    ownedWorkspace,
+    invitedWorkspaces,
+    dispatch,
+  ]);
 
   const handleWorkspaceChange = (workspaceId: string) => {
     setSelectedWorkspaceId(workspaceId);
@@ -56,101 +85,198 @@ const WorkSpaceSetting: React.FC = () => {
     setSelectedWorkspace(selected);
     dispatch(setSelectWorkspaceId(workspaceId));
     dispatch(setSelectWorkspace(selected));
-    dispatch(setSelectProject(null))
-    dispatch(setSelectProjectId(null))
+    dispatch(setSelectProject(null));
+    dispatch(setSelectProjectId(null));
   };
 
+  const getSubscriptionDetails = () => {
+    const plan = subscriptionPlan?.data?.plan || {};
+    return {
+      name: plan.name || "Free",
+      price: plan.price || 0,
+      status: subscriptionPlan?.data?.status || "INACTIVE",
+      expiresAt: subscriptionPlan?.data?.expiresAt
+        ? formatDate(subscriptionPlan.data.expiresAt)
+        : "N/A",
+      createdAt: subscriptionPlan?.data?.createdAt
+        ? formatDate(subscriptionPlan.data.createdAt)
+        : "N/A",
+    };
+  };
 
+  const subscription = getSubscriptionDetails();
+  const projectCount = selectedWorkspace?.projects?.length || 0;
+  const memberCount = selectedWorkspace?.members?.length || 0;
 
+  const myProjectCount = ownedWorkspace?.projects?.length || 0;
+  const myMemberCount = ownedWorkspace?.members?.length || 0;
 
+  const handleCreateWorkspace = () => {
+    navigate("/create-work-space");
+  };
 
-
+  const TabButton = ({
+    id,
+    icon,
+    label,
+  }: {
+    id: string;
+    icon: React.ReactNode;
+    label: string;
+  }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${activeTab === id
+          ? "bg-[#0052cc57] text-white"
+          : "text-gray-300 hover:bg-[#2A2A2A] hover:text-white"
+        }`}
+    >
+      {icon}
+      <span>{label}</span>
+    </button>
+  );
 
   return (
-    <div className="min-h-screen bg-[#1E1E1E] text-white p-6">
-      {/* Header with back button */}
-      <div className="mb-10">
+    <div className="min-h-screen bg-[#191919] text-white p-6">
+      <div className="mb-8">
         <Link
           to="/project"
-          className="flex items-center text-gray-400 hover:text-white"
+          className="flex items-center text-gray-400 hover:text-white transition-colors"
         >
           <FaArrowLeft className="mr-2" />
-          <span>Back to project</span>
+          <span>Back to Project</span>
         </Link>
       </div>
 
-      {/* Main content container */}
-      <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 justify-center border-b border-[#5A6060] py-6">
-        {/* Left side - Workspace Settings */}
+      <div className="mx-60">
         <div>
-          <h1 className="text-3xl font-medium mb-3">Workspace Settings</h1>
-          <p className="text-gray-400 mb-6">
-            Manage your workspaces and switch between them easily. Edit workspace
-            details anytime in settings.
-          </p>
+          <h1 className="mx-5 my-4 text-xl font-semibold text-gray-200">
+            Workspace Mangement
+          </h1>
 
-          {/* Workspace Selector */}
-          <div className="mb-4">
-            <label className="block mb-2 text-white">
-              Select Workspace
-            </label>
-            <select
-              className="w-full bg-[#2E3033] border border-[#404348] rounded p-2 text-white focus:outline-none focus:ring-2 focus:ring-[#0052CC]"
-              value={selectedWorkspaceId}
-              onChange={(e) => handleWorkspaceChange(e.target.value)}
-            >
-              {/* Owned Workspace */}
-              {ownedWorkspace && <optgroup label="Owned Workspace">
-                <option value={ownedWorkspace?._id}>
-                  {ownedWorkspace?.name} (Owned)
-                </option>
-              </optgroup>}
+        </div>
 
-              {/* Invited Workspaces */}
-              {invitedWorkspaces?.length > 0 && (
-                <optgroup label="Invited Workspaces">
-                  {invitedWorkspaces?.map((workspace: any) => (
-                    <option key={workspace._id} value={workspace._id}>
-                      {workspace.name}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
+        <div className="bg-[#202020] rounded-md px-10 py-6 shadow-md mt-4 mx-4">
+          <div className="flex flex-1 items-center gap-10">
+            <div className="flex flex-col gap-2 items-center mb-4">
+              <div className="flex justify-center">
+                <div className="ml-3 w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-xl font-bold">
+                  {selectedWorkspace?.name
+                    ? selectedWorkspace?.name.charAt(0).toUpperCase() +
+                    selectedWorkspace?.name.charAt(1).toUpperCase()
+                    : "?"}
+                </div>
+              </div>
+              <div className="flex flex-col items-center">
+                <h3 className="font-semibold">{selectedWorkspace?.name}</h3>
+                <p className="text-gray-400 text-sm">
+                  Created{" "}
+                  {selectedWorkspace?.createdAt
+                    ? formatDate(selectedWorkspace?.createdAt)
+                    : ""}
+                </p>
+              </div>
+            </div>
 
-          {/* Workspace Details */}
-          <div className="mb-4">
-            <h3 className="text-xl font-medium mb-2">Workspace Details</h3>
-            {selectedWorkspace ? (
-              <>
-                <p className="text-gray-400">Workspace Name : {selectedWorkspace.name}</p>
-                <p className="text-gray-400">Owner Name : {selectedWorkspace.owner.fullName || "You"}</p>
-              </>) : (
-              <p className="text-gray-400">Please select a workspace.</p>
-            )}
-
+            <div className="flex items-center justify-end flex-2">
+              <div className="w-full">
+                <label className="block mb-2 text-gray-300 font-medium">
+                  Select Workspace
+                </label>
+                <div className="relative w-auto">
+                  <select
+                    className="w-full bg-[#2E3033] border border-[#404348] rounded-sm px-4 py-2 text-white focus:outline-none focus:ring-1 appearance-none cursor-pointer"
+                    value={selectedWorkspaceId}
+                    onChange={(e) => handleWorkspaceChange(e.target.value)}
+                  >
+                    {ownedWorkspace && (
+                      <optgroup label="Owned Workspace">
+                        <option value={ownedWorkspace._id}>
+                          {ownedWorkspace.name} (Owned)
+                        </option>
+                      </optgroup>
+                    )}
+                    {invitedWorkspaces?.length > 0 && (
+                      <optgroup label="Invited Workspaces">
+                        {invitedWorkspaces.map((workspace: any) => (
+                          <option key={workspace._id} value={workspace._id}>
+                            {workspace.name}
+                          </option>
+                        ))}
+                      </optgroup>
+                    )}
+                  </select>
+                  <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                    <FaChevronDown />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Right side - Placeholder for additional content (optional) */}
-        <div className="hidden md:block">
-          {/* You can add a placeholder or component here like AddProjectRightItem */}
-          <div className="bg-[#2E3033] border border-[#404348] rounded p-4 text-gray-400">
-            <p>Additional workspace info or actions can go here.</p>
+        <div className="mx-4">
+          <div className="my-5">
+            <BreadCrumb
+              pageName="My Workspace"
+              buttonText="Create New Workspace"
+              onButtonClick={handleCreateWorkspace}
+              buttonBg="#d72020"
+              ButtonIcon={FiPlus}
+              disabled={!!ownedWorkspace}
+            />
           </div>
+
+                    
+          {ownedWorkspace && <div className="">
+            <div className="col-span-12 md:col-span-3">
+              <div className="pb-4">
+                <div className="flex items-center gap-2">
+                  <TabButton
+                    id="overview"
+                    icon={<IoStatsChart size={18} />}
+                    label="Overview"
+                  />
+                  <TabButton
+                    id="subscription"
+                    icon={<FiPackage size={18} />}
+                    label="Subscription"
+                  />
+                  <TabButton
+                    id="settings"
+                    icon={<IoSettingsSharp size={18} />}
+                    label="Settings"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 grid gap-6 pb-6">
+              <div className="col-span-12 md:col-span-9 ">
+                {activeTab === "overview" && (
+                  <WorkspaceOverview
+                    workspaceName={ownedWorkspace?.name}
+                    subscriptionName={subscription.name}
+                    projectCount={myProjectCount}
+                    memberCount={myMemberCount}
+                    subscriptionStatus={subscription.status}
+                    subscriptionPrice={subscription.price}
+                    subscriptionCreatedAt={subscription.createdAt}
+                    subscriptionExpiresAt={subscription.expiresAt}
+                  />
+                )}
+                {activeTab === "subscription" && <WorkspaceSubscription
+                  subscriptionName={subscription.name}
+                  subscriptionStatus={subscription.status}
+                  subscriptionPrice={subscription.price}
+                  subscriptionCreatedAt={subscription.createdAt}
+                  subscriptionExpiresAt={subscription.expiresAt}
+                />}
+                {activeTab === "settings" && <WorkspaceSettingForm workspaceName={ownedWorkspace?.name} workspaceCreatedAt={ownedWorkspace?.createdAt}/>}
+              </div>
+            </div>
+          </div>}
         </div>
       </div>
-
-      {/* Footer buttons */}
-      {/* <div className="mt-4 flex justify-end max-w-4xl mx-auto">
-      <button className="bg-[#2E3033] text-white px-4 py-2 rounded mr-4 hover:bg-[#3E4043]">
-        Cancel
-      </button>
-      <button className="bg-[#0052CC] text-white px-4 py-2 rounded hover:bg-[#0065FF]">
-        Save Changes
-      </button>
-    </div> */}
     </div>
   );
 };

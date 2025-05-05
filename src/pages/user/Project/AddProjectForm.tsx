@@ -49,7 +49,7 @@ const AddProjectForm: React.FC = () => {
     initialValues: {
       name: '',
       projectkey: '',
-      description: '',
+      title: '',
       workspaceId: workspace?.data?.data?._id || '',
       emails: [] as string[],
     },
@@ -146,17 +146,17 @@ const AddProjectForm: React.FC = () => {
             {/* discription */}
             <div className="mb-4">
               <label className="flex items-center gap-1 mb-2">
-                Discription<span className="text-red-500">*</span>
-                {formik.touched.name && formik.errors.description && (
-                  <span className="text-red-500 text-sm">{formik.errors.description}</span>
+                Title<span className="text-red-500">*</span>
+                {formik.touched.name && formik.errors.title && (
+                  <span className="text-red-500 text-sm">{formik.errors.title}</span>
                 )}
               </label>
               <input
                 type="text"
                 className="w-full bg-[#2E3033] border border-[#404348] rounded p-2 text-white"
-                name="description"
-                placeholder="Description"
-                value={formik.values.description}
+                name="title"
+                placeholder="Title"
+                value={formik.values.title}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />

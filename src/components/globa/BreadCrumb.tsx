@@ -9,6 +9,8 @@ interface BreadCrumbProps {
   onButtonClick?: () => void;
   ButtonIcon?: any;
   isBackLog?: boolean;
+  buttonBg?: string;
+  disabled?: boolean;
 }
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({
@@ -16,13 +18,15 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
   buttonText,
   onButtonClick,
   ButtonIcon,
-  isBackLog
+  isBackLog,
+  disabled,
+  buttonBg = "gray-600"
 }) => {
   const location = useLocation();
   const paths = location.pathname.split("/").filter(Boolean);
 
   return (
-    <div className="flex justify-between items-center p-4">
+    <div className="flex justify-between items-center">
       {/* Left Side - Breadcrumb */}
       <div>
         <h2 className="text-xl font-semibold text-gray-200">{pageName}</h2>
@@ -39,7 +43,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
       </div>
 
       {/* Right Side - Button */}
-      {buttonText && onButtonClick && (
+      {/* {buttonText && onButtonClick && (
         <button
           onClick={onButtonClick}
           className="flex items-center bg-gray-600 text-white px-2.5 py-1.5 rounded-sm shadow hover:bg-gray-500 transition text-sm"
@@ -47,12 +51,26 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
           {buttonText}
           {ButtonIcon && <ButtonIcon size={20} className="ml-2" />}
         </button>
-      )}
+      )} */}
+      {buttonText && onButtonClick && (
+  <button
+    onClick={onButtonClick}
+    className={`flex items-center text-white px-2.5 py-1.5 rounded-sm shadow transition text-sm ${
+      disabled
+        ? "bg-gray-700 cursor-not-allowed"
+        : `bg-${buttonBg} hover:bg-gray-500`
+    }`}
+    disabled={disabled}
+  >
+    {buttonText}
+    {ButtonIcon && <ButtonIcon size={20} className="ml-2" />}
+  </button>
+)}
       {isBackLog && <div className="flex gap-3">
         <button className="text-gray-200">
           <ImEnlarge2 size={15}/>
         </button>
-        <button className="text-gray-200 bg-gray-600 p-1 rounded-xs">
+        <button className={`text-gray-200 bg-${buttonBg} p-1 rounded-xs`}>
           <BsThreeDots size={16}/>
         </button>
       </div>}

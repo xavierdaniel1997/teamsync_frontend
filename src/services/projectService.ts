@@ -1,4 +1,5 @@
 import api from "../api/axiosInstance"
+import { IProject } from "../types/project";
 import { ProjectTeamData } from "../types/projectTeamData";
 import { CreateSprintData } from "../types/sprint";
 import { ITask } from "../types/task";
@@ -8,6 +9,14 @@ export const createProjectWithTeamApi = async (data: ProjectTeamData) => {
     return response.data;
 }
 
+export const updateProjectApi = async (projectId: string, workspaceId: string, data: FormData) => {
+    const response = await api.put(`project/edit-project/${projectId}/${workspaceId}`, data, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+    })
+    return response.data;
+}
 
 export const getAllProjectsApi = async (workspaceId: string) => {
     const response = await api.get("project/all-projects", { params: { workspaceId } })

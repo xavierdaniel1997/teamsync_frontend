@@ -39,7 +39,7 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
   onPageChange,
   isPagination = true,
 }) => {
-  const totalPage = Math.ceil(totalCount / rowsPerPage);
+  // const totalPage = Math.ceil(totalCount / rowsPerPage);
 
   return (
     <>
@@ -94,7 +94,7 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
       </TableContainer>
       {isPagination && (
         <Pagination
-          count={totalPage}
+          // count={totalPage}
           page={page}
           onChange={onPageChange}
           variant="outlined"

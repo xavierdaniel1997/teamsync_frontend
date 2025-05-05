@@ -5,6 +5,7 @@ interface Project {
     _id: string;
     name: string;
     projectkey: string;
+    projectCoverImg: string;
     description: string;
     workspace: any;
     owner: any;
