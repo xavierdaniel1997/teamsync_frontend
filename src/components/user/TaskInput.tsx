@@ -10,6 +10,7 @@ import { TaskType } from '../../types/task';
 interface TaskInputProps {
   onCancel: () => void;
   sprintId?: string;
+  sprintName?: string;
   workspaceId: string;
   projectId: string;
   epicId?: string;
@@ -21,7 +22,7 @@ const issueTypes = [
   { id: TaskType.BUG, label: 'Bug', icon: <BiBug className="text-red-400" /> },
 ];
 
-const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, workspaceId, projectId, epicId }) => {
+const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, sprintName, workspaceId, projectId, epicId }) => {
   const [title, setTitle] = useState('');
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
   const [selectedType, setSelectedType] = useState(issueTypes[0]);

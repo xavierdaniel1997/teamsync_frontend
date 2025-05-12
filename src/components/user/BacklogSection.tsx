@@ -40,6 +40,8 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
   const inProgressCount = backlogTasks?.filter(task => task.status === 'IN_PROGRESS').length || 0;
   const doneCount = backlogTasks?.filter(task => task.status === 'DONE').length || 0;
 
+  // console.log("backlog task form the backlog section", backlogTasks)
+  
   return (
     <div className="rounded-md p-4 bg-[#202020]">
       {/* Header section */}
@@ -69,16 +71,15 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
           </button>
         </div>
       </div>
-      
-      {/* Content section */}
+
       <div className="mt-4">
-        {/* Loading State */}
+
         {backlogLoading ? (
           <TaskShimmerList count={3} />
         ) : (
-          /* Empty or Data State */
+    
           backlogTasks?.length > 0 ? (
-            /* Data State - Show tasks */
+       
             backlogTasks.map((task) => (
               <TaskCard 
                 key={task._id}
@@ -86,7 +87,7 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
               />
             ))
           ) : (
-            /* Empty State */
+     
             <div className="mt-4 border border-dashed border-gray-600 py-5 text-center text-gray-400 rounded-md">
               Your backlog is empty.
             </div>

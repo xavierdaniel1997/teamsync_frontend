@@ -4,6 +4,8 @@ import sprintLogo from "../../assets/sprintLogo.png"
 import TaskInput from './TaskInput';
 import TaskDropDown from './TaskDropDown';
 import { useProject } from '../../hooks/useProject';
+import { TaskShimmerList } from './TaskShimmer';
+import TaskCard from './TaskCard';
 
 interface SprintSectionProps {
   sprintName: string;
@@ -15,6 +17,7 @@ interface SprintSectionProps {
 }
 
 const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, sprintId, workspaceId, projectId, epicId }) => {
+  const {useGetSprintTasks} = useProject()
   const [creatIssue, setCreateIssue] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false);
   const {useDeleteSprint} = useProject()
@@ -29,6 +32,21 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
     useDeleteSprint.mutate(sprintId)
   }
 
+  const { data: sprintTasksData, isLoading, error } = useGetSprintTasks(
+    workspaceId,
+    projectId,
+    sprintId
+  );
+
+
+  // console.log("sprintTaskData from the sprintsectin", sprintTasksData)
+
+   const taskCount = sprintTasksData?.data?.length || 0;
+  const totalStoryPoints = sprintTasksData?.data?.reduce((total, task) => total + (task.storyPoints || 0), 0) || 0;
+
+  const todoCount = sprintTasksData?.data?.filter(task => task.status === 'TO_DO').length || 0;
+  const inProgressCount = sprintTasksData?.data?.filter(task => task.status === 'IN_PROGRESS').length || 0;
+  const doneCount = sprintTasksData?.data?.filter(task => task.status === 'DONE').length || 0;
 
   return (
     <div className="bg-[#202020] rounded-md p-4 text-white">
@@ -39,14 +57,14 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
           <input type="checkbox" className="accent-gray-500" />
           <span className="font-medium">SCRUM {sprintName}</span>
           <span className="text-blue-400 text-sm cursor-pointer hover:underline">Add dates</span>
-          <span className="text-gray-400 text-sm">(0 issues)</span>
+          <span className="text-gray-400 text-sm">({taskCount} issues)</span>
         </div>
 
 
         <div className="flex items-center gap-2">
-          <span className="bg-gray-700 text-xs px-1.5 rounded-full">0</span>
-          <span className="bg-blue-600 text-xs px-1.5 rounded-full">0</span>
-          <span className="bg-green-600 text-xs px-1.5 rounded-full">0</span>
+          <span className="bg-gray-700 text-xs px-1.5 rounded-full">{todoCount}</span>
+          <span className="bg-blue-600 text-xs px-1.5 rounded-full">{inProgressCount}</span>
+          <span className="bg-green-600 text-xs px-1.5 rounded-full">{doneCount}</span>
 
           <button
             disabled
@@ -64,8 +82,19 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
         </div>
       </div>
 
-
-      <div className="mt-4 border border-dashed border-gray-600 py-3 px-6 text-center text-gray-400 rounded-md">
+      <div className="mt-4">
+      {isLoading ? (
+        <TaskShimmerList count={3} />
+      ): (
+        sprintTasksData?.data?.length && sprintTasksData?.data?.length > 0 ? (
+          sprintTasksData?.data?.map((task) => (
+            <TaskCard
+                key={task._id}
+                task={task}
+              />
+          ))
+        ): (
+            <div className="mt-4 border border-dashed border-gray-600 py-3 px-6 text-center text-gray-400 rounded-md">
         <div className="flex flex-col items-center justify-center">
           {sprintOrder === 0 &&
             <>
@@ -81,12 +110,32 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
           </p>
         </div>
       </div>
+        )
+      )}
 
-      {/* Create Issue */}
+      </div>
+      {/* <div className="mt-4 border border-dashed border-gray-600 py-3 px-6 text-center text-gray-400 rounded-md">
+        <div className="flex flex-col items-center justify-center">
+          {sprintOrder === 0 &&
+            <>
+              <img
+                src={sprintLogo}
+                alt="Plan Sprint"
+                className="w-28 h-20 opacity-80 mb-1"
+              />
+              <p className="font-semibold text-white">Plan your sprint</p>
+            </>}
+          <p>
+            Drag issues from the <strong>Backlog</strong> section, or create new issues, to plan.
+          </p>
+        </div>
+      </div> */}
+
+
       <div className="mt-1">
         {!creatIssue ? <button className="text-blue-400 text-sm hover:underline"
           onClick={() => setCreateIssue(true)}>+ Create issue</button> :
-          <TaskInput onCancel={() => setCreateIssue(false)} sprintId={sprintId} workspaceId={workspaceId} projectId={projectId} epicId={epicId}/>}
+          <TaskInput onCancel={() => setCreateIssue(false)} sprintId={sprintId} sprintName={sprintName} workspaceId={workspaceId} projectId={projectId} epicId={epicId}/>}
       </div>
     </div>
   );

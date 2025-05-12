@@ -16,6 +16,7 @@ const Backlog: React.FC = () => {
 
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
+  const project = useSelector((state: RootState) => state.project.selectedProject)
   const { data: epicData, isLoading } = useGetEpic(projectId || "")
   const {data: backlogData, isLoading: backlogLoading} = useGetBacklogTasks(projectId || "")
   const { data: sprintData, isLoading: sprintLoading } = useGetSprints(projectId || "")
@@ -30,7 +31,7 @@ const Backlog: React.FC = () => {
     }
   }, [epicData, selectedEpicId]);
 
-  // console.log("backlog details  form the backlogaaaaaaaaaaaaaaaa", backlogData)
+  // console.log("backlog details  form the backlogaaaaaaaaaaaaaaaa", project)
 
   return (
     <div className="p-5 bg-[#191919] min-h-screen">
@@ -41,7 +42,7 @@ const Backlog: React.FC = () => {
         isBackLog={true}
       />
       </div>
-      <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} />
+      <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members}/>
       <div className="flex p-4">
         {showEpic && <EpicSection isLoading={isLoading} showEpic={showEpic} setShowEpic={setShowEpic} epicHeading={epicTitle}
           selectedEpicId={selectedEpicId}
@@ -49,9 +50,9 @@ const Backlog: React.FC = () => {
         />}
         <div className="flex-1 ml-4 space-y-4">
           {sprintData?.data?.map((sprint: ISprint, index: number) => (
-            <SprintSection key={sprint._id} sprintName={sprint.name} sprintOrder={index} sprintId={sprint._id} workspaceId={workspaceId || ""} projectId={projectId || ""} epicId={selectedEpicId || ""}/>
+            <SprintSection key={sprint._id} sprintName={sprint.sprintName} sprintOrder={index} sprintId={sprint._id} workspaceId={workspaceId || ""} projectId={projectId || ""} epicId={selectedEpicId || ""}/>
           ))}
-          <BacklogSection epicId={selectedEpicId || ""} backlogTasks={backlogData?.data} backlogLoading={backlogLoading}/>
+          <BacklogSection epicId={""} backlogTasks={backlogData?.data} backlogLoading={backlogLoading}/>
         </div>
       </div>
     </div>

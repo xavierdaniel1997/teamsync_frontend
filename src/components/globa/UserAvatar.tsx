@@ -28,7 +28,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ user, getRandomColor, getInitia
     } else {
       return (
         <div
-          className={`w-${width} h-${height} rounded-full flex items-center justify-center text-white font-semibold text-sm`}
+          className={`w-${width} h-${height} rounded-full flex items-center justify-center text-white font-semibold text-xs`}
           style={{ backgroundColor: getRandomColor(user._id || "") }}
         >
           {getInitials(user.fullName, user.secondName || "")}

@@ -2,13 +2,18 @@ import { FaSearch, FaUserFriends, FaUserCircle, FaUserPlus } from 'react-icons/f
 import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi';
 import { MdInsights } from 'react-icons/md';
 import { FiSettings } from 'react-icons/fi';
+import UserAvatar from '../globa/UserAvatar';
+import { getInitials, getRandomColor } from '../../utils/userHelpers';
 
 interface Props {
     showEpic: boolean;
     setShowEpic: React.Dispatch<React.SetStateAction<boolean>>;
+    projectMembers?: any[]
   }
 
-const BackLogTopBar: React.FC<Props> = ({showEpic, setShowEpic}) => {
+const BackLogTopBar: React.FC<Props> = ({showEpic, setShowEpic, projectMembers}) => {
+
+  console.log("from the backlogtop bar", projectMembers)
   return (
     <div className="flex items-center justify-between px-4 py-2 w-full">
       <div className="flex items-center space-x-2">
@@ -24,15 +29,20 @@ const BackLogTopBar: React.FC<Props> = ({showEpic, setShowEpic}) => {
         {/* Overlapping Avatars */}
         <div className="flex items-center ml-2">
           <div className="flex -space-x-2">
-            {/* First Avatar */}
-            <div className="bg-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold border-2 border-[#1c1f24] z-10">
-              HM
-            </div>
 
-            {/* Second Avatar */}
-            <div className="bg-gray-400 rounded-full w-8 h-8 flex items-center justify-center border-2 border-[#1c1f24] z-0">
+            {projectMembers?.map((member) => (
+              <UserAvatar user={member.user || undefined} getRandomColor={getRandomColor} getInitials={getInitials}/>
+            ))}
+           
+            {/* <div className="bg-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold border-2 border-[#1c1f24] z-10">
+              HM
+            </div> */}
+
+
+          
+            {/* <div className="bg-gray-400 rounded-full w-8 h-8 flex items-center justify-center border-2 border-[#1c1f24] z-0">
               <FaUserCircle className="text-[#1c1f24] text-lg" />
-            </div>
+            </div> */}
           </div>
 
           {/* Add Member Button */}

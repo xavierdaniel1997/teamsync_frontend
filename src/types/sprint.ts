@@ -4,7 +4,7 @@ export interface ISprint {
   _id: string;
   project: string;
   workspace: string;
-  name: string;
+  sprintName: string;
   goal?: string;
   startDate?: string; 
   endDate?: string;

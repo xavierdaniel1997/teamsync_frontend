@@ -29,6 +29,12 @@ export const getProjectByIdApi = async (projectId: string) => {
 }
 
 
+export const inviteMemeberToProjectApi = async (projectId: string, workspaceId: string, emails: string[]) => {
+    const response = await api.post(`project/invite-member/${projectId}/${workspaceId}`, {emails})
+    return response.data;
+}
+
+
 
 //task related apis
 
@@ -52,6 +58,11 @@ export const updateTaskApi = async (taskId: string, task: Partial<ITask>) => {
 
 export const getBacklogTasksApi = async (projectId: string) => {
     const response = await api.get(`project/backlog-tasks/${projectId}`)
+    return response.data;
+}
+
+export const getTaskFromSprintApi = async (workspaceId: string, projectId: string, sprintId: string) => {
+    const response = await api.get(`project/sprint-tasks/${workspaceId}/${projectId}/${sprintId}`)
     return response.data;
 }
 

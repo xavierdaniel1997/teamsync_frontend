@@ -40,7 +40,7 @@ import Kanban from "./pages/user/Kanban/Kanban";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <Toaster position="top-center" richColors theme="light" />
+      <Toaster position="bottom-left" richColors theme="dark" />
       <Routes>
         <Route path="*" element={<PageNotFound/>}/>
         <Route path="/" element={<LandingPage />} />
@@ -68,7 +68,7 @@ const App: React.FC = () => {
           <Route path="/project" element={<UserLayout />} >
             <Route index element={<Dashboard />} />
             <Route path="backlog" element={<Backlog />} />
-            <Route path="kanban" element={<Kanban/>} />
+            <Route path="board" element={<Kanban/>} />
             <Route path="team-members" element={<TeamMembers/>} />
             <Route path="project-setting" element={<ProjectSetting/>} />
             <Route path="settings" element={<UserSettings/>}/>

@@ -41,7 +41,8 @@ export enum TaskType {
     priority: TaskPriority;
     assignee?: string;
     reporter?: string;
-    epic?: string;
+    // epic?: string;
+    epic?: { _id: string; title: string; taskKey: string }
     parent?: string;
     sprint?: string;
     storyPoints?: number;

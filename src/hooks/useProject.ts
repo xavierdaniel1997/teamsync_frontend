@@ -1,10 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, getAllProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
+import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, getAllProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
 import { IProject, ProjectResponse } from "../types/project"
 import { ITask, TaskResponse } from "../types/task"
 import { setSelectProject } from "../redux/projectSlice"
 import { useDispatch } from "react-redux"
+import InviteTeamModal from "../components/user/InviteTeamModal"
 
 export const useProject = () => {
   const queryClient = useQueryClient()
@@ -56,6 +57,21 @@ export const useProject = () => {
     });
   };
 
+  const useInviteMember = useMutation({
+    mutationFn: ({ projectId, workspaceId, emails}: { projectId: string; workspaceId: string; emails: string[] }) => inviteMemeberToProjectApi(projectId, workspaceId, emails),
+    onSuccess: (response) => {
+      console.log("invite member and accesslevel set successfully", response);
+      toast.success(response.message || "Invited Members successfully");
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projectById"] });
+      dispatch(setSelectProject(response?.data)) 
+    },
+    onError: (error: any) => {
+      console.log("Failed to invite team member to the project", error);
+      toast.error(error?.response?.data?.message || "Failed to invite team member to the project");
+    },
+  })
+
 
   //task related api's
 
@@ -76,7 +92,7 @@ export const useProject = () => {
       updateTaskApi(taskId, task),
     onSuccess: (response) => {
       console.log("task updated successfully", response);
-      queryClient.invalidateQueries({ queryKey: ["project", ] });
+      queryClient.invalidateQueries({ queryKey: ["project",] });
     },
     onError: (error: any) => {
       console.log("failed to update the task", error);
@@ -100,6 +116,14 @@ export const useProject = () => {
       enabled: !!projectId
     })
   }
+
+  const useGetSprintTasks = (workspaceId: string, projectId: string, sprintId: string) => {
+  return useQuery<TaskResponse, Error>({
+    queryKey: ["task", workspaceId, projectId, sprintId],
+    queryFn: () => getTaskFromSprintApi(workspaceId, projectId, sprintId),
+    enabled: !!workspaceId && !!projectId && !!sprintId,
+  });
+};
 
   //sprint section
 
@@ -138,5 +162,5 @@ export const useProject = () => {
   })
 
 
-  return { useCreateProjectWithTeam, useUpdateProject, useGetProjects, useGetProjectById, useCreateTask, useGetEpic, useUpdateTask, useCreateSprint, useGetSprints, useDeleteSprint, useGetBacklogTasks}
+  return { useCreateProjectWithTeam, useUpdateProject, useGetProjects, useGetProjectById, useCreateTask, useGetEpic, useUpdateTask, useCreateSprint, useGetSprints, useDeleteSprint, useGetBacklogTasks, useInviteMember, useGetSprintTasks }
 }

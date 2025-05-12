@@ -27,10 +27,10 @@ const UserLayout: React.FC = () => {
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: 'Summary', path: '/project' },
     { icon: <FiLayers />, text: 'Backlog', path: '/project/backlog' },
-    { icon: <FiCalendar />, text: 'Board', path: '/project/kanban' },
+    { icon: <FiCalendar />, text: 'Board', path: '/project/board' },
     { icon: <FiBell />, text: 'Notification', path: '/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Chat', path: '/chats' },
-    { icon: <FiEdit />, text: 'Teams & Members', path: '/project/team-members' },
+    // { icon: <FiEdit />, text: 'Teams & Members', path: '/project/team-members' },
     { icon: <FiTarget />, text: 'Projects', path: '/project/project-setting' },
     { icon: <FiSettings />, text: 'Settings', path: '/project/settings' },
   ];

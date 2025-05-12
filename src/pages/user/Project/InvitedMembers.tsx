@@ -44,7 +44,7 @@ const InvitedMembers: React.FC = () => {
           };
           const statusStyles = {
             PENDING: 'bg-orange-300/10 text-orange-600',
-            ACCEPTED: 'bg-green-500/30 text-green-900',
+            ACCEPTED: 'bg-green-300/10 text-green-600',
             REJECTED: 'bg-red-500/30 text-red-900',
             EXPIRED: 'bg-gray-500/30 text-gray-900',
           };
