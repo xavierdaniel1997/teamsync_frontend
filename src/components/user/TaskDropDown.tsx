@@ -6,8 +6,10 @@ interface TaskDropDownProps {
   onMoveDown?: () => void;
   onMoveToBottom?: () => void;
   onEdit?: () => void;
-  onDelete: (sprintId: string) => void;
+  onDelete: (workspaceId: string, projectId: string, sprintId: string) => void;
   sprintName: string;
+  workspaceId: string;
+  projectId: string;
   sprintId: string;
 }
 
@@ -18,6 +20,8 @@ const TaskDropDown: React.FC<TaskDropDownProps> = ({
   onEdit,
   onDelete,
   sprintName,
+  workspaceId,
+  projectId,
   sprintId
 }) => {
   const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -58,8 +62,7 @@ const TaskDropDown: React.FC<TaskDropDownProps> = ({
   }
 
   const handleConfirmDelete = () => {
-    console.log('handleConfirmDelete called with sprintId:', sprintId);
-    if (onDelete) onDelete(sprintId);
+    if (onDelete) onDelete(workspaceId, projectId, sprintId);
     setIsConfirmModalOpen(false);
     setShowDropdown(false);
   };
@@ -74,7 +77,7 @@ const TaskDropDown: React.FC<TaskDropDownProps> = ({
     <>
     <div 
       ref={dropdownRef}
-      className="absolute right-0 mt-2 w-48 bg-[#1E1E1E] rounded-md shadow-lg z-10 text-sm"
+      className="absolute right-0 mt-2 w-48 bg-[#202020] border border-[#2C2C2C] rounded-sm z-10 text-sm"
     >
       <ul className="py-1 text-white">
         <li 

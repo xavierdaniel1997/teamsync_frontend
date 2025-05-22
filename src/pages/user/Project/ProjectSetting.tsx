@@ -8,9 +8,9 @@ import MyProjects from "./MyProjects";
 const tabOptions = [
   { label: "General", value: "general" },
   { label: "Team & Members", value: "members" },
-  {label: "Invited Peoples", value: "invitedPeoples"},
+  { label: "Invited Peoples", value: "invitedPeoples" },
+  { label: "My Projects", value: "myProjects" },
   { label: "Project States", value: "projectStates" },
-  {label: "My Projects", value: "myProjects"}
 ];
 
 const ProjectSetting: React.FC = () => {
@@ -23,11 +23,11 @@ const ProjectSetting: React.FC = () => {
       case "members":
         return <ProjectMembers />;
       case "invitedPeoples":
-        return <InvitedMembers/>;
+        return <InvitedMembers />;
+      case "myProjects":
+        return <MyProjects />;
       case "projectStates":
         return <div>Project States content coming soon...</div>;
-      case "myProjects":
-         return <MyProjects/>;
       default:
         return <div>Select a tab to view content</div>;
     }

@@ -1,3 +1,4 @@
+import { IUser } from "./users";
 
 
 export enum TaskType {
@@ -30,7 +31,7 @@ export enum TaskType {
   }
   
   export interface ITask {
-    _id?: string;
+    _id: string;
     project: string;
     workspace: string;
     taskKey: string;
@@ -39,12 +40,12 @@ export enum TaskType {
     type: TaskType;
     status: TaskStatus;
     priority: TaskPriority;
-    assignee?: string;
+    assignee?: string | IUser;
     reporter?: string;
-    // epic?: string;
+    epicId?: string | null;
     epic?: { _id: string; title: string; taskKey: string }
     parent?: string;
-    sprint?: string;
+    sprint?: string | null;
     storyPoints?: number;
     files?: IFile;
     startDate: string;

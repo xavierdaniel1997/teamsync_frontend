@@ -8,19 +8,48 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { useProject } from '../../../hooks/useProject';
 import { ISprint } from '../../../types/sprint';
+import { ITask } from '../../../types/task';
+import { DndContext, closestCenter, DragEndEvent, DragStartEvent, DragOverlay, useSensors, MouseSensor, useSensor, TouchSensor } from '@dnd-kit/core';
+import TaskDragPreview from '../../../components/user/TaskDragPreview';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Backlog: React.FC = () => {
   const [showEpic, setShowEpic] = useState(true);
-  const { useGetEpic, useGetSprints, useGetBacklogTasks } = useProject();
+  const { useGetEpic, useGetSprints, useGetBacklogTasks, useUpdateTask, useGetTasksByProject } = useProject();
   const [selectedEpicId, setSelectedEpicId] = useState<string | null>(null);
+  const [draggedTask, setDraggedTask] = useState<ITask | null>(null);
+  // Highlighted: Add local state for tasks
+  const [localTasks, setLocalTasks] = useState<ITask[]>([]);
 
-  const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
-  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
-  const project = useSelector((state: RootState) => state.project.selectedProject)
-  const { data: epicData, isLoading } = useGetEpic(projectId || "")
-  const {data: backlogData, isLoading: backlogLoading} = useGetBacklogTasks(projectId || "")
-  const { data: sprintData, isLoading: sprintLoading } = useGetSprints(projectId || "")
-  const epicTitle = epicData?.data
+  const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
+  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
+  const project = useSelector((state: RootState) => state.project.selectedProject);
+  const { data: epicData, isLoading } = useGetEpic(projectId || "");
+  const { data: backlogData, isLoading: backlogLoading } = useGetBacklogTasks(projectId || "");
+  const { data: sprintData, isLoading: sprintLoading } = useGetSprints(projectId || "");
+  const epicTitle = epicData?.data;
+  const { data: taskData } = useGetTasksByProject(workspaceId || "", projectId || "");
+
+
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    })
+  );
+
+  useEffect(() => {
+    if (taskData?.data) {
+      setLocalTasks(taskData.data);
+    }
+  }, [taskData]);
 
   useEffect(() => {
     if (epicData?.data && epicData.data.length > 0 && !selectedEpicId) {
@@ -31,30 +60,100 @@ const Backlog: React.FC = () => {
     }
   }, [epicData, selectedEpicId]);
 
-  // console.log("backlog details  form the backlogaaaaaaaaaaaaaaaa", project)
+  const handleDragStart = (event: DragStartEvent) => {
+    const taskId = event.active.id as string;
+    const allTasks = taskData?.data;
+    const task = allTasks?.find((t) => t._id === taskId);
+    setDraggedTask(task || null);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    setDraggedTask(null);
+    if (!over) return;
+
+    const taskId = active.id as string;
+    const sourceContainerId = active.data.current?.containerId as string;
+    const destinationContainerId = over.id as string;
+
+    if (sourceContainerId === destinationContainerId) return;
+
+    const isBacklog = destinationContainerId === 'backlog';
+    const sprintId = isBacklog ? null : destinationContainerId;
+
+    // Optimistic update: Update localTasks
+    setLocalTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task._id === taskId ? { ...task, sprint: sprintId } : task
+      )
+    );
+
+    if (workspaceId && projectId) {
+      useUpdateTask.mutate(
+        {
+          workspaceId,
+          projectId,
+          taskId,
+          task: { sprint: sprintId },
+        },
+      );
+    }
+  };
+
+  const sprintTasks = (sprintId: string) => localTasks.filter((task) => task.sprint === sprintId);
+  const backlogTasks = localTasks.filter((task) => !task.sprint);
 
   return (
     <div className="p-5 bg-[#191919] min-h-screen">
-      <div className='m-5'>
-      <BreadCrumb
-        pageName="Backlog"
-        buttonText="Add Member"
-        isBackLog={true}
-      />
+      <div className="m-5">
+        <BreadCrumb
+          pageName="Backlog"
+          buttonText="Add Member"
+          isBackLog={true}
+        />
       </div>
-      <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members}/>
-      <div className="flex p-4">
-        {showEpic && <EpicSection isLoading={isLoading} showEpic={showEpic} setShowEpic={setShowEpic} epicHeading={epicTitle}
-          selectedEpicId={selectedEpicId}
-          setSelectedEpicId={setSelectedEpicId}
-        />}
-        <div className="flex-1 ml-4 space-y-4">
-          {sprintData?.data?.map((sprint: ISprint, index: number) => (
-            <SprintSection key={sprint._id} sprintName={sprint.sprintName} sprintOrder={index} sprintId={sprint._id} workspaceId={workspaceId || ""} projectId={projectId || ""} epicId={selectedEpicId || ""}/>
-          ))}
-          <BacklogSection epicId={""} backlogTasks={backlogData?.data} backlogLoading={backlogLoading}/>
+      <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members} />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="flex p-4">
+          {showEpic && (
+            <EpicSection
+              isLoading={isLoading}
+              showEpic={showEpic}
+              setShowEpic={setShowEpic}
+              epicHeading={epicTitle}
+              selectedEpicId={selectedEpicId}
+              setSelectedEpicId={setSelectedEpicId}
+            />
+          )}
+          <div className="flex-1 ml-4 space-y-4">
+            {sprintData?.data?.map((sprint: ISprint, index: number) => (
+              <SprintSection
+                key={sprint._id}
+                sprintName={sprint.sprintName}
+                sprintOrder={index}
+                sprintId={sprint._id}
+                workspaceId={workspaceId || ""}
+                projectId={projectId || ""}
+                epicId={""}
+                tasks={sprintTasks(sprint._id)}
+              />
+            ))}
+            <BacklogSection
+              epicId={""}
+              backlogTasks={backlogTasks}
+              backlogLoading={backlogLoading}
+            />
+          </div>
         </div>
-      </div>
+        <DragOverlay>
+          {draggedTask ? <TaskDragPreview task={draggedTask} /> : null}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 };

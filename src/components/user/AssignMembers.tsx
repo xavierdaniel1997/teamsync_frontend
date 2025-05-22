@@ -5,11 +5,12 @@ import { getInitials, getRandomColor } from "../../utils/userHelpers";
 
 interface AssignMemberProps {
     members: any[]
+    onSelectMember: (userId: string) => void;
 }
 
-const AssignMembers: React.FC<AssignMemberProps> = ({ members }) => {
+const AssignMembers: React.FC<AssignMemberProps> = ({ members, onSelectMember }) => {
     return (
-        <div className="bg-[#202020] px-3 py-2 border border-[#2C2C2C] rounded-xs">
+        <div className="bg-[#202020] border-[#2C2C2C] px-3 py-2 border rounded-xs">
             <div className="relative mb-2">
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
                     <FiSearch size={16} />
@@ -22,7 +23,8 @@ const AssignMembers: React.FC<AssignMemberProps> = ({ members }) => {
 
             </div>
             {members?.map((member) => (
-                <div className="py-1 flex gap-2 items-center cursor-pointer">
+                <div className="py-1 flex gap-2 items-center cursor-pointer"
+                onClick={() => onSelectMember(member.user._id)}>
                     <div className="flex-shrink-0">
 
                         <UserAvatar user={member.user || undefined} getRandomColor={getRandomColor} getInitials={getInitials}/>

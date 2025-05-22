@@ -13,7 +13,7 @@ const ProjectCard = () => {
     'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80'
 
   return (
-    <div className="bg-[#1e1e1e] text-white rounded-lg overflow-hidden shadow-lg w-[282px]">
+    <div className="bg-[#1e1e1e] text-white rounded-lg overflow-hidden shadow-lg max-w-2xl w-auto">
       {/* Background image */}
       <div
         className="relative h-40 bg-cover bg-center"

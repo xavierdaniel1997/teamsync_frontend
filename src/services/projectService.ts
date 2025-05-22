@@ -51,8 +51,14 @@ export const getEpicsByProjectApi = async (projectId: string) => {
 }
 
 
-export const updateTaskApi = async (taskId: string, task: Partial<ITask>) => {
-    const response = await api.put(`project/update-task/${taskId}`, task)
+export const updateTaskApi = async (workspaceId: string, projectId: string, taskId: string, task: Partial<ITask>) => {
+    const response = await api.put(`project/update-task/${workspaceId}/${projectId}/${taskId}`, task)
+    return response.data;
+}
+
+
+export const deleteTaskApi = async (workspaceId: string, projectId: string, taskId: string) => {
+    const response = await api.delete(`project/delete-task/${workspaceId}/${projectId}/${taskId}`)
     return response.data;
 }
 
@@ -67,6 +73,11 @@ export const getTaskFromSprintApi = async (workspaceId: string, projectId: strin
 }
 
 
+export const getAllTaskByProjectsApi = async (workspaceId: string, projectId: string) => {
+    const response = await api.get(`project/all-tasks/${workspaceId}/${projectId}`)
+    return response.data;
+}
+
 // sprint related apis
 
 export const createSprintApi = async (data: CreateSprintData) => {
@@ -79,7 +90,7 @@ export const getSprintApi = async (projectId: string) => {
     return response.data
 }
 
-export const deleteSprintApi = async (sprintId: string) => {
-    const response = await api.delete(`project/delete-sprint/${sprintId}`)
+export const deleteSprintApi = async (workspaceId: string, projectId: string ,sprintId: string) => {
+    const response = await api.delete(`project/delete-sprint/${workspaceId}/${projectId}/${sprintId}`)
     return response.data;
 }

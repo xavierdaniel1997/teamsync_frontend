@@ -50,7 +50,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
         };
         await loginMutation.mutateAsync(data, {
           onSuccess: (response: any) => {
-            console.log(`${title} response:`, response);
             toast.success(response.message || "Logged in successfully");
             resetForm();
             if (onSuccessRedirect) onSuccessRedirect();

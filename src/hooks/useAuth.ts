@@ -86,9 +86,9 @@ export const useAuthMutations = () => {
         return;
       }
       try {
-        console.log("check workspace")
+        // console.log("check workspace")
         await handleWorkspaceSelection(dispatch, navigate);
-        console.log("checked workspace")
+        // console.log("checked workspace")
       } catch (error) {
         console.log("Failed to fetch the workspace", error);
         navigate("/create-work-space");
@@ -125,7 +125,7 @@ export const useAuthMutations = () => {
     mutationFn: (data: EmailValidationData) => authService.forgotPassword(data),
     onSuccess: (res) => {
       toast.success(res.message);
-      console.log("Forgot password success:", res);
+      // console.log("Forgot password success:", res);
     },
     onError: (error: any) => {
       toast.error(error?.response?.data?.message);

@@ -13,7 +13,7 @@ interface Props {
 
 const BackLogTopBar: React.FC<Props> = ({showEpic, setShowEpic, projectMembers}) => {
 
-  console.log("from the backlogtop bar", projectMembers)
+  // console.log("from the backlogtop bar", projectMembers)
   return (
     <div className="flex items-center justify-between px-4 py-2 w-full">
       <div className="flex items-center space-x-2">

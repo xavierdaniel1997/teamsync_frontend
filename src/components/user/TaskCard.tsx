@@ -3,13 +3,19 @@ import { FaUserCircle } from "react-icons/fa";
 import { PiDotsThreeBold } from "react-icons/pi";
 import { ITask, TaskType, TaskStatus } from "../../types/task";
 import { BsBookmarkCheck } from "react-icons/bs";
-import { RiPencilFill, RiTaskLine } from "react-icons/ri";
+import { RiPencilFill, RiTaskLine, RiDraggable } from "react-icons/ri";
 import { BiBug } from "react-icons/bi";
 import { statusTypes } from "../../utils/taskConfing";
 import AssignMembers from "./AssignMembers";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { IoAddSharp } from "react-icons/io5";
+import EditTaskModal from "./EditTaskModal";
+import { useProject } from "../../hooks/useProject";
+import EpicListModal from "./EpicListModal";
+import UserAvatar from "../globa/UserAvatar";
+import { getInitials, getRandomColor } from "../../utils/userHelpers";
+import { useDraggable } from '@dnd-kit/core';
 
 
 const issueTypes = [
@@ -20,10 +26,14 @@ const issueTypes = [
 
 interface TaskCardProps {
   task: ITask;
+  taskType: string;
+  containerId: string;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
   const project = useSelector((state: RootState) => state.project.selectedProject)
+  const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
+  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
   const [status, setStatus] = useState<TaskStatus>(task.status)
   const [openAssigneMember, setOpenAssigneMember] = useState<boolean>(false)
   const [editTitle, setEditTitle] = useState<boolean>(false)
@@ -32,20 +42,86 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const issueType = issueTypes.find((type) => type.id === task.type)
   const currentStatus = statusTypes.find((statusType) => statusType.id === task.status)
+  const [openEditTaskModal, setOpenEditTaskModal] = useState<boolean>(false)
+  const [showEpicList, setShowEpicList] = useState<boolean>(false)
+  const { useGetEpic, useUpdateTask } = useProject()
+  const { data: epicData, isLoading: epicLoading } = useGetEpic(projectId || "")
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+
+ 
+
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id: task._id,
+    data: {
+      taskType,
+      containerId,
+      sprintId: task.sprint || '',
+    },
+    disabled: editTitle || openAssigneMember || showEpicList || openEditTaskModal,
+  });
+
+
+  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>, taskId: string) => {
+    event.stopPropagation();
     const newStatus = event.target.value as TaskStatus;
-    if (newStatus === status) return;
     setStatus(newStatus);
+    if (workspaceId && projectId) {
+      useUpdateTask.mutate({
+        workspaceId: workspaceId,
+        projectId: projectId,
+        taskId: taskId,
+        task: { status: newStatus }
+      })
+    }
   };
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      // handleSaveTitle();
-    } else if (event.key === "Escape") {
-      setNewTitle(task.title);
-      setEditTitle(false);
+
+  const handleAssigneeChange = (userId: string) => {
+    if (workspaceId && projectId) {
+      useUpdateTask.mutate({
+        workspaceId: workspaceId,
+        projectId: projectId,
+        taskId: task._id,
+        task: { assignee: userId }
+      }, {
+        onSuccess: () => setOpenAssigneMember(false)
+      })
     }
+  };
+
+
+  const handleAddEpic = (epicId: string | null) => {
+    if (workspaceId && projectId) {
+      useUpdateTask.mutate({
+        workspaceId: workspaceId,
+        projectId: projectId,
+        taskId: task._id,
+        task: { epicId }
+      },
+        {
+          onSuccess: () => setShowEpicList(false)
+        }
+      )
+    }
+
+  }
+
+  const handleBlurTitle = (event: React.FocusEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    if (workspaceId && projectId) {
+      useUpdateTask.mutate({
+        workspaceId: workspaceId,
+        projectId: projectId,
+        taskId: task._id,
+        task: { title: newTitle }
+      }, {
+        onSuccess: () => setEditTitle(false)
+      })
+    }
+  }
+
+  const handleInputClick = (event: React.MouseEvent<HTMLInputElement>) => {
+    event.stopPropagation(); 
   };
 
   useEffect(() => {
@@ -58,33 +134,64 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleEditClick = () => {
+  const handleEditClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
     setEditTitle(true)
   }
 
 
+  const handleEpicButtonClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  setShowEpicList(!showEpicList);
+  console.log("click handle epic modal open close")
+};
+
+const handleAssigneeButtonClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  setOpenAssigneMember(!openAssigneMember);
+  console.log("click handle open assignee user")
+};
+
+const handleEditTaskButtonClick = (e: React.MouseEvent) => {
+  e.stopPropagation();
+  setOpenEditTaskModal(!openEditTaskModal);
+  console.log("click handle etit task button click")
+};
+
+
   return (
-    <div className="group flex items-center justify-between px-6 py-1 bg-[#1a1a1a] border-b border-[#2E2E2E] hover:bg-[#2a2a2a] transition-colors duration-150 text-gray-400">
+    <div
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      className={`task-card cursor-grab group flex items-center justify-between px-6 py-2 bg-[#1a1a1a] border-b border-[#2E2E2E] hover:bg-[#2a2a2a] transition-colors duration-150 text-gray-400 ${isDragging ? 'dragging' : ''}`}
+
+    >
       <div className="flex items-center gap-4">
         <input
           type="checkbox"
           className="w-3 h-3 bg-gray-400 accent-gray-600 rounded border-gray-600"
         />
+        <div className="cursor-grab"
+        //  {...listeners} {...attributes}
+         >
+          <RiDraggable size={20}/>
+        </div>
         {issueType?.icon}
         <div className="flex flex-col">
           <span className="text-xs text-gray-400">{task.taskKey}</span>
         </div>
 
 
-          <div className="flex items-center">
+        <div className="flex items-center">
           {editTitle ? (
             <input
               ref={inputRef}
               type="text"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
-              // onBlur={handleSaveTitle}
-              onKeyDown={handleKeyDown}
+              onBlur={handleBlurTitle}
+              onClick={handleInputClick}
               className="w-64 text-sm font-medium text-white border-none focus:outline-none focus:ring-1 focus:ring-gray-500 rounded-xs p-1"
               autoFocus
             />
@@ -103,17 +210,34 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-8">
-        {task?.epic ? <div>
-          <p className="font-semibold text-xs bg-violet-600/20 px-1.5 py-0.5 rounded-sm">{task.epic.title}</p>
-        </div> : <button className="flex items-center gap-1 text-sm opacity-0 group-hover:opacity-100 text-gray-400 hover:text-white cursor-pointer transition-opacity duration-150">
-          <IoAddSharp/>
+      <div className="flex items-center gap-8 ">
+        <div className="relative">
+          {task?.epic ?
+            <button className="font-semibold text-xs bg-violet-600/20 px-1.5 py-0.5 rounded-sm cursor-pointer relative"
+              // onClick={() => setShowEpicList(!showEpicList)}
+              onClick={handleEpicButtonClick}
+            >{task.epic.title}</button>
+            :
+            <button
+              className="flex items-center gap-1 text-sm opacity-0 group-hover:opacity-100 text-gray-400 hover:text-white cursor-pointer transition-opacity duration-150 "
+              // onClick={() => setShowEpicList(!showEpicList)}
+              onClick={handleEpicButtonClick}
+            >
+              <IoAddSharp />
               Epic
             </button>}
+
+          {showEpicList &&
+            (<div className="absolute right-0 top-6 w-auto z-50">
+              <EpicListModal epicDetails={epicData.data} onSelectEpic={handleAddEpic} hasEpic={!!task.epic}/>
+            </div>)}
+        </div>
+
+
         <div>
           <select
             value={status}
-            onChange={handleStatusChange}
+            onChange={(event) => handleStatusChange(event, task._id)}
             className={`appearance-none p-0.5 px-1 text-center rounded-sm text-xs font-medium ${currentStatus?.bgColor} ${currentStatus?.textColor}`}
           >
             {statusTypes.map((status) => (
@@ -125,19 +249,43 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
         </div>
         <div className="rounded-full flex items-center justify-center">
           <div className="flex items-center gap-3">
-            <div ref={assigneeRef} className="relative flex items-center">
-              <button onClick={() => setOpenAssigneMember(!openAssigneMember)}>
-                <FaUserCircle size={24} />
+            <div ref={assigneeRef} className="relative flex items-center cursor-pointer">
+              <button className="cursor-pointer" 
+              // onClick={() => setOpenAssigneMember(!openAssigneMember)}
+              onClick={handleAssigneeButtonClick}
+              >
+                {task.assignee && typeof task.assignee === "object" ? (
+                  <UserAvatar user={task.assignee} width={6} height={6} getRandomColor={getRandomColor} getInitials={getInitials} />
+                ) : (
+                  <FaUserCircle size={24} />
+                )}
+
               </button>
               {openAssigneMember && (
-                <div className="absolute right-0 top-6 w-auto z-10">
-                  <AssignMembers members={project?.members || []}/>
+                <div className="absolute right-0 top-6 w-auto z-50">
+                  <AssignMembers members={project?.members || []} onSelectMember={handleAssigneeChange} />
                 </div>
               )}
             </div>
-            <button className="p-1 hover:bg-gray-600 rounded">
-              <PiDotsThreeBold size={20} />
-            </button>
+            <div className="relative">
+              <button className="p-0.5 hover:bg-gray-600 rounded cursor-pointer" 
+              // onClick={() => setOpenEditTaskModal(!openEditTaskModal)}
+              onClick={handleEditTaskButtonClick}
+                >
+                <PiDotsThreeBold size={20} />
+              </button>
+              {openEditTaskModal && <div className="absolute left-5 z-50">
+                <EditTaskModal
+                  taskType={taskType}
+                  taskId={task._id}
+                  taskName={task.taskKey}
+                  sprintId={task.sprint}
+                  workspaceId={workspaceId || ''}
+                  projectId={projectId || ''}
+                  closeOpenEditTaskModal={() => setOpenEditTaskModal(!openEditTaskModal)}
+                />
+              </div>}
+            </div>
           </div>
         </div>
       </div>

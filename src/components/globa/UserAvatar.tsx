@@ -1,4 +1,5 @@
 import React from "react";
+import { IUser } from "../../types/users";
 
 interface User {
   _id?: string;
@@ -8,7 +9,7 @@ interface User {
 }
 
 interface UserAvatarProps {
-  user?: User;
+  user?: IUser;
   getRandomColor: (id: string) => string;
   getInitials: (fullName: string, secondName: string) => string;
   width?: number;

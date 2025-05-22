@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, getAllProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, updateProjectApi, updateTaskApi } from "../services/projectService"
+import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, deleteTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
 import { IProject, ProjectResponse } from "../types/project"
 import { ITask, TaskResponse } from "../types/task"
@@ -40,6 +40,8 @@ export const useProject = () => {
   });
 
 
+
+
   const useGetProjects = (workspaceId?: string) => {
     return useQuery<ProjectResponse, Error>({
       queryKey: ["project", workspaceId],
@@ -58,13 +60,13 @@ export const useProject = () => {
   };
 
   const useInviteMember = useMutation({
-    mutationFn: ({ projectId, workspaceId, emails}: { projectId: string; workspaceId: string; emails: string[] }) => inviteMemeberToProjectApi(projectId, workspaceId, emails),
+    mutationFn: ({ projectId, workspaceId, emails }: { projectId: string; workspaceId: string; emails: string[] }) => inviteMemeberToProjectApi(projectId, workspaceId, emails),
     onSuccess: (response) => {
       console.log("invite member and accesslevel set successfully", response);
       toast.success(response.message || "Invited Members successfully");
       queryClient.invalidateQueries({ queryKey: ["project"] });
       queryClient.invalidateQueries({ queryKey: ["projectById"] });
-      dispatch(setSelectProject(response?.data)) 
+      dispatch(setSelectProject(response?.data))
     },
     onError: (error: any) => {
       console.log("Failed to invite team member to the project", error);
@@ -88,16 +90,32 @@ export const useProject = () => {
   })
 
   const useUpdateTask = useMutation({
-    mutationFn: ({ taskId, task }: { taskId: string; task: Partial<ITask> }) =>
-      updateTaskApi(taskId, task),
+    mutationFn: ({ workspaceId, projectId, taskId, task }: { workspaceId: string, projectId: string, taskId: string; task: Partial<ITask> }) =>
+      updateTaskApi(workspaceId, projectId, taskId, task),
     onSuccess: (response) => {
       console.log("task updated successfully", response);
-      queryClient.invalidateQueries({ queryKey: ["project",] });
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["task"] });
     },
     onError: (error: any) => {
       console.log("failed to update the task", error);
       toast.error(error?.response?.data?.message || "Failed to update task");
     },
+  })
+
+  const useDeleteTask = useMutation({
+    mutationFn: ({ workspaceId, projectId, taskId }: { workspaceId: string, projectId: string, taskId: string }) =>
+      deleteTaskApi(workspaceId, projectId, taskId),
+    onSuccess: (response) => {
+      console.log("task deleted successfully", response)
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["task"] });
+    },
+    onError: (error: any) => {
+      console.log("failed to delete the task", error);
+      toast.error(error?.response?.data?.message || "Failed to delete the task")
+    }
+
   })
 
 
@@ -118,12 +136,20 @@ export const useProject = () => {
   }
 
   const useGetSprintTasks = (workspaceId: string, projectId: string, sprintId: string) => {
-  return useQuery<TaskResponse, Error>({
-    queryKey: ["task", workspaceId, projectId, sprintId],
-    queryFn: () => getTaskFromSprintApi(workspaceId, projectId, sprintId),
-    enabled: !!workspaceId && !!projectId && !!sprintId,
-  });
-};
+    return useQuery<TaskResponse, Error>({
+      queryKey: ["task", workspaceId, projectId, sprintId],
+      queryFn: () => getTaskFromSprintApi(workspaceId, projectId, sprintId),
+      enabled: !!workspaceId && !!projectId && !!sprintId,
+    });
+  };
+
+  const useGetTasksByProject = (workspaceId: string, projectId: string) => {
+    return useQuery<TaskResponse>({
+      queryKey: ["task", workspaceId, projectId],
+      queryFn: () => getAllTaskByProjectsApi(workspaceId, projectId),
+      enabled: !!workspaceId && !!projectId
+    })
+  }
 
   //sprint section
 
@@ -150,9 +176,10 @@ export const useProject = () => {
   }
 
   const useDeleteSprint = useMutation({
-    mutationFn: deleteSprintApi,
+    mutationFn: ({workspaceId, projectId, sprintId}: {workspaceId: string, projectId: string, sprintId: string}) => deleteSprintApi(workspaceId, projectId, sprintId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sprints'] });
+      queryClient.invalidateQueries({queryKey: ['task']})
       toast.success('Sprint deleted successfully');
     },
     onError: (error: any) => {
@@ -162,5 +189,21 @@ export const useProject = () => {
   })
 
 
-  return { useCreateProjectWithTeam, useUpdateProject, useGetProjects, useGetProjectById, useCreateTask, useGetEpic, useUpdateTask, useCreateSprint, useGetSprints, useDeleteSprint, useGetBacklogTasks, useInviteMember, useGetSprintTasks }
+  return {
+    useCreateProjectWithTeam,
+    useUpdateProject,
+    useGetProjects,
+    useGetProjectById,
+    useCreateTask,
+    useDeleteTask,
+    useGetEpic,
+    useUpdateTask,
+    useCreateSprint,
+    useGetSprints,
+    useDeleteSprint,
+    useGetBacklogTasks,
+    useInviteMember,
+    useGetSprintTasks,
+    useGetTasksByProject
+  }
 }

@@ -8,6 +8,8 @@ import { RootState } from '../../redux/store';
 import { toast } from 'sonner';
 import { ITask } from '../../types/task';
 import TaskShimmer, { TaskShimmerList } from './TaskShimmer';
+import { useDroppable } from '@dnd-kit/core';
+
 
 interface BacklogSectionProps {
   epicId?: string;
@@ -21,6 +23,11 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
   const { useCreateSprint } = useProject();
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: 'backlog',
+    data: { type: 'backlog', id: 'backlog' },
+  });
   
   const handleCreateSprint = (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,7 +50,11 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
   // console.log("backlog task form the backlog section", backlogTasks)
   
   return (
-    <div className="rounded-md p-4 bg-[#202020]">
+    <div 
+    // className="rounded-md p-4 bg-[#202020]"
+    ref={setNodeRef}
+      className={`drop-zone rounded-md p-4 bg-[#202020] ${isOver ? 'over' : ''}`}
+    >
       {/* Header section */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
@@ -84,6 +95,8 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
               <TaskCard 
                 key={task._id}
                 task={task}
+                taskType={"backlog"}
+                containerId="backlog"
               />
             ))
           ) : (
