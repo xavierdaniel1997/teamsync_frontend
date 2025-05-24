@@ -40,10 +40,10 @@ const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#323
       {/* Status bar */}
       <div className="h-1 w-full rounded-sm" style={{ backgroundColor: statusColor }} />
       {openEpicDetails && <div className='flex flex-col gap-2 align-middle'>
-        <div className='bg-[#1D2125] p-0.5 text-gray-400 rounded-sm'>
+        <div className='bg-[#202020] p-0.5 text-gray-400 rounded-sm'>
           <p>start date</p>
         </div>
-        <button className='bg-[#1D2125] p-0.5 text-gray-400 rounded-sm cursor-pointer'
+        <button className='bg-[#202020] p-0.5 text-gray-400 rounded-sm cursor-pointer'
         onClick={handleViewDetails}>View Details</button>
         </div>}
         <TaskModal isOpen={isTaskModalOpen} onClose={() => setIsTaskModalOpen(false)} epicTitle={title} taskCount={taskCount} epicId={epicId} members={projectDetails?.members as [] || []}/>

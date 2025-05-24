@@ -11,6 +11,7 @@ interface EditTaskModalProps {
   workspaceId: string;
   projectId: string;
   closeOpenEditTaskModal: () => void;
+  openTaskModal: () => void;
 }
 const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
   taskId,
@@ -18,7 +19,8 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
   sprintId,
   workspaceId,
   projectId,
-  closeOpenEditTaskModal
+  closeOpenEditTaskModal,
+  openTaskModal
 }) => {
 
   const [showSprintList, setShowSprintList] = useState(false);
@@ -59,6 +61,11 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
     }
   }
 
+  const handleEditTask = () => {
+    openTaskModal()
+    closeOpenEditTaskModal();
+  }
+
   return (
     <>
       <div
@@ -75,7 +82,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#2a2a2a] cursor-pointer"
-              // onClick={handleEditTask}
+              onClick={handleEditTask}
               >
                 Edit Backlog Task
               </li>
@@ -102,7 +109,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#2a2a2a] cursor-pointer"
-              // onClick={handleEditTask}
+              onClick={handleEditTask}
               >
                 Edit Sprint Task
               </li>

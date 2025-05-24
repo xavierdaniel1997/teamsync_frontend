@@ -16,6 +16,8 @@ import EpicListModal from "./EpicListModal";
 import UserAvatar from "../globa/UserAvatar";
 import { getInitials, getRandomColor } from "../../utils/userHelpers";
 import { useDraggable } from '@dnd-kit/core';
+import TaskModal from "./TaskModal";
+import { truncate } from "fs";
 
 
 const issueTypes = [
@@ -36,6 +38,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
   const [status, setStatus] = useState<TaskStatus>(task.status)
   const [openAssigneMember, setOpenAssigneMember] = useState<boolean>(false)
+  const [isTaskModalOpen, setIsTaskModalOpen] = useState<boolean>(false);
   const [editTitle, setEditTitle] = useState<boolean>(false)
   const [newTitle, setNewTitle] = useState<string>(task.title);
   const assigneeRef = useRef<HTMLDivElement>(null);
@@ -48,7 +51,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
   const { data: epicData, isLoading: epicLoading } = useGetEpic(projectId || "")
 
 
- 
+
 
   const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
     id: task._id,
@@ -121,7 +124,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
   }
 
   const handleInputClick = (event: React.MouseEvent<HTMLInputElement>) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
   };
 
   useEffect(() => {
@@ -141,22 +144,23 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
 
 
   const handleEpicButtonClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-  setShowEpicList(!showEpicList);
-  console.log("click handle epic modal open close")
-};
+    e.stopPropagation();
+    setShowEpicList(!showEpicList);
+    console.log("click handle epic modal open close")
+  };
 
-const handleAssigneeButtonClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-  setOpenAssigneMember(!openAssigneMember);
-  console.log("click handle open assignee user")
-};
+  const handleAssigneeButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenAssigneMember(!openAssigneMember);
+    console.log("click handle open assignee user")
+  };
 
-const handleEditTaskButtonClick = (e: React.MouseEvent) => {
-  e.stopPropagation();
-  setOpenEditTaskModal(!openEditTaskModal);
-  console.log("click handle etit task button click")
-};
+  const handleEditTaskButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpenEditTaskModal(!openEditTaskModal);
+    console.log("click handle etit task button click")
+  };
+
 
 
   return (
@@ -165,7 +169,6 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
       {...listeners}
       {...attributes}
       className={`task-card cursor-grab group flex items-center justify-between px-6 py-2 bg-[#1a1a1a] border-b border-[#2E2E2E] hover:bg-[#2a2a2a] transition-colors duration-150 text-gray-400 ${isDragging ? 'dragging' : ''}`}
-
     >
       <div className="flex items-center gap-4">
         <input
@@ -174,8 +177,8 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
         />
         <div className="cursor-grab"
         //  {...listeners} {...attributes}
-         >
-          <RiDraggable size={20}/>
+        >
+          <RiDraggable size={20} />
         </div>
         {issueType?.icon}
         <div className="flex flex-col">
@@ -197,7 +200,12 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
             />
           ) : (
             <>
-              <span className="text-sm font-medium text-white">{task.title}</span>
+              <span
+                className="text-sm font-medium text-white truncate max-w-[350px]"
+                title={task.title}
+              >
+                {task.title}
+              </span>
               <span
                 className="ml-4 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-white cursor-pointer transition-opacity duration-150"
                 onClick={handleEditClick}
@@ -229,7 +237,7 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
 
           {showEpicList &&
             (<div className="absolute right-0 top-6 w-auto z-50">
-              <EpicListModal epicDetails={epicData.data} onSelectEpic={handleAddEpic} hasEpic={!!task.epic}/>
+              <EpicListModal epicDetails={epicData.data} onSelectEpic={handleAddEpic} hasEpic={!!task.epic} />
             </div>)}
         </div>
 
@@ -250,9 +258,9 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
         <div className="rounded-full flex items-center justify-center">
           <div className="flex items-center gap-3">
             <div ref={assigneeRef} className="relative flex items-center cursor-pointer">
-              <button className="cursor-pointer" 
-              // onClick={() => setOpenAssigneMember(!openAssigneMember)}
-              onClick={handleAssigneeButtonClick}
+              <button className="cursor-pointer"
+                // onClick={() => setOpenAssigneMember(!openAssigneMember)}
+                onClick={handleAssigneeButtonClick}
               >
                 {task.assignee && typeof task.assignee === "object" ? (
                   <UserAvatar user={task.assignee} width={6} height={6} getRandomColor={getRandomColor} getInitials={getInitials} />
@@ -268,10 +276,10 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
               )}
             </div>
             <div className="relative">
-              <button className="p-0.5 hover:bg-gray-600 rounded cursor-pointer" 
-              // onClick={() => setOpenEditTaskModal(!openEditTaskModal)}
-              onClick={handleEditTaskButtonClick}
-                >
+              <button className="p-0.5 hover:bg-gray-600 rounded cursor-pointer"
+                // onClick={() => setOpenEditTaskModal(!openEditTaskModal)}
+                onClick={handleEditTaskButtonClick}
+              >
                 <PiDotsThreeBold size={20} />
               </button>
               {openEditTaskModal && <div className="absolute left-5 z-50">
@@ -283,12 +291,17 @@ const handleEditTaskButtonClick = (e: React.MouseEvent) => {
                   workspaceId={workspaceId || ''}
                   projectId={projectId || ''}
                   closeOpenEditTaskModal={() => setOpenEditTaskModal(!openEditTaskModal)}
+                  openTaskModal={() => setIsTaskModalOpen(true)}
                 />
               </div>}
             </div>
           </div>
         </div>
       </div>
+      <TaskModal
+        isOpen={isTaskModalOpen}
+        onClose={() => setIsTaskModalOpen(false)}
+      />
     </div>
   );
 };

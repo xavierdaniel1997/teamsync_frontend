@@ -26,7 +26,7 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
   const {useGetSprintTasks} = useProject()
   const [creatIssue, setCreateIssue] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false);
-  const [openStartSprint, setOpenStartSprint] = useState(false);
+  const [openStartSprintModal, setOpenStartSprintModal] = useState(false)
   const {useDeleteSprint} = useProject()
   
 
@@ -58,6 +58,11 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
   const inProgressCount = tasks.filter(task => task.status === 'IN_PROGRESS').length || 0;
   const doneCount = tasks.filter(task => task.status === 'DONE').length || 0;
 
+  const handleOpenStartSprintModal = () => {
+    setOpenStartSprintModal(true)
+    console.log("handle open start sprint", openStartSprintModal)
+  }
+
   return (
     <div 
     // className="bg-[#202020] rounded-md p-4 text-white"
@@ -82,8 +87,9 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
           <span className="bg-green-600 text-xs px-1.5 rounded-full">{doneCount}</span>
 
           <button
-            disabled
+            disabled={tasks.length === 0}
             className={` bg-[#6f6f6f45] text-gray-500 px-3 py-1 text-sm rounded ${tasks.length > 0 ? " hover:bg-[#79787845] hover:text-gray-200" : "cursor-not-allowed" } `}
+            onClick={handleOpenStartSprintModal}
           >
             Start sprint
           </button>
@@ -141,7 +147,10 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
       </div>
 
     
-        <StartSprintModal/>
+        <StartSprintModal
+        isOpen={openStartSprintModal}
+        onClose={() => setOpenStartSprintModal(false)}
+        />
  
     </div>
   );
