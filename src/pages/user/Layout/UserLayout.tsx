@@ -28,7 +28,7 @@ const UserLayout: React.FC = () => {
     { icon: <FiGlobe />, text: 'Summary', path: '/project' },
     { icon: <FiLayers />, text: 'Backlog', path: '/project/backlog' },
     { icon: <FiCalendar />, text: 'Board', path: '/project/board' },
-    { icon: <FiBell />, text: 'Notification', path: '/notifications' },
+    { icon: <FiBell />, text: 'Notification', path: '/project/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Chat', path: '/chats' },
     // { icon: <FiEdit />, text: 'Teams & Members', path: '/project/team-members' },
     { icon: <FiTarget />, text: 'Projects', path: '/project/project-setting' },

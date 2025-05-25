@@ -32,6 +32,7 @@ import UserDetials from "./pages/admin/UserManagment/UserDetials";
 import UserSettings from "./pages/user/UserSettings/UserSettings";
 import ProjectSetting from "./pages/user/Project/ProjectSetting";
 import Kanban from "./pages/user/Kanban/Kanban";
+import Notification from "./pages/user/Notification/Notification";
 
 
 
@@ -69,6 +70,7 @@ const App: React.FC = () => {
             <Route index element={<Dashboard />} />
             <Route path="backlog" element={<Backlog />} />
             <Route path="board" element={<Kanban/>} />
+            <Route path="notifications" element={<Notification/>}/>
             <Route path="team-members" element={<TeamMembers/>} />
             <Route path="project-setting" element={<ProjectSetting/>} />
             <Route path="settings" element={<UserSettings/>}/>
