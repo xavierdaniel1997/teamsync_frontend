@@ -15,6 +15,7 @@ import StartSprintModal from './StartSprintModal';
 interface SprintSectionProps {
   sprintName: string;
   sprintOrder: number;
+  sprintStatus: string;
   sprintId: string;
   workspaceId: string;
   projectId: string;
@@ -22,7 +23,7 @@ interface SprintSectionProps {
   tasks: ITask[];
 }
 
-const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, sprintId, workspaceId, projectId, epicId, tasks}) => {
+const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, sprintStatus, sprintId, workspaceId, projectId, epicId, tasks}) => {
   const {useGetSprintTasks} = useProject()
   const [creatIssue, setCreateIssue] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false);
@@ -40,6 +41,7 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
   const { setNodeRef, isOver } = useDroppable({
     id: sprintId,
     data: { type: 'sprint', id: sprintId },
+    disabled: sprintStatus === 'ACTIVE',
   });
 
    const handleDelete = (workspaceId: string, projectId: string, sprintId: string) => {
@@ -51,6 +53,7 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
   }
 
 
+  
 
   const taskCount = tasks.length;
   const totalStoryPoints = tasks.reduce((total, task) => total + (task.storyPoints || 0), 0) || 0;
@@ -62,6 +65,7 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
     setOpenStartSprintModal(true)
     console.log("handle open start sprint", openStartSprintModal)
   }
+
 
   return (
     <div 
@@ -86,13 +90,15 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
           <span className="bg-blue-600 text-xs px-1.5 rounded-full">{inProgressCount}</span>
           <span className="bg-green-600 text-xs px-1.5 rounded-full">{doneCount}</span>
 
-          <button
+          {sprintStatus==="PLANNED" ? <button
             disabled={tasks.length === 0}
             className={` bg-[#6f6f6f45] text-gray-500 px-3 py-1 text-sm rounded ${tasks.length > 0 ? " hover:bg-[#79787845] hover:text-gray-200" : "cursor-not-allowed" } `}
             onClick={handleOpenStartSprintModal}
           >
             Start sprint
-          </button>
+          </button>: <button
+          className='bg-[#6f6f6f45] text-gray-500 px-3 py-1 text-sm rounded-sm hover:bg-[#79787845] hover:text-gray-200'
+          >Complete sprint</button>}
 
           <div className="relative">
             <button onClick={() => setShowDropdown(prev => !prev)}>
@@ -150,6 +156,10 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
         <StartSprintModal
         isOpen={openStartSprintModal}
         onClose={() => setOpenStartSprintModal(false)}
+        sprintName={sprintName}
+        workspaceId={workspaceId}
+        projectId={projectId}
+        sprintId={sprintId}
         />
  
     </div>

@@ -1,7 +1,7 @@
 import api from "../api/axiosInstance"
 import { IProject } from "../types/project";
 import { ProjectTeamData } from "../types/projectTeamData";
-import { CreateSprintData } from "../types/sprint";
+import { CreateSprintData, IStartSprint } from "../types/sprint";
 import { ITask } from "../types/task";
 
 export const createProjectWithTeamApi = async (data: ProjectTeamData) => {
@@ -92,5 +92,10 @@ export const getSprintApi = async (projectId: string) => {
 
 export const deleteSprintApi = async (workspaceId: string, projectId: string ,sprintId: string) => {
     const response = await api.delete(`project/delete-sprint/${workspaceId}/${projectId}/${sprintId}`)
+    return response.data;
+}
+
+export const startSprintApi = async (workspaceId: string, projectId: string ,sprintId: string, data: IStartSprint) => {
+    const response = await api.post(`project/start-sprint/${workspaceId}/${projectId}/${sprintId}`, data);
     return response.data;
 }

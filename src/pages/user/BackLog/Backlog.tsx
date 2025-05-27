@@ -11,7 +11,7 @@ import { ISprint } from '../../../types/sprint';
 import { ITask } from '../../../types/task';
 import { DndContext, closestCenter, DragEndEvent, DragStartEvent, DragOverlay, useSensors, MouseSensor, useSensor, TouchSensor } from '@dnd-kit/core';
 import TaskDragPreview from '../../../components/user/TaskDragPreview';
-import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const Backlog: React.FC = () => {
   const [showEpic, setShowEpic] = useState(true);
@@ -78,10 +78,22 @@ const Backlog: React.FC = () => {
 
     if (sourceContainerId === destinationContainerId) return;
 
+     const sourceSprint = sprintData?.data?.find((sprint: ISprint) => sprint._id === sourceContainerId);
+    if (sourceSprint?.status === 'ACTIVE') {
+      toast.error('Cannot move tasks from an active sprint');
+      return;
+    }
+
+    const destinationSprint = sprintData?.data?.find((sprint: ISprint) => sprint._id === destinationContainerId);
+    if (destinationSprint?.status === 'ACTIVE') {
+      toast.error('Cannot move tasks to an active sprint');
+      return;
+    }
+
+
     const isBacklog = destinationContainerId === 'backlog';
     const sprintId = isBacklog ? null : destinationContainerId;
 
-    // Optimistic update: Update localTasks
     setLocalTasks((prevTasks) =>
       prevTasks.map((task) =>
         task._id === taskId ? { ...task, sprint: sprintId } : task
@@ -102,6 +114,7 @@ const Backlog: React.FC = () => {
 
   const sprintTasks = (sprintId: string) => localTasks.filter((task) => task.sprint === sprintId);
   const backlogTasks = localTasks.filter((task) => !task.sprint);
+
 
   return (
     <div className="p-5 bg-[#191919] min-h-screen">
@@ -135,6 +148,7 @@ const Backlog: React.FC = () => {
               <SprintSection
                 key={sprint._id}
                 sprintName={sprint.sprintName}
+                sprintStatus={sprint.status}
                 sprintOrder={index}
                 sprintId={sprint._id}
                 workspaceId={workspaceId || ""}

@@ -76,28 +76,6 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
         {/* Avatar (Click to open dropdown) */}
         <button onClick={toggleDropdown} className="relative flex items-center  focus:outline-none">
-          {/* {user && user.fullName ? (
-            user.avatar ? (
-              <img
-                src={user.avatar}
-                alt="User avatar"
-                className="w-8 h-8 object-cover rounded-full"
-              />
-            ) : (
-              <div
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-sm"
-                style={{ backgroundColor: getRandomColor(user?._id || "") }}
-              >
-                {getInitials(user.fullName, user.secondName || '')}
-              </div>
-            )
-          ) : (
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold text-sm bg-gray-500"
-            >
-              ?
-            </div>
-          )} */}
           <UserAvatar user={user || undefined} getRandomColor={getRandomColor} getInitials={getInitials} />
         </button>
 

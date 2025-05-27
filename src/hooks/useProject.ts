@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, deleteTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, updateProjectApi, updateTaskApi } from "../services/projectService"
+import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, deleteTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, startSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
 import { IProject, ProjectResponse } from "../types/project"
 import { ITask, TaskResponse } from "../types/task"
 import { setSelectProject } from "../redux/projectSlice"
 import { useDispatch } from "react-redux"
 import InviteTeamModal from "../components/user/InviteTeamModal"
+import { IStartSprint } from "../types/sprint"
 
 export const useProject = () => {
   const queryClient = useQueryClient()
@@ -189,6 +190,18 @@ export const useProject = () => {
   })
 
 
+  const useStartSprint = useMutation({
+    mutationFn: ({workspaceId, projectId, sprintId, data}: {workspaceId: string, projectId: string, sprintId: string, data: IStartSprint}) => startSprintApi(workspaceId, projectId, sprintId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['sprints']});
+      console.log("sprint started successfully")
+    },
+    onError: (error: any) => {
+      console.log("failed to start the sprint", error)
+    }
+  })
+
+
   return {
     useCreateProjectWithTeam,
     useUpdateProject,
@@ -204,6 +217,7 @@ export const useProject = () => {
     useGetBacklogTasks,
     useInviteMember,
     useGetSprintTasks,
-    useGetTasksByProject
+    useGetTasksByProject,
+    useStartSprint,
   }
 }

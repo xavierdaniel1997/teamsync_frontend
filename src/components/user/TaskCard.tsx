@@ -30,9 +30,10 @@ interface TaskCardProps {
   task: ITask;
   taskType: string;
   containerId: string;
+  sprintStatus?: string;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
+const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprintStatus }) => {
   const project = useSelector((state: RootState) => state.project.selectedProject)
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
@@ -60,7 +61,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId }) => {
       containerId,
       sprintId: task.sprint || '',
     },
-    disabled: editTitle || openAssigneMember || showEpicList || openEditTaskModal,
+    
+    disabled: editTitle || openAssigneMember || showEpicList || openEditTaskModal || sprintStatus === "ACTIVE",
   });
 
 

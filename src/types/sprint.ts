@@ -21,3 +21,11 @@ export interface CreateSprintData {
   startDate?: string;
   endDate?: string;
 }
+
+export interface IStartSprint {
+  sprintName: string;
+  duration: string;
+  startDate: string;
+  endDate: string;
+  sprintGoal: string;
+}

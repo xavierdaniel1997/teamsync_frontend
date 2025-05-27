@@ -63,7 +63,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, sprintName, w
       project: projectId,
       workspace: workspaceId,
       epic: epicId,
-      sprint: sprintId,
+      sprint: sprintId ,
       type: selectedType.id,
       parent: epicId,
     })
