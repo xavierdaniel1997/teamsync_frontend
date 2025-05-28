@@ -78,6 +78,11 @@ export const getAllTaskByProjectsApi = async (workspaceId: string, projectId: st
     return response.data;
 }
 
+export const getActiveSprintTaskApi = async (workspaceId: string, projectId: string) => {
+    const response = await api.get(`project/active-tasks/${workspaceId}/${projectId}`)
+    return response.data;
+}
+
 // sprint related apis
 
 export const createSprintApi = async (data: CreateSprintData) => {

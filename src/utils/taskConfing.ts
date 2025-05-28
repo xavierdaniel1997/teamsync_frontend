@@ -1,7 +1,5 @@
-import { BsBookmarkCheck } from "react-icons/bs";
-import { RiTaskLine } from "react-icons/ri";
-import { BiBug } from "react-icons/bi";
-import { TaskStatus, TaskType } from "../types/task";
+
+import { TaskStatus, } from "../types/task";
 
 
 export const statusTypes = [
@@ -17,6 +15,12 @@ export const statusTypes = [
     bgColor: "bg-blue-600",
     textColor: "text-blue-100",
   },
+  // {
+  //   id: TaskStatus.IN_REVIEW,
+  //   label: "IN REVIEW",
+  //   bgColor: 'bg-red-600',
+  //   textColor: "text-red-100"
+  // },
   {
     id: TaskStatus.DONE,
     label: "DONE",

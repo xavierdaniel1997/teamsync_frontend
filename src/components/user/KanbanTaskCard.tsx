@@ -1,6 +1,11 @@
 import React from 'react'
+import { ITask } from '../../types/task'
 
-const KanbanTaskCard: React.FC = () => {
+interface KanbanTaskCardPrope{
+  task: ITask;
+}
+
+const KanbanTaskCard: React.FC<KanbanTaskCardPrope> = ({task}) => {
   return (
     <div className='bg-[#191919] p-3 rounded-sm'>
         <div>

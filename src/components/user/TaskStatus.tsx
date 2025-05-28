@@ -1,4 +1,4 @@
-// components/TaskStatus.tsx
+/*
 import { FC } from "react";
 import { formatStatus, getStatusStyles } from "../../utils/taskStatusStyles";
 
@@ -27,8 +27,6 @@ const TaskStatus: FC<TaskStatusProps> = ({
         <option value="IN_PROGRESS">{formatStatus("IN_PROGRESS")}</option>
         <option value="IN_REVIEW">{formatStatus("IN_REVIEW")}</option>
         <option value="DONE">{formatStatus("DONE")}</option>
-        {/* <option value="BLOCKED">{formatStatus("BLOCKED")}</option>
-        <option value="TESTING">{formatStatus("TESTING")}</option> */}
       </select>
     );
   }
@@ -41,3 +39,4 @@ const TaskStatus: FC<TaskStatusProps> = ({
 };
 
 export default TaskStatus;
+*/

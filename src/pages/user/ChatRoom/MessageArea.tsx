@@ -34,7 +34,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket }) => {
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
   const currentUserId = useSelector((state: RootState) => state.auth.user?._id);
 
-  // Fetch initial messages
+
   useEffect(() => {
     const fetchMessages = async () => {
       if (projectId && currentUserId && userDetails._id) {
@@ -54,7 +54,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket }) => {
     fetchMessages();
   }, [projectId, currentUserId, userDetails._id]);
 
-  // Socket.io handling
+
   useEffect(() => {
     if (projectId && currentUserId && userDetails._id) {
       const joinConversation = () => {
@@ -74,13 +74,11 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket }) => {
           (message.senderId === userDetails._id && message.recipientId === currentUserId)
         ) {
           setMessages((prev) => {
-            // Check for duplicates by _id
             if (prev.some((msg) => msg._id === message._id)) {
               console.log('Duplicate message ignored:', message._id);
               return prev;
             }
 
-            // Replace temporary message if tempId matches
             if (message.tempId) {
               const tempMessageIndex = prev.findIndex((msg) => msg._id === message.tempId);
               if (tempMessageIndex !== -1) {
@@ -91,7 +89,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket }) => {
               }
             }
 
-            // Add new message if no temporary message found
             console.log('Adding new message:', message._id);
             return [...prev, message];
           });
@@ -105,7 +102,6 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket }) => {
         }
       });
 
-      // Scroll to bottom
       if (messageAreaRef.current) {
         messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight;
       }
@@ -131,14 +127,13 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket }) => {
         tempId,
       };
 
-      // Optimistically add the message
       console.log('Adding temporary message:', tempId);
       setMessages((prev) => [...prev, tempMessage]);
       socket.emit('sendMessage', {
         projectId,
         recipientId: userDetails._id,
         message: newMessage,
-        tempId, // Include tempId in payload
+        tempId, 
       });
       setNewMessage('');
     }

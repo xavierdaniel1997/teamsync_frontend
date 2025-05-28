@@ -12,6 +12,7 @@ export enum TaskType {
   export enum TaskStatus {
     TO_DO = "TO_DO",
     IN_PROGRESS = "IN_PROGRESS",
+    IN_REVIEW = "IN_REVIEW",
     DONE = "DONE",
   }
   
@@ -62,3 +63,18 @@ export enum TaskType {
     data: ITask[];
   };
   
+
+
+export interface KanbanData {
+  [TaskStatus.TO_DO]: ITask[];
+  [TaskStatus.IN_PROGRESS]: ITask[];
+  [TaskStatus.IN_REVIEW]: ITask[];
+  [TaskStatus.DONE]: ITask[];
+}
+
+export interface KanbanResponse {
+  success: boolean;
+  status: number;
+  message: string;
+  data: KanbanData;
+}
