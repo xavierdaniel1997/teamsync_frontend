@@ -24,7 +24,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, label, bgColor, tas
     <div className="flex-1 bg-[#202020] rounded-md p-3 min-w-[250px] max-w-[380px]">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className={`text-white font-medium`}>{status}</span>
+          <span className={`text-gray-400 font-medium`}>{status}</span>
           <span className={`${bgColor} text-xs px-1.5 rounded-full text-white`}>{task.length}</span>
         </div>
       </div>
@@ -32,7 +32,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, label, bgColor, tas
         ref={setNodeRef}
         className={`min-h-[500px] ${isOver ? 'bg-[#2a2a2a]' : ''} rounded-md transition-colors duration-150`}
       >
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
         {task.map((currentTask) => (
         <KanbanTaskCard task={currentTask}/>
         ))}
