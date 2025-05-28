@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { getListMemberApi } from "../services/chatRoomService"
+import { getListMemberApi, getMessagesApi } from "../services/chatRoomService"
 
 export const useChatRoom = () => {
 
@@ -12,5 +12,21 @@ export const useChatRoom = () => {
         })
     }
 
-    return {useGetMemeberList}
+//     const useGetMessages = (projectId: string, userId: string, recipientId: string) => {
+//     return useQuery({
+//       queryKey: ["messages", projectId, userId, recipientId],
+//       queryFn: () => getMessagesApi(projectId, recipientId),
+//       enabled: !!projectId && !!userId && !!recipientId,
+//     });
+//   };
+
+const useGetMessages = (projectId: string, userId: string, recipientId: string) => {
+    return useQuery({
+      queryKey: ["messages", projectId, userId, recipientId],
+      queryFn: () => getMessagesApi(projectId, recipientId),
+      enabled: !!projectId && !!userId && !!recipientId,
+    });
+  };
+
+    return {useGetMemeberList, useGetMessages}
 }
