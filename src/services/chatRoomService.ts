@@ -8,11 +8,11 @@ export const getListMemberApi = async(workspaceId: string, projectId: string) =>
 
 
 export const getMessagesApi = async (projectId: string, recipientId: string) => {
-  const response = await api.get(`chat/messages/${projectId}`, {
-    params: { recipientId },
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem('authToken')}`, 
-    },
+  const response = await api.get('chat/messages/', {
+    params: {projectId, recipientId },
+    // headers: {
+    //   Authorization: `Bearer ${localStorage.getItem('authToken')}`, 
+    // },
   });
-  return response.data.data; 
+  return response.data; 
 };

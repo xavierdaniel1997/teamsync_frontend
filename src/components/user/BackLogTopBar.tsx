@@ -34,15 +34,6 @@ const BackLogTopBar: React.FC<Props> = ({showEpic, setShowEpic, projectMembers})
               <UserAvatar user={member.user || undefined} getRandomColor={getRandomColor} getInitials={getInitials}/>
             ))}
            
-            {/* <div className="bg-green-700 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold border-2 border-[#1c1f24] z-10">
-              HM
-            </div> */}
-
-
-          
-            {/* <div className="bg-gray-400 rounded-full w-8 h-8 flex items-center justify-center border-2 border-[#1c1f24] z-0">
-              <FaUserCircle className="text-[#1c1f24] text-lg" />
-            </div> */}
           </div>
 
           {/* Add Member Button */}

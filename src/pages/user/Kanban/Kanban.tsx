@@ -1,33 +1,69 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { closestCenter, DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, } from '@dnd-kit/core';
 import BreadCrumb from '../../../components/globa/BreadCrumb'
 import BackLogTopBar from '../../../components/user/BackLogTopBar'
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import KanbanColumn from './KanbanColumn';
 import { useProject } from '../../../hooks/useProject';
-import { ITask, KanbanData, KanbanResponse, TaskStatus } from '../../../types/task';
+import { ITask, TaskResponse, TaskStatus } from '../../../types/task';
+import { useQueryClient } from '@tanstack/react-query';
 
- 
+const taskStatus = [{ _id: "TO_DO", status: "TO_DO" }, { _id: "IN_PROGRESS", status: "IN_PROGRESS" }, {_id: "IN_REVIEW", status: "IN_REVIEW"}, {_id: "DONE", status: "DONE"}]
+
+
 
 const Kanban: React.FC = () => {
   const [showEpic, setShowEpic] = useState<boolean>(true);
+  const [localTasks, setLocalTasks] = useState<{ status: TaskStatus; tasks: ITask[] }[]>([]);
+  const boardRef = useRef<HTMLDivElement>(null);
   const project = useSelector((state: RootState) => state.project.selectedProject)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
-  const { useGetActiveSprintTask } = useProject();
+  const { useGetActiveSprintTask, useUpdateTask } = useProject();
   const { data: activeTask, isLoading: taskLoading } = useGetActiveSprintTask(workspaceId || "", projectId || "")
 
- 
 
-  if (taskLoading) {
-    return <div>Loading tasks...</div>;
+
+  const sensors = useSensors(
+      useSensor(MouseSensor, {
+        activationConstraint: {
+          distance: 5,
+        },
+      }),
+      useSensor(TouchSensor, {
+        activationConstraint: {
+          delay: 200,
+          tolerance: 5,
+        },
+      })
+    );
+    
+  
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    const task = active.data.current?.task as ITask;
+    const newStatus = over.data.current?.id as TaskStatus;
+
+    if (!task || !newStatus || task.status === newStatus) return;
+
+
+    if (workspaceId && projectId) {
+      useUpdateTask.mutate({
+        workspaceId: workspaceId,
+        projectId: projectId,
+        taskId: task._id,
+        task: { status: newStatus }
+      })
+    }
+
   }
 
-  if (!activeTask || !activeTask.data) {
-    return <div>No tasks available.</div>;
-  }
 
-  console.log("task details form the board", activeTask)
   return (
     <div className="p-5 bg-[#191919] min-h-screen">
       <div className='m-5'>
@@ -37,26 +73,29 @@ const Kanban: React.FC = () => {
           isBackLog={true}
         />
       </div>
-      <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members} />
-      <div className='p-5'>
-        <div className='flex w-full gap-5'>
-          {/* {STATUS_COLUMNS.map((column) => (
-            <KanbanColumn
-              key={column.id}
-              status={column.id}
-              label={column.label}
-              bgColor={column.label}
-              tasks={activeTask.data[column.id] || []}
-            />
-          ))} */}
+      <DndContext 
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      >
+        <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members} />
+        <div className='p-5'>
+          <div ref={boardRef} className='flex w-full gap-5' >
 
-          {activeTask.data.map((column: any) => (
-            <KanbanColumn status={column.status} task={column?.tasks}/> 
-          ))}
+            {!activeTask || !activeTask.data ? (
+              <>
+                {taskStatus.map((column: any) => (<KanbanColumn key={column._id} status={column.status} taskLoading={taskLoading}/>))}
+              </>
+            ) : (<>
+              {activeTask.data.map((column: any) => (
+                <KanbanColumn status={column.status} task={column?.tasks} />
+              ))}
+            </>)}
 
 
+          </div>
         </div>
-      </div>
+      </DndContext>
     </div>
   )
 }

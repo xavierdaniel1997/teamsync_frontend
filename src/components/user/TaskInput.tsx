@@ -33,6 +33,9 @@ const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, sprintName, w
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+        if(title.trim()){
+          handleSubmit();
+        }
         onCancel();
       }
     }
@@ -41,7 +44,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, sprintName, w
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [onCancel]);
+  }, [onCancel, title]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && title.trim()) {
@@ -62,7 +65,7 @@ const TaskInput: React.FC<TaskInputProps> = ({ onCancel, sprintId, sprintName, w
       title: title,
       project: projectId,
       workspace: workspaceId,
-      epic: epicId,
+      // epic: epicId,
       sprint: sprintId ,
       type: selectedType.id,
       parent: epicId,

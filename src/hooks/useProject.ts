@@ -85,8 +85,9 @@ export const useProject = () => {
       queryClient.invalidateQueries({ queryKey: ["project"] })
       queryClient.invalidateQueries({ queryKey: ["task"] });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.log("failed to create the task", error)
+      toast.error(error?.response?.data?.message)
     }
   })
 
@@ -97,6 +98,7 @@ export const useProject = () => {
       console.log("task updated successfully", response);
       queryClient.invalidateQueries({ queryKey: ["project"] });
       queryClient.invalidateQueries({ queryKey: ["task"] });
+      queryClient.invalidateQueries({ queryKey: ["activeTask"] });
     },
     onError: (error: any) => {
       console.log("failed to update the task", error);

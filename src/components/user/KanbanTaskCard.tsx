@@ -7,6 +7,7 @@ import { PiDotsThreeBold } from 'react-icons/pi';
 import UserAvatar from '../globa/UserAvatar';
 import { getInitials, getRandomColor } from '../../utils/userHelpers';
 import { FaUserCircle } from 'react-icons/fa';
+import { useDraggable } from '@dnd-kit/core';
 
 const issueTypes = [
   { id: TaskType.STORY, label: "Story", icon: <BsBookmarkCheck className="text-green-400" /> },
@@ -19,10 +20,30 @@ interface KanbanTaskCardPrope{
 }
 
 const KanbanTaskCard: React.FC<KanbanTaskCardPrope> = ({task}) => {
-  console.log("task details from the kanbanTask card", task)
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: task._id, 
+    data: { task }, 
+  })
+
+
    const issueType = issueTypes.find((type) => type.id === task.type)
+
+   const style = transform
+    ? {
+        transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
+        zIndex: 1000, 
+      }
+    : {};
+
   return (
-    <div className='bg-[#191919] p-3 rounded-sm text-gray-400 min-h-[110px] max-h-[150px]'>  
+    <div 
+    ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      className="bg-[#191919] p-3 rounded-sm text-gray-400 min-h-[110px] max-h-[150px] cursor-grab"
+    >  
         <div className='flex justify-between'>
            <div className='flex flex-col justify-between gap-3'>
              <p className='truncate max-w-[100px]'  title={task.title}>{task.title}</p>

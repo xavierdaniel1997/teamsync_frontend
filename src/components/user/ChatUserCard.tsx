@@ -18,7 +18,7 @@ const ChatUserCard: React.FC<ChatUserCardProps> = ({ user, isSelected, onSelect 
 
   return (
     <div
-      className={`p-4 flex items-center gap-4 rounded-sm cursor-pointer hover:bg-[#2E2E2E] transition-all duration-100 ${
+      className={`w-full p-4 flex items-center gap-4 rounded-sm cursor-pointer hover:bg-[#2E2E2E] transition-all duration-100 ${
         isSelected ? 'bg-[#1919197a] border-b border-[#2E2E2E]' : 'bg-[#191919]'
       }`}
       onClick={onSelect}

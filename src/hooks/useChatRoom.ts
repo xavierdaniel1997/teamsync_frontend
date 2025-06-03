@@ -20,11 +20,11 @@ export const useChatRoom = () => {
 //     });
 //   };
 
-const useGetMessages = (projectId: string, userId: string, recipientId: string) => {
+const useGetMessages = (projectId: string, recipientId: string) => {
     return useQuery({
-      queryKey: ["messages", projectId, userId, recipientId],
+      queryKey: ["messages", projectId, recipientId],
       queryFn: () => getMessagesApi(projectId, recipientId),
-      enabled: !!projectId && !!userId && !!recipientId,
+      enabled: !!projectId && !!recipientId,
     });
   };
 

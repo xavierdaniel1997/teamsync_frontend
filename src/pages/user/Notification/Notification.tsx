@@ -11,7 +11,7 @@ const Notification: React.FC = () => {
         isBackLog={true}
       />
       </div>
-      <div className='mx-6 mt-10 flex flex-col gap-5'>
+      <div className='mx-10 mt-10 flex flex-col gap-5'>
         <NotificationCard
           type="error"
           title="High Priority: Website redesign deadline approaching"

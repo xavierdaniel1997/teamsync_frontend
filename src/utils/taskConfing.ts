@@ -12,19 +12,19 @@ export const statusTypes = [
   {
     id: TaskStatus.IN_PROGRESS,
     label: "IN PROGRESS",
-    bgColor: "bg-blue-600",
+    bgColor: "bg-blue-600/40",
     textColor: "text-blue-100",
   },
-  // {
-  //   id: TaskStatus.IN_REVIEW,
-  //   label: "IN REVIEW",
-  //   bgColor: 'bg-red-600',
-  //   textColor: "text-red-100"
-  // },
+  {
+    id: TaskStatus.IN_REVIEW,
+    label: "IN REVIEW",
+    bgColor: 'bg-red-600/30',
+    textColor: "text-red-100"
+  },
   {
     id: TaskStatus.DONE,
     label: "DONE",
-    bgColor: "bg-green-600",
+    bgColor: "bg-green-600/30",
     textColor: "text-green-100",
   },
 ];

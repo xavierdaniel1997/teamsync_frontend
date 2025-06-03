@@ -4,6 +4,7 @@ import React from 'react'
 import { IoClose } from 'react-icons/io5';
 import { useFormik } from 'formik';
 import { useProject } from '../../hooks/useProject';
+import { useNavigate } from 'react-router-dom';
 
 
 interface StartSprintModalProps {
@@ -18,6 +19,7 @@ interface StartSprintModalProps {
 const StartSprintModal: React.FC<StartSprintModalProps> = ({ isOpen, onClose, sprintName, workspaceId, projectId, sprintId }) => {
 
     const { useStartSprint } = useProject();
+    const navigte = useNavigate()
 
     const formik = useFormik({
         initialValues: {
@@ -34,6 +36,7 @@ const StartSprintModal: React.FC<StartSprintModalProps> = ({ isOpen, onClose, sp
                         onSuccess: () => {
                             resetForm(),
                                 onClose()
+                                navigte("/project/board")
                         }
                     }
                 )

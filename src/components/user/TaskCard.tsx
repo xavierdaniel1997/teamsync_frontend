@@ -120,10 +120,23 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
         taskId: task._id,
         task: { title: newTitle }
       }, {
-        onSuccess: () => setEditTitle(false)
+        onSuccess: () => setEditTitle(false),
       })
+    }else{
+      setEditTitle(false);
     }
   }
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => { 
+    if (event.key === 'Enter' && newTitle.trim()) {
+      event.preventDefault();
+      handleBlurTitle(event as any); 
+    } else if (event.key === 'Escape') {
+      event.preventDefault();
+      setNewTitle(task.title); 
+      setEditTitle(false); 
+    }
+  };
 
   const handleInputClick = (event: React.MouseEvent<HTMLInputElement>) => {
     event.stopPropagation();
@@ -197,6 +210,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
               onChange={(e) => setNewTitle(e.target.value)}
               onBlur={handleBlurTitle}
               onClick={handleInputClick}
+              onKeyDown={handleKeyDown} 
               className="w-64 text-sm font-medium text-white border-none focus:outline-none focus:ring-1 focus:ring-gray-500 rounded-xs p-1"
               autoFocus
             />
