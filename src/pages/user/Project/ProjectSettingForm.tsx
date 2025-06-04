@@ -69,7 +69,7 @@ const ProjectSettingForm: React.FC = () => {
 
 
   return (
-    <div className="bg-[#191919] text-gray-300 min-h-screen p-6">
+    <div className="bg-[#191919] text-gray-300 min-h-[93vh] h-auto p-6">
       {/* Cover Image with Overlaid Header */}
       <div className="relative h-48 bg-cover bg-center rounded-md overflow-hidden">
         <img

@@ -34,7 +34,7 @@ const ProjectSetting: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#191919]">
+    <div className="flex min-h-[93vh] h-auto bg-[#191919]">
       <SidebarTab
         tabs={tabOptions}
         selectedTab={activeTab}

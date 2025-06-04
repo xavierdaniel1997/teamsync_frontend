@@ -27,6 +27,8 @@ const Chat: React.FC = () => {
         const socket = initializeSocket(token);
         if (!socket) return;
 
+        socket.emit('register', userId)
+
         socket.on('onlineStatus', ({ userId, isonline }: { userId: string; isonline: boolean }) => {
             setOnlineUsers((prev) => ({
                 ...prev,
@@ -58,14 +60,18 @@ const Chat: React.FC = () => {
     }
 
 
-    const handleMouseDown = () => {
+    const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+        e.preventDefault();
+        const startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
         isDragging.current = true;
+        document.body.style.userSelect = 'none';
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
         if (isDragging.current && chatUserListRef.current) {
-            const newWidth = e.clientX - chatUserListRef.current.getBoundingClientRect().left;
-            if (newWidth >= 200 && newWidth <= 600) { // Min 200px, Max 600px
+            const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+            const newWidth = clientX - chatUserListRef.current.getBoundingClientRect().left;
+            if (newWidth >= 200 && newWidth <= 600) {
                 setSidebarWidth(newWidth);
             }
         }
@@ -73,14 +79,19 @@ const Chat: React.FC = () => {
 
     const handleMouseUp = () => {
         isDragging.current = false;
+        document.body.style.userSelect = '';
     };
 
     useEffect(() => {
         document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('touchmove', handleMouseMove, { passive: false });
         document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('touchend', handleMouseUp);
         return () => {
             document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('touchmove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('touchend', handleMouseUp);
         };
     }, []);
 
@@ -88,7 +99,7 @@ const Chat: React.FC = () => {
 
     return (
 
-        <div className="p-2.5 pb-2.5 bg-[#191919] flex">
+        <div className="p-1.5 pt-2.5 bg-[#191919] flex min-h-[93vh] h-auto">
             <div
                 ref={chatUserListRef}
                 className="relative"
@@ -97,14 +108,13 @@ const Chat: React.FC = () => {
                 <ChatUserList
                     onSelectUser={handleSelectUser}
                     selectedUserId={selectedUser?._id || null}
-                    handleMouseDown={handleMouseDown}
                 />
                 <div
-                    className="absolute top-0 right-0 w-1 h-[calc(96vh-3rem)] bg-[#2a2a2a] cursor-ew-resize hover:bg-[#3e3e3e]"
+                    className="absolute top-0 right-0 w-1 h-[calc(96vh-3rem)] bg-[#191919] cursor-col-resize hover:bg-[#60A5FA]"
                     onMouseDown={handleMouseDown}
                 />
             </div>
-            <div className="flex-1 h-[calc(100vh-1.25rem)]">
+            <div className="flex-1">
                 {selectedUser && (
                     <MessageArea
                         userDetails={selectedUser}

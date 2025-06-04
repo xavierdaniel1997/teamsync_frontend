@@ -21,10 +21,9 @@ interface MemberListData {
 interface ChatUserListProps {
   onSelectUser: (user: IUser) => void;
   selectedUserId: string | null;
-  handleMouseDown: () => void;
 }
 
-const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserId , handleMouseDown }) => {
+const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserId  }) => {
   const { useGetMemeberList } = useChatRoom();
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
@@ -63,19 +62,17 @@ const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserI
 
   return (
     <div 
-    // className="text-white flex flex-col bg-[#202020] h-[calc(96vh-3rem)] w-lg fixed custom-scrollbar overflow-y-auto"
-    className="text-white flex flex-col bg-[#202020] h-[calc(96vh-3rem)] overflow-y-auto custom-scrollbar"
+    className="text-white flex flex-col bg-[#202020] h-[calc(98vh-4rem)]"
     >
       <div className="p-4 flex justify-between items-center border-b border-[#2E2E2E]">
         <h1 className="text-gray-300 font-semibold text-2xl">Chats</h1>
-        <span className='cursor-grabbing p-2'
-        onMouseDown={handleMouseDown}
+        <span className='cursor-grabbing'
         >
           <LuChevronsLeft size={20} aria-label="Collapse chat list" 
           />
         </span>
       </div>
-      <div className="p-2 flex flex-col gap-1 overflow-y-auto">
+      <div className="p-2 flex flex-col gap-1 custom-scrollbar overflow-y-auto">
         {filteredMembers.length > 0 ? (
           filteredMembers.map((member: Member) => (
             <ChatUserCard

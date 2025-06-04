@@ -46,4 +46,5 @@ const ChatUserCard: React.FC<ChatUserCardProps> = ({ user, isSelected, onSelect 
   );
 };
 
-export default React.memo(ChatUserCard);
+// export default React.memo(ChatUserCard);
+export default ChatUserCard;

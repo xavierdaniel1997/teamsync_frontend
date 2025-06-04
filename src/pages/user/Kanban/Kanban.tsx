@@ -65,7 +65,7 @@ const Kanban: React.FC = () => {
 
 
   return (
-    <div className="p-5 bg-[#191919] min-h-screen">
+    <div className="p-5 bg-[#191919] min-h-[93vh] h-auto">
       <div className='m-5'>
         <BreadCrumb
           pageName="SCRUM board"

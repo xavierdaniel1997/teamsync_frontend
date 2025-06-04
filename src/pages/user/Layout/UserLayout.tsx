@@ -29,14 +29,16 @@ const UserLayout: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user?._id)
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
   const [onlineUsers, setOnlineUsers] = useState<Record<string, boolean>>({});
+  const [sidebarWidth, setSidebarWidth] = useState<number>(256);
 
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: "Summary", path: "/project" },
     { icon: <FiLayers />, text: "Backlog", path: "/project/backlog" },
     { icon: <FiCalendar />, text: "Board", path: "/project/board" },
+    { icon: <FiTarget />, text: "Projects", path: "/project/project-setting" },
     { icon: <FiBell />, text: "Notification", path: "/project/notifications" },
     { icon: <IoChatbubbleOutline />, text: "Chat", path: "/project/chat" },
-    { icon: <FiTarget />, text: "Projects", path: "/project/project-setting" },
+    { icon: <IoChatbubbleOutline />, text: "Meetings", path: "/project/meetings" },
     { icon: <FiSettings />, text: "Settings", path: "/project/settings" },
   ];
 
@@ -64,24 +66,39 @@ const UserLayout: React.FC = () => {
 
   }, []);
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    setSidebarWidth(isSidebarOpen ? 64 : 256); 
+  };
+
+
+  const adjustSidebarWidth = (width: number) => {
+    setSidebarWidth(Math.max(64, Math.min(width, 400))); 
+    setIsSidebarOpen(width > 64); 
+  };
+
 
   return (
-    <div className="h-screen bg-[#191919] flex flex-col">
-      <div className="fixed top-0 left-0 w-full z-50 h-16 bg-white">
+    <div className="bg-[#191919] flex flex-col">
+      <div className="fixed top-0 left-0 w-full z-50 h-16">
         <Navbar isAdmin={false} />
       </div>
 
       <div className="flex">
         <div
-          className={`fixed top-16 left-0 ${
-            isSidebarOpen ? "w-64" : "w-16"
-          } h-[calc(100vh-4rem)] transition-all duration-300`}
+          // className={`fixed top-16 left-0 ${
+          //   isSidebarOpen ? "w-64" : "w-16"
+          // } h-[calc(100vh-4rem)] transition-all duration-300`}
+          className={`fixed top-16 left-0 h-[calc(100vh-4rem)] transition-all duration-300`}
+          style={{ width: `${sidebarWidth}px` }}
         >
           <NavSideBar
             isOpen={isSidebarOpen}
-            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            toggleSidebar={toggleSidebar}
             navItems={navItems}
             isAdmin={false}
+            sidebarWidth={sidebarWidth}
+            adjustSidebarWidth={adjustSidebarWidth}
           />
         </div>
 
@@ -89,6 +106,7 @@ const UserLayout: React.FC = () => {
           className={`flex-1 transition-all duration-300 bg-[#202020] text-gray-300 ${
             isSidebarOpen ? "ml-64" : "ml-16"
           }  mt-16`}
+          style={{ marginLeft: `${sidebarWidth}px` }}
         >
           <Outlet />
         </div>

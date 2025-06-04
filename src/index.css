@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+  background-color: #202020; 
+}
+
 
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
