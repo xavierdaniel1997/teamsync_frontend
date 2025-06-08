@@ -4,7 +4,7 @@ import NotificationCard from '../../../components/user/NotificationCard'
 
 const Notification: React.FC = () => {
   return (
-    <div className="p-5 bg-[#191919] min-h-screen">
+    <div className="p-5 bg-[#191919] min-h-[93vh]">
       <div className='m-5'>
          <BreadCrumb
         pageName="Notifications"

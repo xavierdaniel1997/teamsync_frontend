@@ -27,7 +27,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ type, title, messag
       className={`flex items-start p-3 bg-gray-800 border-l-4 rounded-r-lg shadow-md text-gray-300 ${typeStyles[type]} ${className}`}
       role="alert"
     >
-      <div className="flex-shrink-0 mt-1">
+      <div className="flex-shrink-0">
         <IoWarning size={22}/>
       </div>
       <div className="ml-3 flex-1">

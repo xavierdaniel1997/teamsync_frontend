@@ -6,11 +6,19 @@ import { IUser } from '../../../types/users';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { disconnectSocket, getSocket, initializeSocket } from '../../../config/socket';
+import { number, string } from 'yup';
+
+interface UnreadCount {
+  senderId: string;
+  count: number;
+}
 
 const Chat: React.FC = () => {
     const userId = useSelector((state: RootState) => state.auth.user?._id)
+    const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
     const [onlineUsers, setOnlineUsers] = useState<{ [key: string]: boolean }>({});
+    const [unreadCounts, setUnreadCounts] = useState<{ [key: string]: number }>({});
     const [sidebarWidth, setSidebarWidth] = useState(384);
     const chatUserListRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
@@ -28,6 +36,7 @@ const Chat: React.FC = () => {
         if (!socket) return;
 
         socket.emit('register', userId)
+        socket.emit('fetchUnreadCounts', projectId);
 
         socket.on('onlineStatus', ({ userId, isonline }: { userId: string; isonline: boolean }) => {
             setOnlineUsers((prev) => ({
@@ -35,6 +44,16 @@ const Chat: React.FC = () => {
                 [userId]: isonline,
             }));
         });
+
+
+        socket.on('unreadCounts', (counts: UnreadCount[]) => {
+      const countsMap = counts.reduce((acc, { senderId, count }) => {
+        acc[senderId] = count;
+        return acc;
+      }, {} as { [key: string]: number });
+      setUnreadCounts(countsMap);
+    });
+
 
         socket.on('connect_error', (err) => {
             console.error('Socket connection error:', err.message);
@@ -47,7 +66,7 @@ const Chat: React.FC = () => {
         return () => {
             disconnectSocket()
         }
-    }, [userId])
+    }, [userId, projectId])
 
 
 
@@ -95,7 +114,6 @@ const Chat: React.FC = () => {
         };
     }, []);
 
-    console.log("checking online user", onlineUsers)
 
     return (
 
@@ -108,6 +126,7 @@ const Chat: React.FC = () => {
                 <ChatUserList
                     onSelectUser={handleSelectUser}
                     selectedUserId={selectedUser?._id || null}
+                    unreadCounts={unreadCounts}
                 />
                 <div
                     className="absolute top-0 right-0 w-1 h-[calc(96vh-3rem)] bg-[#191919] cursor-col-resize hover:bg-[#60A5FA]"
@@ -129,37 +148,3 @@ const Chat: React.FC = () => {
 
 export default Chat
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// <div className='min-h-11/12 max-h-screen p-2.5 pb-2.5 bg-[#191919]'>
-//     <div className='flex w-full gap-2'>
-//         <div className='w-lg'>
-//             <ChatUserList
-//                 onSelectUser={handleSelectUser}
-//                 selectedUserId={selectedUser?._id || null}
-//             />
-//         </div>
-//         <div className='flex-1 h-full'>
-//             {selectedUser && <MessageArea
-//                 userDetails={selectedUser}
-//                 socket={getSocket()!}
-//                 onlineUsers={onlineUsers}
-//             />}
-//         </div>
-//     </div>
-// </div>

@@ -60,7 +60,7 @@ const SubscriptionPricing = () => {
         workspaceId,
         email: user.email,
       });
-      console.log("API Response:", response);
+      // console.log("API Response:", response);
       if (response.data?.sessionId) {
         const stripe = await stripePromise;
         if (!stripe) throw new Error("Stripe failed to initialize");

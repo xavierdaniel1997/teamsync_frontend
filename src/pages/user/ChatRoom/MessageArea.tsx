@@ -13,6 +13,9 @@ import { format, isToday, isYesterday, startOfDay } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { useChatRoom } from '../../../hooks/useChatRoom';
 import { DotPulse } from "ldrs/react";
+import tick from '../../../assets/tick.svg'
+import doubleTick from "../../../assets/doubletick.svg"
+
 
 interface Message {
   _id: string;
@@ -22,6 +25,7 @@ interface Message {
   message: string;
   createdAt: string;
   timestamp: string;
+  read: boolean;
 }
 
 interface GroupedMessages {
@@ -48,44 +52,60 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
 
   const { data: chatData } = useGetMessages(projectId || "", userDetails._id || "")
 
-  console.log("chatData form the message area", chatData)
+  // console.log("chatData form the message area", chatData)
 
   useEffect(() => {
     if (chatData?.data && Array.isArray(chatData?.data))
-      // setMessages(chatData?.data)
       setGroupedMessages(chatData.data)
   }, [chatData?.data])
+
 
 
   useEffect(() => {
     socket.on('receiveMessage', (message: Message) => {
       // setMessages((preMessage) => [...preMessage, message]) 
-      const date = new Date(message.timestamp);
-      const dateKey = format(startOfDay(date), 'yyyy-MM-dd');
-      let label = format(date, 'MMMM d, yyyy');
-      if (isToday(date)) {
-        label = 'Today';
-      } else if (isYesterday(date)) {
-        label = 'Yesterday'
+
+
+      if (
+        (message.senderId === userDetails._id && message.recipientId === currentUserId) ||
+        (message.senderId === currentUserId && message.recipientId === userDetails._id)
+      ) {
+        const date = new Date(message.timestamp);
+        const dateKey = format(startOfDay(date), 'yyyy-MM-dd');
+        let label = format(date, 'MMMM d, yyyy');
+        if (isToday(date)) {
+          label = 'Today';
+        } else if (isYesterday(date)) {
+          label = 'Yesterday';
+        }
+
+        setGroupedMessages((prev) => {
+          const newGroups = [...prev];
+          const groupIndex = newGroups.findIndex((group) => group.date === dateKey);
+
+          if (groupIndex >= 0) {
+            newGroups[groupIndex].messages = [...newGroups[groupIndex].messages, message].sort(
+              (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+            );
+          } else {
+            newGroups.unshift({
+              date: dateKey,
+              label,
+              messages: [message],
+            });
+          }
+          return newGroups;
+        });
       }
 
-      setGroupedMessages((prev) => {
-        const newGroups = [...prev];
-        const groupIndex = newGroups.findIndex((group) => group.date === dateKey);
+    })
 
-        if (groupIndex >= 0) {
-          newGroups[groupIndex].messages = [...newGroups[groupIndex].messages, message].sort(
-            (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-          );
-        } else {
-          newGroups.unshift({
-            date: dateKey,
-            label,
-            messages: [message]
-          })
-        }
-        return newGroups
-      })
+    socket.on('messageRead', ({messageId, read}: {messageId: string; read: boolean}) => {
+      console.log(`messageRead event received: messageId=${messageId}, read=${read}`);
+      setGroupedMessages((prev) => prev.map((group) => ({
+        ...group,
+        messages: group.messages.map((msg) => msg._id === messageId ? {...msg, read} : msg)
+      })))
     })
 
     socket.on('typing', ({ senderId }: { senderId: string }) => {
@@ -103,6 +123,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
 
     return () => {
       socket.off('receiveMessage')
+      socket.off('messageRead');
       socket.off('typing');
       socket.off('stopTyping');
     }
@@ -113,6 +134,42 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
       messageAreaRef.current.scrollTop = messageAreaRef.current.scrollHeight;
     }
   }, [groupedMessages]);
+
+
+  //  Mark messages as read when they become visible
+  useEffect(() => {
+    if (!messageAreaRef.current || !currentUserId || currentUserId === userDetails._id) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const messageId = entry.target.getAttribute('data-message-id');
+            if (messageId) {
+              socket.emit('markMessageAsRead', { messageId });
+            }
+          }
+        });
+      },
+      { threshold: 0.5 } // Trigger when 50% of the message is visible
+    );
+
+    const messageElements = messageAreaRef.current?.querySelectorAll('[data-message-id]');
+    messageElements?.forEach((el) => {
+      const messageId = el.getAttribute('data-message-id');
+      const message = groupedMessages
+        .flatMap((group) => group.messages)
+        .find((msg) => msg._id === messageId);
+      if (message && !message.read && message.recipientId === currentUserId) {
+        observer.observe(el);
+      }
+    });
+
+
+    return () => {
+      messageElements?.forEach((el) => observer.unobserve(el));
+    };
+  }, [groupedMessages, socket, currentUserId, userDetails._id]);
+
 
 
   useEffect(() => {
@@ -243,12 +300,11 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
               {group.messages.map((msg) => (
                 <div
                   key={msg._id}
+                  data-message-id={msg._id}
                   className={`flex ${msg.senderId === currentUserId ? 'justify-end' : 'justify-start'
                     } mb-2 px-6`}
                 >
                   <div
-                    // className={`flex items-center gap-2 ${msg.senderId === currentUserId ? 'flex-row' : 'flex-row-reverse'
-                    //   }relative group`}
                     className={`flex items-center gap-2 ${msg.senderId === currentUserId ? 'flex-row' : 'flex-row-reverse'
                       } relative group`}
                   >
@@ -262,7 +318,12 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
                         : 'bg-gray-700 text-gray-200'
                         }`}
                     >
+                      <div className='flex flex-row items-end gap-2'>
                       <div>{msg.message}</div>
+                      {msg.senderId === currentUserId && <div className=''>
+                            {msg.read ? <img className='w-5 h-6' src={doubleTick}/> : <img className='w-3 h-6 rotate-12' src={tick}/>}
+                      </div>}
+                      </div>
                     </div>
                   </div>
                 </div>

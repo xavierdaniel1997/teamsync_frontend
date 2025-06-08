@@ -5,6 +5,8 @@ import { RootState } from '../../../redux/store';
 import { useChatRoom } from '../../../hooks/useChatRoom';
 import ChatUserCard from '../../../components/user/ChatUserCard';
 import { IUser } from '../../../types/users';
+import { Socket } from 'socket.io-client';
+import { number, string } from 'yup';
 
 interface Member {
   user: IUser;
@@ -21,9 +23,10 @@ interface MemberListData {
 interface ChatUserListProps {
   onSelectUser: (user: IUser) => void;
   selectedUserId: string | null;
+  unreadCounts: { [key: string]: number };
 }
 
-const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserId  }) => {
+const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserId, unreadCounts}) => {
   const { useGetMemeberList } = useChatRoom();
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
@@ -60,6 +63,7 @@ const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserI
   );
 
 
+
   return (
     <div 
     className="text-white flex flex-col bg-[#202020] h-[calc(98vh-4rem)]"
@@ -80,6 +84,8 @@ const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserI
               user={member.user}
               isSelected={member.user._id === selectedUserId}
               onSelect={() => onSelectUser(member.user)}
+              // unreadCount={unreadCounts[member.user._id] || 0}
+              unreadCount={member.user._id ? unreadCounts[member.user._id] : 0}
             />
           ))
         ) : (

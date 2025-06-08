@@ -34,6 +34,7 @@ import ProjectSetting from "./pages/user/Project/ProjectSetting";
 import Kanban from "./pages/user/Kanban/Kanban";
 import Notification from "./pages/user/Notification/Notification";
 import Chat from "./pages/user/ChatRoom/Chat";
+import Meeting from "./pages/user/Meeting/Meeting";
 
 
 
@@ -73,6 +74,7 @@ const App: React.FC = () => {
             <Route path="board" element={<Kanban/>} />
             <Route path="notifications" element={<Notification/>}/>
             <Route path="chat" element={<Chat/>} />
+            <Route path="meeting" element={<Meeting/>}/>
             <Route path="team-members" element={<TeamMembers/>} />
             <Route path="project-setting" element={<ProjectSetting/>} />
             <Route path="settings" element={<UserSettings/>}/>

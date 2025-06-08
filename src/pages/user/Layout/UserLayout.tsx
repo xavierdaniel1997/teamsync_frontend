@@ -38,7 +38,7 @@ const UserLayout: React.FC = () => {
     { icon: <FiTarget />, text: "Projects", path: "/project/project-setting" },
     { icon: <FiBell />, text: "Notification", path: "/project/notifications" },
     { icon: <IoChatbubbleOutline />, text: "Chat", path: "/project/chat" },
-    { icon: <IoChatbubbleOutline />, text: "Meetings", path: "/project/meetings" },
+    { icon: <IoChatbubbleOutline />, text: "Meetings", path: "/project/meeting" },
     { icon: <FiSettings />, text: "Settings", path: "/project/settings" },
   ];
 
