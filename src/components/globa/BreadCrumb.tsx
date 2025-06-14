@@ -20,7 +20,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
   ButtonIcon,
   isBackLog,
   disabled,
-  buttonBg = "gray-600"
+  buttonBg = "gray-600",
 }) => {
   const location = useLocation();
   const paths = location.pathname.split("/").filter(Boolean);

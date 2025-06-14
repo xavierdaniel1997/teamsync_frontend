@@ -7,6 +7,7 @@ import ChatUserCard from '../../../components/user/ChatUserCard';
 import { IUser } from '../../../types/users';
 import { Socket } from 'socket.io-client';
 import { number, string } from 'yup';
+import { Message } from '../../../types/chat';
 
 interface Member {
   user: IUser;
@@ -24,9 +25,10 @@ interface ChatUserListProps {
   onSelectUser: (user: IUser) => void;
   selectedUserId: string | null;
   unreadCounts: { [key: string]: number };
+  lastMessages: { [key: string]: Message | null };
 }
 
-const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserId, unreadCounts}) => {
+const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserId, unreadCounts, lastMessages}) => {
   const { useGetMemeberList } = useChatRoom();
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
@@ -86,6 +88,7 @@ const ChatUserList: React.FC<ChatUserListProps> = ({ onSelectUser, selectedUserI
               onSelect={() => onSelectUser(member.user)}
               // unreadCount={unreadCounts[member.user._id] || 0}
               unreadCount={member.user._id ? unreadCounts[member.user._id] : 0}
+              lastMessage={member.user._id ? lastMessages[member.user._id] : null}
             />
           ))
         ) : (

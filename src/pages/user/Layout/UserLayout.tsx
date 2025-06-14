@@ -13,6 +13,7 @@ import {
   FiSettings,
 } from "react-icons/fi";
 import { IoChatbubbleOutline } from "react-icons/io5";
+import { BsCameraVideo } from "react-icons/bs";
 import { io, Socket } from "socket.io-client";
 import { boolean, string } from "yup";
 import { useSelector } from "react-redux";
@@ -38,7 +39,7 @@ const UserLayout: React.FC = () => {
     { icon: <FiTarget />, text: "Projects", path: "/project/project-setting" },
     { icon: <FiBell />, text: "Notification", path: "/project/notifications" },
     { icon: <IoChatbubbleOutline />, text: "Chat", path: "/project/chat" },
-    { icon: <IoChatbubbleOutline />, text: "Meetings", path: "/project/meeting" },
+    { icon: <BsCameraVideo />, text: "Meetings", path: "/project/meeting" },
     { icon: <FiSettings />, text: "Settings", path: "/project/settings" },
   ];
 
@@ -54,27 +55,25 @@ const UserLayout: React.FC = () => {
     if (!socket) return;
 
     socket.emit('register', userId)
-    
-    // socket.on("registerSuccess", (data: { userId: string; isonline: boolean }) => {
-    //   console.log(`Registration successful for user ${data.userId}`);
-    //   setOnlineUsers((prev) => ({ ...prev, [data.userId]: data.isonline }));
-    // });
 
     return () => {
-      disconnectSocket()
+      // disconnectSocket()
+      socket.off('connect');
+      socket.off('connect_error');
+      socket.off('disconnect');
     }
 
-  }, []);
+  }, [userId]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-    setSidebarWidth(isSidebarOpen ? 64 : 256); 
+    setSidebarWidth(isSidebarOpen ? 64 : 256);
   };
 
 
   const adjustSidebarWidth = (width: number) => {
-    setSidebarWidth(Math.max(64, Math.min(width, 400))); 
-    setIsSidebarOpen(width > 64); 
+    setSidebarWidth(Math.max(64, Math.min(width, 400)));
+    setIsSidebarOpen(width > 64);
   };
 
 
@@ -103,9 +102,8 @@ const UserLayout: React.FC = () => {
         </div>
 
         <div
-          className={`flex-1 transition-all duration-300 bg-[#202020] text-gray-300 ${
-            isSidebarOpen ? "ml-64" : "ml-16"
-          }  mt-16`}
+          className={`flex-1 transition-all duration-300 bg-[#202020] text-gray-300 ${isSidebarOpen ? "ml-64" : "ml-16"
+            }  mt-16`}
           style={{ marginLeft: `${sidebarWidth}px` }}
         >
           <Outlet />

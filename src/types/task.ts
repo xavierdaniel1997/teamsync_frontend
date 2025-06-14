@@ -41,7 +41,7 @@ export enum TaskType {
     type: TaskType;
     status: TaskStatus;
     priority: TaskPriority;
-    assignee?: string | IUser;
+    assignee?: string | IUser | null;
     reporter?: string;
     epicId?: string | null;
     epic?: { _id: string; title: string; taskKey: string }

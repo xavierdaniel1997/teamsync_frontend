@@ -4,18 +4,26 @@ import React from 'react';
 import { IUser } from '../../types/users';
 import UserAvatar from '../globa/UserAvatar';
 import { getInitials, getRandomColor } from '../../utils/userHelpers';
+import { Message } from '../../types/chat';
+import { formatInTimeZone } from 'date-fns-tz';
 
 interface ChatUserCardProps {
   user: IUser;
   isSelected: boolean;
   onSelect: () => void;
   unreadCount: number;
+  lastMessage: Message | null;
 }
 
-const ChatUserCard: React.FC<ChatUserCardProps> = ({ user, isSelected, onSelect, unreadCount}) => {
+const ChatUserCard: React.FC<ChatUserCardProps> = ({ user, isSelected, onSelect, unreadCount, lastMessage }) => {
   if (!user) {
     return null;
   }
+
+  const truncateMessage = (message: string, maxLength: number = 20) => {
+    return message.length > maxLength ? `${message.substring(0, maxLength)}...` : message;
+  };
+
 
   return (
     <div
@@ -41,14 +49,23 @@ const ChatUserCard: React.FC<ChatUserCardProps> = ({ user, isSelected, onSelect,
           <h1 className="text-gray-300 font-semibold">
             {user.secondName ? `${user.fullName} ${user.secondName}` : user.fullName}
           </h1>
-          <p className="text-gray-500 text-xs capitalize">last seen</p>
+          <p className="text-gray-500 text-xs capitalize">
+            {lastMessage ? truncateMessage(lastMessage.message) : 'No messages yet'}
+          </p>
         </div>
       </div>
 
-        {/* show if there is any unreaded messages */}
-      {unreadCount > 0 && <span className='bg-blue-500 px-1.5 rounded-full text-[#191919] font-bold'>
-    {unreadCount}
-      </span>}
+      {/* show if there is any unreaded messages */}
+      <div className='flex flex-col justify-end gap-1'>
+        <span className='text-xs text-gray-400'>
+          {lastMessage ? formatInTimeZone(new Date(lastMessage.timestamp), 'Asia/Kolkata', 'h:mm a') : ""}
+        </span>
+        <div className='flex justify-end'>
+          {unreadCount > 0 && <span className='bg-blue-500 px-1.5 rounded-full text-[#191919] font-bold w-fit'>
+            {unreadCount}
+          </span>}
+        </div>
+      </div>
     </div>
   );
 };

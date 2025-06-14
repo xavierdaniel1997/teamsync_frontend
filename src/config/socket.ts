@@ -10,7 +10,10 @@ export const initializeSocket = (token: string): Socket | null => {
     const socketUrl = import.meta.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
     socket = io(socketUrl, {
         withCredentials: true,
-        auth: { token }
+        auth: { token },
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
     })
 
     socket.on('connect_error', (err) => {
@@ -28,8 +31,8 @@ export const getSocket = (): Socket | null => socket;
 
 
 export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
+    if (socket) {
+        socket.disconnect();
+        socket = null;
+    }
 };

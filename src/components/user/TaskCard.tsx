@@ -81,7 +81,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
   };
 
 
-  const handleAssigneeChange = (userId: string) => {
+  const handleAssigneeChange = (userId: string | null) => {
     if (workspaceId && projectId) {
       useUpdateTask.mutate({
         workspaceId: workspaceId,

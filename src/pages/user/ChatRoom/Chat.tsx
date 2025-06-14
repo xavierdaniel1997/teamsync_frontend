@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { disconnectSocket, getSocket, initializeSocket } from '../../../config/socket';
 import { number, string } from 'yup';
+import { Message } from '../../../types/chat';
 
 interface UnreadCount {
-  senderId: string;
-  count: number;
+    senderId: string;
+    count: number;
 }
 
 const Chat: React.FC = () => {
@@ -19,6 +20,7 @@ const Chat: React.FC = () => {
     const [selectedUser, setSelectedUser] = useState<IUser | null>(null);
     const [onlineUsers, setOnlineUsers] = useState<{ [key: string]: boolean }>({});
     const [unreadCounts, setUnreadCounts] = useState<{ [key: string]: number }>({});
+    const [lastMessages, setLastMessages] = useState<{ [key: string]: Message | null }>({});
     const [sidebarWidth, setSidebarWidth] = useState(384);
     const chatUserListRef = useRef<HTMLDivElement>(null);
     const isDragging = useRef(false);
@@ -37,6 +39,7 @@ const Chat: React.FC = () => {
 
         socket.emit('register', userId)
         socket.emit('fetchUnreadCounts', projectId);
+        socket.emit('fetchLastMessage', projectId)
 
         socket.on('onlineStatus', ({ userId, isonline }: { userId: string; isonline: boolean }) => {
             setOnlineUsers((prev) => ({
@@ -47,12 +50,26 @@ const Chat: React.FC = () => {
 
 
         socket.on('unreadCounts', (counts: UnreadCount[]) => {
-      const countsMap = counts.reduce((acc, { senderId, count }) => {
-        acc[senderId] = count;
-        return acc;
-      }, {} as { [key: string]: number });
-      setUnreadCounts(countsMap);
-    });
+            const countsMap = counts.reduce((acc, { senderId, count }) => {
+                acc[senderId] = count;
+                return acc;
+            }, {} as { [key: string]: number });
+            setUnreadCounts(countsMap);
+        });
+
+
+        socket.on('lastMessages', (messages: { [key: string]: Message | null }) => {
+            console.log("Received lastMessages:", messages);
+            setLastMessages(messages);
+        });
+
+        socket.on('updateLastMessage', ({ senderId, recipientId, lastMessage }: { senderId: string; recipientId: string; lastMessage: Message | null }) => {
+            setLastMessages((prev) => ({
+                ...prev,
+                [senderId]: lastMessage,
+                [recipientId]: lastMessage,
+            }));
+        });
 
 
         socket.on('connect_error', (err) => {
@@ -115,6 +132,7 @@ const Chat: React.FC = () => {
     }, []);
 
 
+
     return (
 
         <div className="p-1.5 pt-2.5 bg-[#191919] flex min-h-[93vh] h-auto">
@@ -127,6 +145,7 @@ const Chat: React.FC = () => {
                     onSelectUser={handleSelectUser}
                     selectedUserId={selectedUser?._id || null}
                     unreadCounts={unreadCounts}
+                    lastMessages={lastMessages}
                 />
                 <div
                     className="absolute top-0 right-0 w-1 h-[calc(96vh-3rem)] bg-[#191919] cursor-col-resize hover:bg-[#60A5FA]"

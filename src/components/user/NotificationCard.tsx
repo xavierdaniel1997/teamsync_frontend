@@ -1,60 +1,104 @@
 import React from 'react';
 import { IoCheckmarkCircle, IoWarning, IoInformationCircle, IoCloseCircle, IoCheckmark, IoTrash } from 'react-icons/io5';
+import { INotification, NotificationStatus } from '../../types/notification';
+import { formatInTimeZone } from 'date-fns-tz';
+import { useNotifications } from '../../hooks/useNotifications';
+import doubleTick from '../../assets/doubletick.svg'
+import singleTick from '../../assets/tick.svg'
 
 // Define the props interface
 interface NotificationCardProps {
-  type: 'success' | 'error' | 'warning' | 'info';
-  title: string;
-  message: string;
-  subtitle: string;
-  onMarkAsRead?: () => void;
-  onDelete?: () => void;
-  className?: string;
+  notification: INotification;
 }
 
-const NotificationCard: React.FC<NotificationCardProps> = ({ type, title, message, subtitle, onMarkAsRead, onDelete, className }) => {
-  // Define styles based on notification type
-  const typeStyles = {
-    success: 'border-l-green-500',
-    error: 'border-l-red-500',
-    warning: 'border-l-yellow-500',
-    info: 'border-l-blue-500',
-  };
+const notificationStatusTypes = [
+  {
+    id: NotificationStatus.INFO,
+    label: "INFO",
+    bgColor: "bg-green-600",
+    textColor: "text-green-600/50",
+    icon: <IoInformationCircle size={28} />,
+  },
+  {
+    id: NotificationStatus.ERROR,
+    label: "ERROR",
+    bgColor: "bg-red-600/30",
+    textColor: "text-red-100",
+    icon: <IoCloseCircle size={22} />,
+  },
+  {
+    id: NotificationStatus.WARNING,
+    label: "WARNING",
+    bgColor: "bg-red-600",
+    textColor: "text-red-500/50",
+    icon: <IoWarning size={28} />,
+  },
+  {
+    id: NotificationStatus.SUCCESS,
+    label: "SUCCESS",
+    bgColor: "bg-blue-600/30",
+    textColor: "text-blue-100",
+    icon: <IoCloseCircle size={22} />,
+  },
+];
 
+const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => {
+
+  const { useUpdateNotification, useDeleteNotification } = useNotifications();
+
+  const statusType = notificationStatusTypes.find(
+    (type) => type.id === notification.notificationStatus
+  ) || notificationStatusTypes[0];
+
+  const handleMarkAsRead = (notificationId: string) => {
+    if (notificationId) {
+      useUpdateNotification.mutate(notificationId)
+    }
+  }
+
+  const handleRemoveNotification = (notificationId: string) => {
+    if(notificationId){
+      useDeleteNotification.mutate(notificationId)
+    }
+  }
 
   return (
     <div
-      className={`flex items-start p-3 bg-gray-800 border-l-4 rounded-r-lg shadow-md text-gray-300 ${typeStyles[type]} ${className}`}
-      role="alert"
+      className={`flex gap-2 items-center p-3 bg-[#202020]  rounded-r-lg shadow-md `}
     >
-      <div className="flex-shrink-0">
-        <IoWarning size={22}/>
+      <div className={`flex-shrink-0 ml-2 ${statusType.textColor}`}>
+        {statusType.icon}
       </div>
       <div className="ml-3 flex-1">
         <div className='flex flex-col gap-1.5'>
-        <p className="font-semibold">{title}</p>
-        <p className="text-gray-300">{message}</p>
-        <p className="text-xs text-blue-400 mt-1">{subtitle}</p>
+          <p className="font-semibold text-gray-400">{notification.title}</p>
+          <p className="text-gray-300">{notification.message}</p>
+          <p className="text-xs text-blue-400 mt-1">{notification.subtitle}</p>
         </div>
       </div>
-      <div className="flex items-center space-x-2">
-          <button
-            onClick={onMarkAsRead}
-            className="text-gray-400 hover:text-gray-200 focus:outline-none"
-            aria-label="Mark as read"
-          >
-            <IoCheckmark size={22} className="w-4 h-4" />
-          </button>
+      <div className="flex space-x-2">
+        <div className='text-xs text-gray-400'>
+          {formatInTimeZone(new Date(notification.createdAt), 'Asia/Kolkata', 'MMM d, yyyy h:mm a')}
+        </div>
+        {notification.isRead ? <button
+          className="text-gray-400 hover:text-gray-200 focus:outline-none"
+          aria-label="Mark as read"
 
-          <button
-            onClick={onDelete}
-            className="text-gray-400 hover:text-gray-200 focus:outline-none"
-            aria-label="Delete notification"
-          >
-            <IoTrash size={22} className="w-4 h-4" />
-          </button>
-    
+        >
+          <img className='w-6 h-6' src={doubleTick} alt="" />
+        </button> : <button className='cursor-pointer'
+          onClick={() => handleMarkAsRead(notification._id)}>
+           <IoCheckmark size={22} className="w-4 h-5" />
+        </button>}
+        <button
+          className="text-gray-400 hover:text-gray-200 focus:outline-none cursor-pointer"
+          aria-label="Delete notification"
+          onClick={() => handleRemoveNotification(notification._id)}
+        >
+          <IoTrash size={22} className="w-4 h-4 text-white" />
+        </button>
       </div>
+
     </div>
   );
 };
