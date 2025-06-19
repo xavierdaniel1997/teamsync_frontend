@@ -18,7 +18,8 @@ import { io, Socket } from "socket.io-client";
 import { boolean, string } from "yup";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { disconnectSocket, initializeSocket } from "../../../config/socket";
+import { initializeSocket } from "../../../config/socket";
+
 
 interface NavItem {
   icon: JSX.Element;
@@ -29,8 +30,11 @@ interface NavItem {
 const UserLayout: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user?._id)
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const [onlineUsers, setOnlineUsers] = useState<Record<string, boolean>>({});
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number>(256);
+  const [onlineUsers, setOnlineUsers] = useState<Record<string, boolean>>({});
+
+
 
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: "Summary", path: "/project" },
@@ -56,14 +60,20 @@ const UserLayout: React.FC = () => {
 
     socket.emit('register', userId)
 
+
+    // socket.on('onlineUsers', (users: Record<string, boolean>) => {
+    //   setOnlineUsers(users);
+    // });
+
     return () => {
-      // disconnectSocket()
       socket.off('connect');
       socket.off('connect_error');
       socket.off('disconnect');
     }
 
   }, [userId]);
+
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -77,7 +87,9 @@ const UserLayout: React.FC = () => {
   };
 
 
+
   return (
+
     <div className="bg-[#191919] flex flex-col">
       <div className="fixed top-0 left-0 w-full z-50 h-16">
         <Navbar isAdmin={false} />
@@ -85,9 +97,7 @@ const UserLayout: React.FC = () => {
 
       <div className="flex">
         <div
-          // className={`fixed top-16 left-0 ${
-          //   isSidebarOpen ? "w-64" : "w-16"
-          // } h-[calc(100vh-4rem)] transition-all duration-300`}
+
           className={`fixed top-16 left-0 h-[calc(100vh-4rem)] transition-all duration-300`}
           style={{ width: `${sidebarWidth}px` }}
         >
@@ -110,6 +120,7 @@ const UserLayout: React.FC = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

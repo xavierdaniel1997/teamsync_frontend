@@ -35,6 +35,9 @@ import Kanban from "./pages/user/Kanban/Kanban";
 import Notification from "./pages/user/Notification/Notification";
 import Chat from "./pages/user/ChatRoom/Chat";
 import Meeting from "./pages/user/Meeting/Meeting";
+import { CallProvider } from "./context/CallContext";
+import GlobalCallNotification from "./components/user/GlobalCallNotification";
+// import GlobalCallNotification from "./components/user/GlobalCallNotification";
 
 
 
@@ -43,7 +46,9 @@ import Meeting from "./pages/user/Meeting/Meeting";
 const App: React.FC = () => {
   return (
     <BrowserRouter>
+    <CallProvider>
       <Toaster position="bottom-left" richColors theme="dark" />
+       <GlobalCallNotification/>
       <Routes>
         <Route path="*" element={<PageNotFound/>}/>
         <Route path="/" element={<LandingPage />} />
@@ -92,7 +97,7 @@ const App: React.FC = () => {
 
       </Routes>
 
-
+</CallProvider>
     </BrowserRouter>
   )
 }

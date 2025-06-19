@@ -15,7 +15,7 @@ import { useChatRoom } from '../../../hooks/useChatRoom';
 import { DotPulse } from "ldrs/react";
 import tick from '../../../assets/tick.svg'
 import doubleTick from "../../../assets/doubletick.svg"
-
+import { useCall } from '../../../context/CallContext';
 
 interface Message {
   _id: string;
@@ -40,32 +40,37 @@ interface MessageAreaProps {
   onlineUsers: { [key: string]: boolean }
 }
 
-const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUsers }) => {
+
+const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUsers}) => {
   const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [groupedMessages, setGroupedMessages] = useState<GroupedMessages[]>([]);
   const messageAreaRef = useRef<HTMLDivElement>(null);
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
   const currentUserId = useSelector((state: RootState) => state.auth.user?._id);
   const { useGetMessages } = useChatRoom()
+  const { callActive, initiateVideoCall, endCall } = useCall();
 
   const { data: chatData } = useGetMessages(projectId || "", userDetails._id || "")
 
-  // console.log("chatData form the message area", chatData)
 
   useEffect(() => {
     if (chatData?.data && Array.isArray(chatData?.data))
       setGroupedMessages(chatData.data)
   }, [chatData?.data])
 
+    const handleVideoCall = () => {
+    if (callActive) {
+      endCall();
+    } else {
+      initiateVideoCall(userDetails._id || "", userDetails.fullName);
+    }
+  };
+
 
 
   useEffect(() => {
     socket.on('receiveMessage', (message: Message) => {
-      // setMessages((preMessage) => [...preMessage, message]) 
-
-
       if (
         (message.senderId === userDetails._id && message.recipientId === currentUserId) ||
         (message.senderId === currentUserId && message.recipientId === userDetails._id)
@@ -100,11 +105,11 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
 
     })
 
-    socket.on('messageRead', ({messageId, read}: {messageId: string; read: boolean}) => {
+    socket.on('messageRead', ({ messageId, read }: { messageId: string; read: boolean }) => {
       console.log(`messageRead event received: messageId=${messageId}, read=${read}`);
       setGroupedMessages((prev) => prev.map((group) => ({
         ...group,
-        messages: group.messages.map((msg) => msg._id === messageId ? {...msg, read} : msg)
+        messages: group.messages.map((msg) => msg._id === messageId ? { ...msg, read } : msg)
       })))
     })
 
@@ -127,7 +132,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
       socket.off('typing');
       socket.off('stopTyping');
     }
-  }, [socket, userDetails._id])
+  }, [socket, userDetails._id, currentUserId, callActive])
 
   useEffect(() => {
     if (messageAreaRef.current) {
@@ -268,19 +273,24 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
           </div>
         </div>
 
-        <div className='flex items-center gap-3'>
-          <div>
+
+         <div className='flex items-center gap-3'>
+          <button
+            onClick={handleVideoCall}
+            disabled={!isOnline && !callActive}
+            className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-colors ${
+              callActive 
+                ? 'text-red-500 hover:text-red-600 bg-red-50 hover:bg-red-100' 
+                : 'text-gray-400 hover:text-gray-200 disabled:opacity-50'
+            }`}
+          >
             <IoVideocam size={20} />
-          </div>
-          <div>
-            <BsThreeDots size={20} />
-          </div>
+            {callActive && <span className="text-sm">End Call</span>}
+          </button>
+          <BsThreeDots size={20} />
         </div>
+       
       </div>
-
-
-      {/* message area */}
-
 
       {groupedMessages.length === 0 ? (
         <div className="flex flex-col items-center h-[calc(96vh-3rem)] justify-center text-white text-center rounded-md">
@@ -319,10 +329,10 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
                         }`}
                     >
                       <div className='flex flex-row items-end gap-2'>
-                      <div>{msg.message}</div>
-                      {msg.senderId === currentUserId && <div className=''>
-                            {msg.read ? <img className='w-5 h-6' src={doubleTick}/> : <img className='w-3 h-6 rotate-12' src={tick}/>}
-                      </div>}
+                        <div>{msg.message}</div>
+                        {msg.senderId === currentUserId && <div className=''>
+                          {msg.read ? <img className='w-5 h-6' src={doubleTick} /> : <img className='w-3 h-6 rotate-12' src={tick} />}
+                        </div>}
                       </div>
                     </div>
                   </div>
@@ -332,7 +342,7 @@ const MessageArea: React.FC<MessageAreaProps> = ({ userDetails, socket, onlineUs
             </div>
           ))}
           {isTyping && <div className=' w-fit'>
-            <span className='bg-gray-700 pb-1 px-2 rounded-md'><DotPulse size={25} speed={2.5}/></span>
+            <span className='bg-gray-700 pb-1 px-2 rounded-md'><DotPulse size={25} speed={2.5} /></span>
           </div>}
         </div>
       )}

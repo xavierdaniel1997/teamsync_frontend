@@ -11,7 +11,7 @@ interface AssignMemberProps {
 
 const AssignMembers: React.FC<AssignMemberProps> = ({ members, onSelectMember }) => {
     return (
-        <div className="bg-[#202020] border-[#2C2C2C] px-3 py-2 border rounded-xs">
+        <div className="bg-[#202020] border-[#2C2C2C] px-3 py-2 border rounded-xs max-h-80 overflow-auto pr-1.5 custom-scrollbar">
             <div className="relative mb-2">
                 <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
                     <FiSearch size={16} />
