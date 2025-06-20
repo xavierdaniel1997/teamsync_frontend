@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import { FiCheck } from "react-icons/fi";
 import LogoImage from "../../../assets/teamsync-log.png";
 import * as Yup from "yup";

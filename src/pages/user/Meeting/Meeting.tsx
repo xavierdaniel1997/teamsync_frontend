@@ -35,7 +35,7 @@ const Meeting: React.FC = () => {
   };
 
 
-  const { data: meetingData, isLoading } = useGetMyMeetings(filterMeeting);
+  const { data: meetingData } = useGetMyMeetings(filterMeeting);
 
   console.log('form the meeting jsx', filterMeeting);
 

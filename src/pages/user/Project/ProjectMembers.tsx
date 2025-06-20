@@ -8,12 +8,10 @@ import ReusableTableTypeOne from "../../../components/globa/ReusableTableTypeOne
 import UserAvatar from "../../../components/globa/UserAvatar"
 import { getInitials, getRandomColor } from "../../../utils/userHelpers"
 import { formatDate } from "../../../utils/formatDate"
-import { IUser } from "../../../types/users"
 import InviteTeamModal from "../../../components/user/InviteTeamModal"
 import { toast } from "sonner"
 import { useProject } from "../../../hooks/useProject"
 import { IoIosArrowDown } from "react-icons/io"
-import { updateProjectApi } from "../../../services/projectService"
 
 
 const ProjectMembers: React.FC = () => {
@@ -22,7 +20,6 @@ const ProjectMembers: React.FC = () => {
   const project = useSelector((state: RootState) => state.project.selectedProject)
   const user = useSelector((state: RootState) => state.auth.user)
   const [openInviteModal, setOpenInviteModal] = useState(false)
-  const [accessLevel, setAccessLevel] = useState()
 
   const currentUserId = user?._id;
   const currentMember = project?.members.find(

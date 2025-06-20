@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { closestCenter, DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, } from '@dnd-kit/core';
 import BreadCrumb from '../../../components/globa/BreadCrumb'
 import BackLogTopBar from '../../../components/user/BackLogTopBar'
@@ -6,8 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import KanbanColumn from './KanbanColumn';
 import { useProject } from '../../../hooks/useProject';
-import { ITask, TaskResponse, TaskStatus } from '../../../types/task';
-import { useQueryClient } from '@tanstack/react-query';
+import { ITask, TaskStatus } from '../../../types/task';
 
 const taskStatus = [{ _id: "TO_DO", status: "TO_DO" }, { _id: "IN_PROGRESS", status: "IN_PROGRESS" }, {_id: "IN_REVIEW", status: "IN_REVIEW"}, {_id: "DONE", status: "DONE"}]
 
@@ -15,7 +14,6 @@ const taskStatus = [{ _id: "TO_DO", status: "TO_DO" }, { _id: "IN_PROGRESS", sta
 
 const Kanban: React.FC = () => {
   const [showEpic, setShowEpic] = useState<boolean>(true);
-  const [localTasks, setLocalTasks] = useState<{ status: TaskStatus; tasks: ITask[] }[]>([]);
   const boardRef = useRef<HTMLDivElement>(null);
   const project = useSelector((state: RootState) => state.project.selectedProject)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)

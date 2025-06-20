@@ -1,11 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, deleteTaskApi, getActiveSprintTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, startSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
-import { IProject, ProjectResponse } from "../types/project"
+import { ProjectResponse } from "../types/project"
 import { ITask, TaskResponse } from "../types/task"
 import { setSelectProject } from "../redux/projectSlice"
 import { useDispatch } from "react-redux"
-import InviteTeamModal from "../components/user/InviteTeamModal"
 import { IStartSprint } from "../types/sprint"
 
 export const useProject = () => {

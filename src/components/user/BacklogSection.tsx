@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { toast } from 'sonner';
 import { ITask } from '../../types/task';
-import TaskShimmer, { TaskShimmerList } from './TaskShimmer';
+import { TaskShimmerList } from './TaskShimmer';
 import { useDroppable } from '@dnd-kit/core';
 
 

@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
 import ChatUserList from './ChatUserList'
 import MessageArea from './MessageArea'
 import { IUser } from '../../../types/users';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { disconnectSocket, getSocket, initializeSocket } from '../../../config/socket';
-import { number, string } from 'yup';
 import { Message } from '../../../types/chat';
 
 interface UnreadCount {
@@ -98,7 +96,7 @@ const Chat: React.FC = () => {
 
     const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
         e.preventDefault();
-        const startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+        // const startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
         isDragging.current = true;
         document.body.style.userSelect = 'none';
     };

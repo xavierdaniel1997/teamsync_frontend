@@ -6,7 +6,7 @@ import { IoCameraOutline } from "react-icons/io5";
 
 const UserSettings: React.FC = () => {
     const { getUserDetials, updateUserProfile } = useUserDetailsMutation();
-    const { data: userDetails, isLoading } = getUserDetials;
+    const { data: userDetails } = getUserDetials;
     const user = userDetails?.data?.userDetail;
 
     const [avatarPreview, setAvatarPreview] = useState<string | null>(null);

@@ -22,7 +22,6 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
 
   const { useCreateTask } = useProject();
   const [isCreating, setIsCreating] = useState(false);
-  const [showEpicBlock, setShowEpicBlock] = useState(true)
   const [epicTitle, setEpicTitle] = useState('');
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);

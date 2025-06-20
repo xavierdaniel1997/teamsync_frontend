@@ -1,10 +1,9 @@
 import React from 'react';
-import { IoCheckmarkCircle, IoWarning, IoInformationCircle, IoCloseCircle, IoCheckmark, IoTrash } from 'react-icons/io5';
+import { IoWarning, IoInformationCircle, IoCloseCircle, IoCheckmark, IoTrash } from 'react-icons/io5';
 import { INotification, NotificationStatus } from '../../types/notification';
 import { formatInTimeZone } from 'date-fns-tz';
 import { useNotifications } from '../../hooks/useNotifications';
 import doubleTick from '../../assets/doubletick.svg'
-import singleTick from '../../assets/tick.svg'
 
 // Define the props interface
 interface NotificationCardProps {

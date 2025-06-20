@@ -1,5 +1,4 @@
 import api from "../api/axiosInstance"
-import { IProject } from "../types/project";
 import { ProjectTeamData } from "../types/projectTeamData";
 import { CreateSprintData, IStartSprint } from "../types/sprint";
 import { ITask } from "../types/task";

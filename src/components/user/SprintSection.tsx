@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { FaEllipsisH } from 'react-icons/fa';
 import sprintLogo from "../../assets/sprintLogo.png"
 import TaskInput from './TaskInput';
 import TaskDropDown from './TaskDropDown';
@@ -32,7 +31,7 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
   
 
 
-  const { data: sprintTasksData, isLoading, error } = useGetSprintTasks(
+  const { isLoading } = useGetSprintTasks(
     workspaceId,
     projectId,
     sprintId
@@ -56,7 +55,7 @@ const SprintSection: React.FC<SprintSectionProps> = ({ sprintName, sprintOrder, 
   
 
   const taskCount = tasks.length;
-  const totalStoryPoints = tasks.reduce((total, task) => total + (task.storyPoints || 0), 0) || 0;
+  // const totalStoryPoints = tasks.reduce((total, task) => total + (task.storyPoints || 0), 0) || 0;
   const todoCount = tasks.filter(task => task.status === 'TO_DO').length || 0;
   const inProgressCount = tasks.filter(task => task.status === 'IN_PROGRESS').length || 0;
   const doneCount = tasks.filter(task => task.status === 'DONE').length || 0;

@@ -19,6 +19,8 @@ const PaymentCancel = () => {
     }
   }, [searchParams]);
 
+  console.log(isLoaded)
+
   return (
     <motion.div 
       className="flex flex-col items-center justify-center min-h-screen w-full bg-rose-700 text-white overflow-hidden relative"

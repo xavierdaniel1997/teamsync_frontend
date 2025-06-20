@@ -10,13 +10,11 @@ import {
 import { useDispatch } from "react-redux";
 import { logout, setCredentials } from "../redux/authSlice";
 import { toast } from "sonner";
-import { data, ErrorResponse, useNavigate } from "react-router-dom";
-import { getWorkSpaceApi } from "../services/workSpaceService";
+import { useNavigate } from "react-router-dom";
 import {
   setSelectWorkspace,
   setSelectWorkspaceId,
 } from "../redux/workspaceSlice";
-import { getuserDetilasApi } from "../services/profileDetilasService";
 import { handleWorkspaceSelection } from "../utils/workspaceUtils";
 import { setSelectProject, setSelectProjectId } from "../redux/projectSlice";
 
@@ -155,7 +153,7 @@ export const useAuthMutations = () => {
       console.log("logout successfully", res);
     },
     onError: (error) => {
-      console.log("faied to login");
+      console.log("faied to login", error);
     },
   });
 

@@ -5,8 +5,6 @@ import { RootState } from '../../../redux/store';
 import { useChatRoom } from '../../../hooks/useChatRoom';
 import ChatUserCard from '../../../components/user/ChatUserCard';
 import { IUser } from '../../../types/users';
-import { Socket } from 'socket.io-client';
-import { number, string } from 'yup';
 import { Message } from '../../../types/chat';
 
 interface Member {
@@ -15,11 +13,6 @@ interface Member {
   _id: string;
 }
 
-interface MemberListData {
-  _id: string;
-  owner: string;
-  members: Member[];
-}
 
 interface ChatUserListProps {
   onSelectUser: (user: IUser) => void;

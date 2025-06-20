@@ -4,7 +4,7 @@ import { IoAddSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useProject } from "../../hooks/useProject";
-import { useUserDetailsMutation } from "../../hooks/useUserDetails";
+// import { useUserDetailsMutation } from "../../hooks/useUserDetails";
 import { IProject } from "../../types/project"; 
 import { setSelectProject, setSelectProjectId } from "../../redux/projectSlice";
 
@@ -23,15 +23,13 @@ const ProjectDropdownList: React.FC<ProjectDropdownProps> = ({ isOpen, setIsOpen
 
   const { useGetProjects, useGetProjectById } = useProject();
   const { data: projectData } = useGetProjects(workspaceId ?? undefined);
-  const { getUserDetials } = useUserDetailsMutation();
-  const { data: userDetails, isLoading } = getUserDetials;
+  // const { getUserDetials } = useUserDetailsMutation();
+  // const { data: userDetails, isLoading } = getUserDetials;
   const dispatch = useDispatch()
 
-  const ownedWorkspace = userDetails?.data?.workspaceOwn;
+  // const ownedWorkspace = userDetails?.data?.workspaceOwn;
   
-  const { data: selectedProject, isLoading: isProjectLoading, error: projectError } = useGetProjectById(selectedProjectId);
-  // console.log("selected project details data projectData dropdown from redux", projectId);
-  // console.log("selectedProject data", selectedProject)
+  const { data: selectedProject} = useGetProjectById(selectedProjectId);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

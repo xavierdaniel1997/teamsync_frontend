@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { IoCall, IoClose } from 'react-icons/io5';
+import { IoClose } from 'react-icons/io5';
 
 interface CallNotificationModalProps {
   callerName: string;

@@ -4,7 +4,7 @@ import { FiPlus } from 'react-icons/fi';
 import PlanCard from '../../../components/globa/PlanCard';
 import PlanDialog from '../../../components/admin/PlanDialog';
 import { usePlanMutation } from '../../../hooks/usePlans';
-import Loader from '../../../components/globa/Loader';
+
 
 const Plan: React.FC = () => {
   const [open, setOpen] = useState(false);

@@ -21,90 +21,6 @@ const Success: React.FC = () => {
     }
   }, [searchParams, navigate]);
 
-  // Animation variants
-  const badgeVariants = {
-    hidden: { scale: 0, rotate: -180 },
-    visible: { 
-      scale: 1, 
-      rotate: 0,
-      transition: { 
-        type: "spring", 
-        stiffness: 200, 
-        damping: 15,
-        duration: 0.8 
-      }
-    }
-  };
-
-  const checkVariants = {
-    hidden: { pathLength: 0, opacity: 0 },
-    visible: { 
-      pathLength: 1, 
-      opacity: 1,
-      transition: { 
-        delay: 0.5, 
-        duration: 0.8,
-        ease: "easeInOut" 
-      }
-    }
-  };
-
-  const circleVariants = {
-    hidden: { scale: 0, opacity: 0 },
-    visible: { 
-      scale: 1,
-      opacity: 1,
-      transition: { 
-        delay: 0.3, 
-        duration: 0.6,
-        ease: "easeInOut" 
-      }
-    }
-  };
-
-  const textVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        delay: 1, 
-        duration: 0.6,
-        ease: "easeOut" 
-      }
-    }
-  };
-
-  const starVariants = {
-    hidden: { scale: 0, opacity: 0 },
-    visible: (i: number) => ({ 
-      scale: [0, 1.5, 0],
-      opacity: [0, 1, 0],
-      transition: { 
-        repeat: Infinity,
-        repeatType: "loop",
-        duration: 2,
-        delay: i * 0.6,
-        ease: "easeInOut"
-      }
-    })
-  };
-
-  const confettiVariants = {
-    hidden: { y: -10, opacity: 0 },
-    visible: (custom: { x: number; y: number; rotate: number; delay: number }) => ({ 
-      y: [0, custom.y],
-      x: [0, custom.x],
-      rotate: [0, custom.rotate],
-      opacity: [0, 1, 0],
-      transition: { 
-        duration: 3,
-        repeat: Infinity,
-        delay: custom.delay
-      }
-    })
-  };
-
   // Generate confetti pieces when complete
   const confettiPieces = Array.from({ length: 20 }).map((_, i) => ({
     id: i,
@@ -126,10 +42,18 @@ const Success: React.FC = () => {
                 <motion.div
                   key={piece.id}
                   className="absolute left-1/2 top-0"
-                  custom={piece}
-                  variants={confettiVariants}
-                  initial="hidden"
-                  animate="visible"
+                  initial={{ y: -10, opacity: 0 }}
+                  animate={{
+                    y: [0, piece.y],
+                    x: [0, piece.x],
+                    rotate: [0, piece.rotate],
+                    opacity: [0, 1, 0]
+                  }}
+                  transition={{ 
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: piece.delay
+                  }}
                   style={{
                     width: Math.random() * 10 + 5,
                     height: Math.random() * 10 + 5,
@@ -147,9 +71,17 @@ const Success: React.FC = () => {
       <div className="relative mb-8">
         <motion.div
           className="bg-white rounded-full p-6 shadow-lg"
-          variants={badgeVariants}
-          initial="hidden"
-          animate="visible"
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ 
+            scale: 1, 
+            rotate: 0
+          }}
+          transition={{ 
+            type: "spring", 
+            stiffness: 200, 
+            damping: 15,
+            duration: 0.8 
+          }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -163,9 +95,16 @@ const Success: React.FC = () => {
               stroke="currentColor"
               strokeWidth="2"
               fill="none"
-              variants={circleVariants}
-              initial="hidden"
-              animate="visible"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ 
+                scale: 1,
+                opacity: 1
+              }}
+              transition={{ 
+                delay: 0.3, 
+                duration: 0.6,
+                ease: "easeInOut" 
+              }}
             />
             <motion.path
               d="M8 12l3 3 6-6"
@@ -174,9 +113,16 @@ const Success: React.FC = () => {
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
-              variants={checkVariants}
-              initial="hidden"
-              animate="visible"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ 
+                pathLength: 1, 
+                opacity: 1
+              }}
+              transition={{ 
+                delay: 0.5, 
+                duration: 0.8,
+                ease: "easeInOut" 
+              }}
             />
           </svg>
         </motion.div>
@@ -186,10 +132,18 @@ const Success: React.FC = () => {
           <motion.div
             key={i}
             className="absolute"
-            variants={starVariants}
-            custom={i}
-            initial="hidden"
-            animate="visible"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ 
+              scale: [0, 1.5, 0],
+              opacity: [0, 1, 0]
+            }}
+            transition={{ 
+              repeat: Infinity,
+              repeatType: "loop",
+              duration: 2,
+              delay: i * 0.6,
+              ease: "easeInOut"
+            }}
             style={{
               top: [-20, 30, 0][i],
               left: [60, -10, 70][i],
@@ -204,9 +158,16 @@ const Success: React.FC = () => {
       {/* Success message with animation */}
       <motion.h1
         className="text-3xl font-bold"
-        variants={textVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ 
+          opacity: 1, 
+          y: 0
+        }}
+        transition={{ 
+          delay: 1, 
+          duration: 0.6,
+          ease: "easeOut" 
+        }}
       >
         Payment Successful
       </motion.h1>
@@ -214,10 +175,16 @@ const Success: React.FC = () => {
       {/* Subtitle with animation */}
       <motion.p
         className="mt-2 text-lg text-gray-200"
-        variants={textVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ delay: 1.2 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ 
+          opacity: 1, 
+          y: 0
+        }}
+        transition={{ 
+          delay: 1.2, 
+          duration: 0.6,
+          ease: "easeOut" 
+        }}
       >
         Create the Project and Connect with your team
       </motion.p>

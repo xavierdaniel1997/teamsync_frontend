@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import logImage from "../../../assets/teamsync-log.png";
 import leftVector from "../../../assets/leftVector.png";
 import rightVector from "../../../assets/rightVector.png";
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate} from 'react-router-dom';
 import { useInvitationTeamMutation } from '../../../hooks/useInvitationAndTeam';
 
 const AcceptInvitation: React.FC = () => {

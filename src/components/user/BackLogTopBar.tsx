@@ -1,5 +1,5 @@
-import { FaSearch, FaUserFriends, FaUserCircle, FaUserPlus } from 'react-icons/fa';
-import { HiOutlineChevronDown, HiOutlineChevronUp } from 'react-icons/hi';
+import { FaSearch, FaUserPlus } from 'react-icons/fa';
+import { HiOutlineChevronDown} from 'react-icons/hi';
 import { MdInsights } from 'react-icons/md';
 import { FiSettings } from 'react-icons/fi';
 import UserAvatar from '../globa/UserAvatar';
@@ -11,7 +11,7 @@ interface Props {
     projectMembers?: any[]
   }
 
-const BackLogTopBar: React.FC<Props> = ({showEpic, setShowEpic, projectMembers}) => {
+const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers}) => {
 
   // console.log("from the backlogtop bar", projectMembers)
   return (

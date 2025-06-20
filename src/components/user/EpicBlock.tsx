@@ -24,7 +24,7 @@ const EpicBlock: React.FC<EpicBlockProps> = ({epicId, title, statusColor = '#323
     setIsTaskModalOpen(true);
   };
 
-  // console.log("project details from the EpicBlock", projectDetails)
+  console.log("project details from the EpicBlock", isSelected)
  
 
   return (

@@ -34,8 +34,6 @@ const ReusableTable: React.FC<ReusableTableProps> = ({
   columns,
   data,
   page,
-  rowsPerPage,
-  totalCount,
   onPageChange,
   isPagination = true,
 }) => {

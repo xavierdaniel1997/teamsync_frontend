@@ -6,9 +6,8 @@ import LoginWithThirdParty from "../../global/LoginWithThirdParty";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useAuthMutations } from "../../../hooks/useAuth";
-import { CreateProfileData, ErrorResponse } from "../../../types/auth";
+import { CreateProfileData } from "../../../types/auth";
 import { toast } from "sonner";
-import { AxiosError } from "axios";
 import { Link } from "react-router-dom";
 
 

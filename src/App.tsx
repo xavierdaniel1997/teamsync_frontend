@@ -1,6 +1,5 @@
 import { Toaster } from "sonner";
 import LandingPage from "./pages/global/LandingPage"
-import LoginForm from "./pages/global/LoginForm"
 import Dashboard from "./pages/user/Dashboard/Dashboard"
 import OTPVerificationForm from "./pages/user/RegistrationProcess/OTPVerificationForm"
 import ProfileSetupForm from "./pages/user/RegistrationProcess/ProfileSetupForm"

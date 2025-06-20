@@ -1,4 +1,4 @@
-import { FcGoogle } from "react-icons/fc";
+
 import logImage from "../../../assets/teamsync-log.png";
 import leftVector from "../../../assets/leftVector.png";
 import rightVector from "../../../assets/rightVector.png";

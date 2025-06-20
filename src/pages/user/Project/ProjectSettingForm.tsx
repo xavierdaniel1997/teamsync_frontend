@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { FaGlobe, FaInfoCircle } from "react-icons/fa";
+import { FaInfoCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useFormik } from "formik";
 import { useProject } from "../../../hooks/useProject";
-import { IProject } from "../../../types/project";
 
 const ProjectSettingForm: React.FC = () => {
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)

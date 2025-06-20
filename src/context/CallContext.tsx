@@ -1,6 +1,5 @@
 
 import React, { createContext, useContext, useRef, useState, useEffect } from 'react';
-import { Socket } from 'socket.io-client';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
@@ -19,12 +18,12 @@ interface IncomingMeeting {
   initiatorName: string;
 }
 
-interface MeetingDetails {
-  meetingId: string;
-  roomId: string;
-  participantIds: string[];
-  initiatorId: string;
-}
+// interface MeetingDetails {
+//   meetingId: string;
+//   roomId: string;
+//   participantIds: string[];
+//   initiatorId: string;
+// }
 
 
 interface CallContextType {
@@ -58,12 +57,13 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
   const [callActive, setCallActive] = useState(false);
   const [incomingCall, setIncomingCall] = useState<IncomingCall | null>(null);
   const [incomingMeeting, setIncomingMeeting] = useState<IncomingMeeting | null>(null);
-    const [meetingDetails, setMeetingDetails] = useState<MeetingDetails | null>(null);
   const zegoContainerRef = useRef<HTMLDivElement>(null);
   const zpRef = useRef<any>(null);
 
   const currentUserId = useSelector((state: RootState) => state.auth.user?._id);
   const currentUserName = useSelector((state: RootState) => state.auth.user?.fullName || 'User');
+
+  console.log("from the callcontext", incomingMeeting)
 
   const resetCallState = () => {
     if (zpRef.current) {
@@ -138,6 +138,7 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
         currentUserId,
         currentUserName,
         callActive,
+        recipientName
       });
       return;
     }

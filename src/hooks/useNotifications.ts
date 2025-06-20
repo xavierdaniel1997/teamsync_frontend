@@ -14,7 +14,7 @@ export const useNotifications = (filter: 'all' | 'read' | 'unread' = 'all') => {
 
     const useUpdateNotification = useMutation({
         mutationFn: (notificationId: string) => updateNotificationApi(notificationId),
-        onSuccess: (response) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notifications"] });
             toast.success("Notification marked as read");
         },
@@ -54,7 +54,7 @@ export const useNotifications = (filter: 'all' | 'read' | 'unread' = 'all') => {
             queryClient.invalidateQueries({ queryKey: ["notifications", filter] });
             toast.success("Deleted Successfully");
         },
-        onError: (error: any, notificationId, context: any) => {
+        onError: (error: any, context: any) => {
             if (context?.previousNotifications) {
                 queryClient.setQueryData(["notifications", filter], context.previousNotifications);
             }

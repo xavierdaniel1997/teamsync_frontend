@@ -1,5 +1,4 @@
 import React from 'react'
-import SubscriptionPricing from '../Subscription/Subscription';
 
 interface WorkspaceSubscriptionProps{
     subscriptionName: string;

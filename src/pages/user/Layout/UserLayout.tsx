@@ -1,21 +1,17 @@
 import React, { useState, JSX, useEffect } from "react";
 import Navbar from "../../../components/globa/Navbar";
-import { data, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import NavSideBar from "../../../components/globa/NavSideBar";
 import {
   FiGlobe,
   FiLayers,
   FiCalendar,
   FiBell,
-  FiEdit,
   FiTarget,
-  FiAlertCircle,
   FiSettings,
 } from "react-icons/fi";
 import { IoChatbubbleOutline } from "react-icons/io5";
 import { BsCameraVideo } from "react-icons/bs";
-import { io, Socket } from "socket.io-client";
-import { boolean, string } from "yup";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { initializeSocket } from "../../../config/socket";
@@ -30,9 +26,7 @@ interface NavItem {
 const UserLayout: React.FC = () => {
   const userId = useSelector((state: RootState) => state.auth.user?._id)
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [sidebarWidth, setSidebarWidth] = useState<number>(256);
-  const [onlineUsers, setOnlineUsers] = useState<Record<string, boolean>>({});
 
 
 

@@ -1,5 +1,4 @@
 import api from "../api/axiosInstance"
-import { UserProfileFormValues } from "../types/users";
 
 export const getuserDetilasApi = async () => {
     const respone = await api.get("user/user-details")

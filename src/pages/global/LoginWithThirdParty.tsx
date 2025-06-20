@@ -1,30 +1,12 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import { FaGithub } from "react-icons/fa";
 import React from 'react'
 import { FcGoogle } from "react-icons/fc";
-import api from '../../api/axiosInstance';
 import { useAuthMutations } from '../../hooks/useAuth';
 import { toast } from 'sonner';
 
 const LoginWithThirdParty: React.FC = () => {
-    const {loginWithGoogle} = useAuthMutations()
-
-    // const googleLogin = useGoogleLogin({
-    //     flow: 'implicit',
-    //     onSuccess: async (tokenResponse) => {
-    //       console.log("Access Token:", tokenResponse.access_token);
-      
-    //       try {
-    //         const res = await api.post("auth/google", {
-    //           access_token: tokenResponse.access_token,
-    //         }, { withCredentials: true });
-    //         console.log(res.data);
-    //       } catch (error) {
-    //         console.log("Google login error", error);
-    //       }
-    //     },
-    //     onError: (error) => console.log("Login Failed:", error),
-    //   });
+    const {loginWithGoogle} = useAuthMutations()   
+   
 
     const googleLogin = useGoogleLogin({
         onSuccess: (tokenResponse) => {

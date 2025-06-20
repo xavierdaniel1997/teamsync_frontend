@@ -13,10 +13,9 @@ interface UserPlanCardProps {
   isSelected: boolean;
   onSelectPlan: () => void;
   isCurrentPlan?: boolean;
-  currentPlanPrice: string;
 }
 
-const UserPlanCard: React.FC<UserPlanCardProps> = ({ data, isSelected, onSelectPlan, isCurrentPlan, currentPlanPrice }) => {
+const UserPlanCard: React.FC<UserPlanCardProps> = ({ data, isSelected, onSelectPlan, isCurrentPlan  }) => {
   return (
     <div
       className={`w-64 relative p-6 rounded-md border 

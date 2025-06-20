@@ -1,11 +1,10 @@
 import { Dialog, DialogContent } from '@mui/material';
 import { IoAdd, IoClose } from 'react-icons/io5';
-import { BsLink45Deg, BsListNested } from 'react-icons/bs';
+import { BsLink45Deg } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { TbSubtask } from "react-icons/tb";
-import { FaAngleDown } from "react-icons/fa6";
 import { BiSolidCheckboxMinus } from 'react-icons/bi';
-import { FaAngleUp, FaPaperclip } from 'react-icons/fa';
+import { FaPaperclip } from 'react-icons/fa';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useState } from 'react';
@@ -39,7 +38,7 @@ const validationSchema = Yup.object({
   linkText: Yup.string().optional(),
 });
 
-const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskCount, epicId, members }) => {
+const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskCount}) => {
   const [openAddItem, setOpenAddItem] = useState(false);
   const [openWebLink, setOpenWebLink] = useState(false);
   const [openChildIssue, setOpenChildIssue] = useState(false);
@@ -127,7 +126,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
+            {() => (
               <Form className="flex flex-col gap-4">
                 {/* Task Title */}
                 <div className="text-gray-400">

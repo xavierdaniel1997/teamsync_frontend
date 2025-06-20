@@ -1,9 +1,7 @@
-import { Dialog, DialogContent } from '@mui/material';
-import { IoAdd, IoClose } from 'react-icons/io5';
+import { DialogContent } from '@mui/material';
+import { IoClose } from 'react-icons/io5';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
-import { FaPaperclip } from 'react-icons/fa';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import { Formik, Form, Field } from 'formik';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
@@ -28,7 +26,7 @@ interface FormValues {
 
 
 
-const CreateMeetingForm: React.FC<CreateMeetingFormProps> = ({ isOpen, onClose }) => {
+const CreateMeetingForm: React.FC<CreateMeetingFormProps> = ({  onClose }) => {
     const [openDetailsContainer, setOpenDetailsContainer] = useState(true);
     const [isOpenMember, setIsOpenMember] = useState(false)
     const [selectedMembers, setSelectedMembers] = useState<{ userId: string ; email: string }[]>([]);
@@ -71,10 +69,10 @@ const CreateMeetingForm: React.FC<CreateMeetingFormProps> = ({ isOpen, onClose }
             const member = project?.members.find((member) => member.user._id === userId)
             console.log("members details form the handleAddMembers", member)
             if (member) {
-                setSelectedMembers((prev) => {
-                    const isSelected = prev.some((m) => m.userId == userId)
+                setSelectedMembers((prev: any) => {
+                    const isSelected = prev.some((m: any) => m.userId == userId)
                     if (isSelected) {
-                        return prev.filter((m) => m.userId !== userId)
+                        return prev.filter((m: any) => m.userId !== userId)
                     } else {
                         return [...prev, { userId: member?.user._id!, email: member?.user.email }]
                     }

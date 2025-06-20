@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react'
+import React, {useEffect, useState } from 'react'
 import BreadCrumb from '../../../components/globa/BreadCrumb'
 import NotificationCard from '../../../components/user/NotificationCard'
 import { INotification } from '../../../types/notification'

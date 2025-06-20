@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   Button,
@@ -11,9 +10,6 @@ import {
   IconButton,
   InputAdornment,
 } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
-// import ExpandIcon from '@mui/icons-material/OpenInFull';
-// import MinimizeIcon from '@mui/icons-material/Remove';
 
 interface PlanDialogProps {
   open: boolean;
@@ -21,10 +17,10 @@ interface PlanDialogProps {
 }
 
 const PlanDialog: React.FC<PlanDialogProps> = ({ open, onClose }) => {
-  const [planName, setPlanName] = useState('');
-  const [price, setPrice] = useState('');
+  const [planName] = useState('');
+  const [price] = useState('');
   const [projectLimit, setProjectLimit] = useState('');
-  const [memberLimit, setMemberLimit] = useState('');
+  const [memberLimit] = useState('');
 
   const handleSave = () => {
     const formData = { planName, price, projectLimit, memberLimit };

@@ -12,7 +12,6 @@ interface SprintListModalProps {
 }
 
 const SprintListModal: React.FC<SprintListModalProps> = ({
-  workspaceId,
   projectId,
   currentSprintId,
   onSelectSprint,

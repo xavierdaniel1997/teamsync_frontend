@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 import { useAuthMutations } from "../../hooks/useAuth";
 import * as Yup from 'yup';
 import { useFormik } from "formik";
-import { CreateNewPasswordData } from "../../types/auth";
 import { toast } from "sonner";
 
 

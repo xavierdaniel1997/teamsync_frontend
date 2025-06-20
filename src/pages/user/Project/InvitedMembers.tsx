@@ -15,7 +15,7 @@ const InvitedMembers: React.FC = () => {
     );
     const hasEditAccess = currentMember?.accessLevel === "OWNER" || currentMember?.accessLevel === "WRITE";
   
-    console.log("project details from the invited members", project)
+    console.log("project details from the invited members", hasEditAccess)
   
     const columns = [
       { label: "Email", field: "email" },

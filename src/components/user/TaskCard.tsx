@@ -17,7 +17,6 @@ import UserAvatar from "../globa/UserAvatar";
 import { getInitials, getRandomColor } from "../../utils/userHelpers";
 import { useDraggable } from '@dnd-kit/core';
 import TaskModal from "./TaskModal";
-import { truncate } from "fs";
 
 
 const issueTypes = [
@@ -49,7 +48,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
   const [openEditTaskModal, setOpenEditTaskModal] = useState<boolean>(false)
   const [showEpicList, setShowEpicList] = useState<boolean>(false)
   const { useGetEpic, useUpdateTask } = useProject()
-  const { data: epicData, isLoading: epicLoading } = useGetEpic(projectId || "")
+  const { data: epicData } = useGetEpic(projectId || "")
 
 
 

@@ -3,7 +3,6 @@ import UserPlanCard from "../../../components/user/UserPlanCard";
 import { usePlanMutation } from "../../../hooks/usePlans";
 import ShimmerUserPlanCard from "../../../components/user/ShimmerUserPlanCard";
 import { useEffect, useState } from "react";
-import { Button } from "@mui/material";
 import { useWorkSpaceMutation } from "../../../hooks/useWorkSpace";
 import { useSubscriptionMutation } from "../../../hooks/useSubscription";
 import { useSelector } from "react-redux";
@@ -24,8 +23,6 @@ const SubscriptionPricing = () => {
   // console.log("mySubscription", subscriptionPlan)
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
 
 
 
@@ -109,7 +106,6 @@ const SubscriptionPricing = () => {
                 isSelected={selectedPlan === data._id}
                 onSelectPlan={() => setSelectedPlan(data._id)}
                 isCurrentPlan={subscriptionPlan?.data?.plan?._id === data._id}
-                currentPlanPrice={subscriptionPlan?.data?.plan?.price}
               />
             ))}
         </div>

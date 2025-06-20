@@ -21,6 +21,7 @@ const OTPVerificationForm: React.FC = () => {
   const { validateOtp, resendOtp } = useAuthMutations()
   const navigate = useNavigate()
 
+  console.log(canResend)
 
 
   // useEffect(() => {
@@ -241,7 +242,7 @@ const OTPVerificationForm: React.FC = () => {
             {otp.map((digit, index) => (
               <input
                 key={index}
-                ref={(el: HTMLInputElement) => inputRefs.current[index] = el}
+                // ref={(el: HTMLInputElement) => inputRefs.current[index] = el}
                 type="text"
                 maxLength={1}
                 value={digit}

@@ -1,18 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { FaInfoCircle, FaArrowLeft } from 'react-icons/fa';
-import { BiSolidRightArrow } from 'react-icons/bi';
+import React, { useEffect } from 'react';
+import { FaArrowLeft } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { IoClose } from 'react-icons/io5';
 import AddProjectRightItem from '../../../components/user/AddProjectRightItem';
 import { useFormik } from 'formik';
-import * as Yup from 'yup'
 import { projectValidationSchema } from './projectValidationSchema';
 import { useProject } from '../../../hooks/useProject';
 import { useWorkSpaceMutation } from '../../../hooks/useWorkSpace';
 import { Tailspin } from 'ldrs/react'
-import { handleWorkspaceSelection } from '../../../utils/workspaceUtils';
-import { useDispatch } from 'react-redux';
-import { generateUniqueId } from '../../../utils/generateId';
 
 
 
@@ -20,7 +15,6 @@ const AddProjectForm: React.FC = () => {
   const { useCreateProjectWithTeam } = useProject()
   const { useGetWorkSpace } = useWorkSpaceMutation();
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   const { data: workspace } = useGetWorkSpace;
 

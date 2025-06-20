@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft, FaEdit, FaTrash } from "react-icons/fa";
+import { FaArrowLeft} from "react-icons/fa";
 import {
-  IoAddOutline,
   IoSettingsSharp,
   IoStatsChart,
-  IoCalendar,
-  IoTime,
 } from "react-icons/io5";
 import { FaChevronDown } from "react-icons/fa6";
-import { FiUsers, FiPackage, FiPlus } from "react-icons/fi";
+import { FiPackage, FiPlus } from "react-icons/fi";
 import { useUserDetailsMutation } from "../../../hooks/useUserDetails";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,7 +28,7 @@ import { formatDate } from "../../../utils/formatDate";
 const WorkSpaceSetting: React.FC = () => {
   const { getUserDetials } = useUserDetailsMutation();
   const { useGetMySubscription } = useSubscriptionMutation();
-  const { data: userDetails, isLoading } = getUserDetials;
+  const { data: userDetails } = getUserDetials;
   const { data: subscriptionPlan } = useGetMySubscription;
   const dispatch = useDispatch<AppDispatch>();
   const currendWorkspaceId = useSelector(
@@ -105,8 +102,8 @@ const WorkSpaceSetting: React.FC = () => {
   };
 
   const subscription = getSubscriptionDetails();
-  const projectCount = selectedWorkspace?.projects?.length || 0;
-  const memberCount = selectedWorkspace?.members?.length || 0;
+  // const projectCount = selectedWorkspace?.projects?.length || 0;
+  // const memberCount = selectedWorkspace?.members?.length || 0;
 
   const myProjectCount = ownedWorkspace?.projects?.length || 0;
   const myMemberCount = ownedWorkspace?.members?.length || 0;

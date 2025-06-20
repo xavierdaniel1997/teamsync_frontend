@@ -1,9 +1,8 @@
-import { useMutation, useQueryClient,  } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { acceptInvitationApi } from "../services/invitationAndTeamService";
 import { toast } from "sonner";
 
 export const useInvitationTeamMutation = () => {
-    const queryClient = useQueryClient()
 
     const useAcceptInvitation = useMutation({
         mutationFn: acceptInvitationApi,

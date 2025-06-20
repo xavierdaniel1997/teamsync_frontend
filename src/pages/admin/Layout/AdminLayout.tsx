@@ -7,9 +7,6 @@ import {
   FiLayers,
   FiCalendar,
   FiBell,
-  FiEdit,
-  FiTarget,
-  FiAlertCircle,
 } from 'react-icons/fi';
 import { FaRegUser } from "react-icons/fa";
 import { IoChatbubbleOutline } from 'react-icons/io5';
@@ -23,6 +20,7 @@ interface NavItem {
 
 const UserLayout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [sidebarWidth, setSidebarWidth] = useState<number>(256);
 
   const navItems: NavItem[] = [
     { icon: <FiGlobe />, text: 'Dashbaord', path: '/admin' },
@@ -32,6 +30,17 @@ const UserLayout: React.FC = () => {
     { icon: <FiBell />, text: 'Report', path: '/notifications' },
     { icon: <IoChatbubbleOutline />, text: 'Settings', path: '/chats' },
   ];
+
+   const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+    setSidebarWidth(isSidebarOpen ? 64 : 256);
+  };
+
+
+  const adjustSidebarWidth = (width: number) => {
+    setSidebarWidth(Math.max(64, Math.min(width, 400)));
+    setIsSidebarOpen(width > 64);
+  };
 
   return (
     <div className="min-h-screen  flex flex-col bg-[#1E1E1E]">
@@ -47,9 +56,11 @@ const UserLayout: React.FC = () => {
         >
           <NavSideBar
             isOpen={isSidebarOpen}
-            toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+            toggleSidebar={toggleSidebar}
             navItems={navItems}
             isAdmin={true}
+            sidebarWidth={sidebarWidth}
+            adjustSidebarWidth={adjustSidebarWidth}
           />
         </div>
 

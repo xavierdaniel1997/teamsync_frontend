@@ -25,8 +25,8 @@ const Backlog: React.FC = () => {
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
   const project = useSelector((state: RootState) => state.project.selectedProject);
   const { data: epicData, isLoading } = useGetEpic(projectId || "");
-  const { data: backlogData, isLoading: backlogLoading } = useGetBacklogTasks(projectId || "");
-  const { data: sprintData, isLoading: sprintLoading } = useGetSprints(projectId || "");
+  const { isLoading: backlogLoading } = useGetBacklogTasks(projectId || "");
+  const { data: sprintData } = useGetSprints(projectId || "");
   const epicTitle = epicData?.data;
   const { data: taskData } = useGetTasksByProject(workspaceId || "", projectId || "");
 
