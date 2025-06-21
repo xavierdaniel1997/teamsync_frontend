@@ -138,8 +138,8 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string)
 
                 {/* Name + Email */}
                 <div className="mt-10 mb-10">
-                    <h2 className="text-xl font-semibold">{`${user.fullName}${user.secondName ? ` ${user.secondName}` : ''}`}</h2>
-                    <p className="text-gray-400 text-sm">{user.email}</p>
+                    <h2 className="text-xl font-semibold">{`${user?.fullName}${user?.secondName ? ` ${user?.secondName}` : ''}`}</h2>
+                    <p className="text-gray-400 text-sm">{user?.email}</p>
                 </div>
 
                 {/* Form */}
