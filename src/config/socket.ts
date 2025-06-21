@@ -7,7 +7,7 @@ export const initializeSocket = (token: string): Socket | null => {
         return socket;
     }
 
-    const socketUrl = import.meta.env.REACT_APP_SOCKET_URL || 'http://localhost:5000';
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || 'https://api.teamsync.buzz';
     socket = io(socketUrl, {
         withCredentials: true,
         auth: { token },

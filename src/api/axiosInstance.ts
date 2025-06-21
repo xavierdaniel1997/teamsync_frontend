@@ -3,8 +3,9 @@ import { logout, setCredentials } from '../redux/authSlice';
 import store from '../redux/store';
 
 
-// const API_URL = 'http://localhost:5000/api/';
-const API_URL = "https://api.teamsync.buzz/api/"
+// const API_URL =  import.meta.env.VITE_NODE_ENV === 'development' ? "http://localhost:5000/api/" : "https://api.teamsync.buzz/api/"
+const API_URL =  import.meta.env.VITE_NODE_ENV === 'development' ? import.meta.env.VITE_LOCAL_URL : import.meta.env.VITE_PRODUCTION_URL;
+
 
 const api = axios.create({
     baseURL: API_URL,
