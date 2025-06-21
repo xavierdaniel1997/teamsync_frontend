@@ -153,6 +153,8 @@ export const CallProvider: React.FC<CallProviderProps> = ({ children }) => {
       const appID = Number(import.meta.env.VITE_ZEGOCLOUD_APP_ID);
       const serverSecret = import.meta.env.VITE_ZEGOCLOUD_SERVER_SECRET;
 
+      console.log("from the callContext.tsx appID and serverSecret", appID, serverSecret)
+
       const userIdNum = parseInt(currentUserId);
       const recipientIdNum = parseInt(recipientId);
       const roomID = `chat_${Math.min(userIdNum, recipientIdNum)}_${Math.max(userIdNum, recipientIdNum)}`;
