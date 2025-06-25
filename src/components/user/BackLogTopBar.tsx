@@ -4,16 +4,21 @@ import { MdInsights } from 'react-icons/md';
 import { FiSettings } from 'react-icons/fi';
 import UserAvatar from '../globa/UserAvatar';
 import { getInitials, getRandomColor } from '../../utils/userHelpers';
+import { IUser } from '../../types/users';
 
 interface Props {
     showEpic: boolean;
     setShowEpic: React.Dispatch<React.SetStateAction<boolean>>;
     projectMembers?: any[]
+    selectedUserIds?: string[];
+  handleSelectUser: (userId: string, user: IUser) => void;
   }
 
-const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers}) => {
+const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedUserIds, handleSelectUser}) => {
 
-  // console.log("from the backlogtop bar", projectMembers)
+  const isSelected = (userId: string) => selectedUserIds?.includes(userId);
+
+ 
   return (
     <div className="flex items-center justify-between px-4 py-2 w-full">
       <div className="flex items-center space-x-2">
@@ -28,10 +33,15 @@ const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers}) => {
 
         {/* Overlapping Avatars */}
         <div className="flex items-center ml-2">
-          <div className="flex -space-x-2">
-
+          <div className="flex -space-x-2 ">
             {projectMembers?.map((member) => (
-              <UserAvatar user={member.user || undefined} getRandomColor={getRandomColor} getInitials={getInitials}/>
+              <button className='cursor-pointer' key={member._id} onClick={() => handleSelectUser(member.user._id, member)}>
+              <UserAvatar
+               user={member.user || undefined} 
+               getRandomColor={getRandomColor}
+                getInitials={getInitials} 
+                selectedUser={isSelected(member.user._id)}/>
+              </button>
             ))}
            
           </div>

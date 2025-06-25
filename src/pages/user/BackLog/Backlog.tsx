@@ -12,23 +12,25 @@ import { ITask } from '../../../types/task';
 import { DndContext, closestCenter, DragEndEvent, DragStartEvent, DragOverlay, useSensors, MouseSensor, useSensor, TouchSensor } from '@dnd-kit/core';
 import TaskDragPreview from '../../../components/user/TaskDragPreview';
 import { toast } from 'sonner';
+import { IUser } from '../../../types/users';
 
 const Backlog: React.FC = () => {
   const [showEpic, setShowEpic] = useState(true);
   const { useGetEpic, useGetSprints, useGetBacklogTasks, useUpdateTask, useGetTasksByProject } = useProject();
   const [selectedEpicId, setSelectedEpicId] = useState<string | null>(null);
   const [draggedTask, setDraggedTask] = useState<ITask | null>(null);
-  // Highlighted: Add local state for tasks
   const [localTasks, setLocalTasks] = useState<ITask[]>([]);
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
+  const [selectedEpics, setSelectedEpics] = useState<string[]>([])
 
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
   const project = useSelector((state: RootState) => state.project.selectedProject);
   const { data: epicData, isLoading } = useGetEpic(projectId || "");
-  const { isLoading: backlogLoading } = useGetBacklogTasks(projectId || "");
+  const { isLoading: backlogLoading } = useGetBacklogTasks(projectId || "",);
   const { data: sprintData } = useGetSprints(projectId || "");
   const epicTitle = epicData?.data;
-  const { data: taskData } = useGetTasksByProject(workspaceId || "", projectId || "");
+  const { data: taskData } = useGetTasksByProject(workspaceId || "", projectId || "", selectedUserIds, selectedEpics);
 
 
   const sensors = useSensors(
@@ -78,7 +80,7 @@ const Backlog: React.FC = () => {
 
     if (sourceContainerId === destinationContainerId) return;
 
-     const sourceSprint = sprintData?.data?.find((sprint: ISprint) => sprint._id === sourceContainerId);
+    const sourceSprint = sprintData?.data?.find((sprint: ISprint) => sprint._id === sourceContainerId);
     if (sourceSprint?.status === 'ACTIVE') {
       toast.error('Cannot move tasks from an active sprint');
       return;
@@ -112,8 +114,31 @@ const Backlog: React.FC = () => {
     }
   };
 
+  const handleSelectUser = (userId: string, user: IUser) => {
+    console.log("user detial of the member", userId, "and user", user)
+    if (!project?.members?.some((member) => member.user._id === userId)) {
+      console.warn(`Invalid user ID selected: ${userId}`);
+      return;
+    }
+    setSelectedUserIds((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+    );
+  };
+
+  const handleSelectEpics = (epicId: string) => {
+    if (!epicData?.data?.some((epic: any) => epic._id === epicId)) {
+      console.warn(`Invalid epic ID selected: ${epicId}`);
+      return;
+    }
+    setSelectedEpics((prev) =>
+      prev.includes(epicId) ? prev.filter((id) => id !== epicId) : [...prev, epicId]
+    );
+  };
+
   const sprintTasks = (sprintId: string) => localTasks.filter((task) => task.sprint === sprintId);
   const backlogTasks = localTasks.filter((task) => !task.sprint);
+
+  console.log("selected userssssssssssssssssssssss", selectedUserIds, "selected epics", selectedEpics)
 
 
   return (
@@ -125,7 +150,13 @@ const Backlog: React.FC = () => {
           isBackLog={true}
         />
       </div>
-      <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members} />
+      <BackLogTopBar
+        showEpic={showEpic}
+        setShowEpic={setShowEpic}
+        projectMembers={project?.members}
+        selectedUserIds={selectedUserIds}
+        handleSelectUser={handleSelectUser}
+      />
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -141,6 +172,8 @@ const Backlog: React.FC = () => {
               epicHeading={epicTitle}
               selectedEpicId={selectedEpicId}
               setSelectedEpicId={setSelectedEpicId}
+              selectedEpics={selectedEpics}
+              handleSelectedEpic={handleSelectEpics}
             />
           )}
           <div className="flex-1 ml-4 space-y-4">

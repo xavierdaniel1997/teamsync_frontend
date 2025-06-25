@@ -14,22 +14,24 @@ interface UserAvatarProps {
   getInitials: (fullName: string, secondName: string) => string;
   width?: number;
   height?: number;
+  selectedUser?: boolean;
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({ user, getRandomColor, getInitials, width=8, height=8 }) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({ user, getRandomColor, getInitials, width=8, height=8, selectedUser }) => {
+
   if (user && user.fullName) {
     if (user.avatar) {
       return (
         <img
           src={user?.avatar}
           alt="User avatar"
-          className={`w-${width} h-${height} object-cover rounded-full`}
+          className={`w-${width} h-${height} object-cover rounded-full ${selectedUser ? "border-2 border-blue-200" : ""}`}
         />
       );
     } else {
       return (
         <div
-          className={`w-${width} h-${height} rounded-full flex items-center justify-center text-white font-semibold text-xs`}
+          className={`w-${width} h-${height} rounded-full flex items-center justify-center text-white font-semibold text-xs ${selectedUser ? "border-2 border-blue-200" : ""}`}
           style={{ backgroundColor: getRandomColor(user._id || "") }}
         >
           {getInitials(user.fullName, user.secondName || "")}

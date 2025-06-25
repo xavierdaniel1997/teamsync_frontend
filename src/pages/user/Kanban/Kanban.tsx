@@ -8,7 +8,7 @@ import KanbanColumn from './KanbanColumn';
 import { useProject } from '../../../hooks/useProject';
 import { ITask, TaskStatus } from '../../../types/task';
 
-const taskStatus = [{ _id: "TO_DO", status: "TO_DO" }, { _id: "IN_PROGRESS", status: "IN_PROGRESS" }, {_id: "IN_REVIEW", status: "IN_REVIEW"}, {_id: "DONE", status: "DONE"}]
+const taskStatus = [{ _id: "TO_DO", status: "TO_DO" }, { _id: "IN_PROGRESS", status: "IN_PROGRESS" }, { _id: "IN_REVIEW", status: "IN_REVIEW" }, { _id: "DONE", status: "DONE" }]
 
 
 
@@ -20,24 +20,31 @@ const Kanban: React.FC = () => {
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
   const { useGetActiveSprintTask, useUpdateTask } = useProject();
   const { data: activeTask, isLoading: taskLoading } = useGetActiveSprintTask(workspaceId || "", projectId || "")
+  const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
+
+  const handleSelectUser = (userId: string) => {
+    setSelectedUserIds((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+    );
+  };
 
 
   const sensors = useSensors(
-      useSensor(MouseSensor, {
-        activationConstraint: {
-          distance: 5,
-        },
-      }),
-      useSensor(TouchSensor, {
-        activationConstraint: {
-          delay: 200,
-          tolerance: 5,
-        },
-      })
-    );
-    
-  
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    })
+  );
+
+
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -71,18 +78,24 @@ const Kanban: React.FC = () => {
           isBackLog={true}
         />
       </div>
-      <DndContext 
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        <BackLogTopBar showEpic={showEpic} setShowEpic={setShowEpic} projectMembers={project?.members} />
+        <BackLogTopBar
+          showEpic={showEpic}
+          setShowEpic={setShowEpic}
+          projectMembers={project?.members}
+          selectedUserIds={selectedUserIds}
+          handleSelectUser={handleSelectUser}
+        />
         <div className='p-5'>
           <div ref={boardRef} className='flex w-full gap-5' >
 
             {!activeTask || !activeTask.data ? (
               <>
-                {taskStatus.map((column: any) => (<KanbanColumn key={column._id} status={column.status} taskLoading={taskLoading}/>))}
+                {taskStatus.map((column: any) => (<KanbanColumn key={column._id} status={column.status} taskLoading={taskLoading} />))}
               </>
             ) : (<>
               {activeTask.data.map((column: any) => (

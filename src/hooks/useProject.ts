@@ -145,10 +145,10 @@ export const useProject = () => {
     });
   };
 
-  const useGetTasksByProject = (workspaceId: string, projectId: string) => {
+  const useGetTasksByProject = (workspaceId: string, projectId: string, assignees?: string[], epics?: string[]) => {
     return useQuery<TaskResponse>({
-      queryKey: ["task", workspaceId, projectId],
-      queryFn: () => getAllTaskByProjectsApi(workspaceId, projectId),
+      queryKey: ["task", workspaceId, projectId, assignees, epics],
+      queryFn: () => getAllTaskByProjectsApi(workspaceId, projectId, assignees, epics),
       enabled: !!workspaceId && !!projectId
     })
   }

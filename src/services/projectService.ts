@@ -62,7 +62,7 @@ export const deleteTaskApi = async (workspaceId: string, projectId: string, task
 }
 
 export const getBacklogTasksApi = async (projectId: string) => {
-    const response = await api.get(`project/backlog-tasks/${projectId}`)
+    const response = await api.get(`project/backlog-tasks/${projectId}`,)
     return response.data;
 }
 
@@ -72,8 +72,14 @@ export const getTaskFromSprintApi = async (workspaceId: string, projectId: strin
 }
 
 
-export const getAllTaskByProjectsApi = async (workspaceId: string, projectId: string) => {
-    const response = await api.get(`project/all-tasks/${workspaceId}/${projectId}`)
+export const getAllTaskByProjectsApi = async (workspaceId: string, projectId: string, assignees?: string[], epics?: string[]) => {
+    const response = await api.get(`project/all-tasks/${workspaceId}/${projectId}`, {
+        params: {
+            assignees: assignees?.join(","),
+            epics: epics?.join(",")
+        }
+    })
+    console.log("response form the getAllTasksByProjectApi", response.data)
     return response.data;
 }
 

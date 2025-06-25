@@ -80,7 +80,7 @@ const MeetingLinkCard: React.FC<MeetingLinkCardProps> = ({ schedule, meeting }) 
               >
                 Start
               </button>
-            ) : meeting.status === 'ongoing' ? (
+            ) : meeting.status === 'ongoing' || meeting.status !== "ended"? (
               <button
                 className="bg-gray-600 hover:bg-gray-500 text-white px-4 py-1 rounded-md w-20"
                 onClick={handleJoinMeeting}

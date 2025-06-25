@@ -7,6 +7,7 @@ import { IoMdClose } from "react-icons/io";
 import epicLogo from "../../assets/epicLogo.svg";
 import EpicBlock from './EpicBlock';
 import EpicBlockShimmer from './EpicBlockShimmer';
+import { toast } from 'sonner';
 
 interface Props {
   isLoading?: boolean;
@@ -15,10 +16,12 @@ interface Props {
   setShowEpic: React.Dispatch<React.SetStateAction<boolean>>;
   selectedEpicId: string | null;
   setSelectedEpicId: React.Dispatch<React.SetStateAction<string | null>>;
+  selectedEpics: string[];
+  handleSelectedEpic: (epicId: string) => void
 }
 
 const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHeading, selectedEpicId,
-  setSelectedEpicId, }) => {
+  setSelectedEpicId, selectedEpics, handleSelectedEpic}) => {
 
   const { useCreateTask } = useProject();
   const [isCreating, setIsCreating] = useState(false);
@@ -28,7 +31,10 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
 
 
   const handleCreateEpic = async () => {
-    if (!epicTitle.trim() || !projectId || !workspaceId) return;
+    if (!epicTitle.trim() || !projectId || !workspaceId){
+      toast.error("Select a workspace and project to create an epic")
+      return;
+    } 
     useCreateTask.mutate({
       title: epicTitle,
       type: TaskType.EPIC,
@@ -39,10 +45,12 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
     setIsCreating(false);
   };
 
-  // console.log("poject Id details form the epicSection..........", epicHeading) 
+
+
+  const isSelectedEpics = (epicId: string) => selectedEpics.includes(epicId)
 
   return (
-    <div className="w-64 bg-[#202020] p-4 rounded shadow h-96 flex flex-col">
+    <div className="w-72 bg-[#202020] p-4 rounded shadow h-fit max-h-[calc(100vh-150px)] flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <span className="text-lg font-semibold text-white">Epic</span>
@@ -63,10 +71,14 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
         ) : (epicHeading ?? []).length > 0 ? (
           <div className="flex flex-col gap-1">
             {epicHeading?.map((epic) => (
-              <EpicBlock key={epic._id} title={epic.title} epicId={epic._id} taskCount={epic.taskKey ?? 0} 
-              isSelected={selectedEpicId === epic._id} 
-                onSelect={() => setSelectedEpicId(epic._id)}
-              />
+              // <button onClick={() => handleSelectedEpic(epic._id)}>
+                <EpicBlock key={epic._id} title={epic.title} epicId={epic._id} taskCount={epic.taskKey ?? 0}
+                  isSelected={selectedEpicId === epic._id}
+                  onSelect={() => setSelectedEpicId(epic._id)}
+                  selectedEpics={isSelectedEpics(epic._id)}
+                  handleSelectedEpic={handleSelectedEpic}
+                />
+              // </button>
             ))}
           </div>
         ) : (
