@@ -1,6 +1,5 @@
 import { Dialog, DialogContent } from '@mui/material';
 import { IoAdd, IoClose } from 'react-icons/io5';
-import { IoMdClose, IoMdCloseCircle } from "react-icons/io";
 import { BsLink45Deg } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { TbSubtask } from "react-icons/tb";
@@ -8,7 +7,7 @@ import { BiSolidCheckboxMinus } from 'react-icons/bi';
 import { FaPaperclip } from 'react-icons/fa';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import AttachmentPreview from './AttachmentPreview';
 import { IUser } from '../../types/users';
 import AssignMembers from './AssignMembers';
@@ -18,10 +17,8 @@ import OpenWebLinkModal from './OpenWebLinkModal';
 import ChildIssueModal from './ChildIssueModal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
-import { toast } from 'sonner';
 import { useProject } from '../../hooks/useProject';
 import { ITask } from '../../types/task';
-import { formatInTimeZone } from 'date-fns-tz';
 import { format } from 'date-fns';
 import EpicListModal from './EpicListModal';
 import WebLinkPreview from './WebLinkPreview';
@@ -218,7 +215,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
     }
   };
 
-  console.log("selected epic checkinggggggggg epicTask", epicTask)
+  console.log("selected epic checkinggggggggg epicTask subtasks", subtasks)
 
   return (
     <Dialog

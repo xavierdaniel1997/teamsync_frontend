@@ -4,9 +4,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import TaskModal from './TaskModal';
-import { ITask } from '../../types/task';
 import { formatInTimeZone } from 'date-fns-tz';
-import { useProject } from '../../hooks/useProject';
 
 interface EpicBlockProps {
   epicId: string;

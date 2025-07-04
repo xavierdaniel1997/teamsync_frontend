@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { IoMdCloseCircle } from 'react-icons/io';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import { FaFilePdf, FaPaperclip } from 'react-icons/fa';

@@ -58,11 +58,14 @@ const Kanban: React.FC = () => {
 
 
     if (workspaceId && projectId) {
+      const formData = new FormData();
+      formData.append("status", newStatus);
       useUpdateTask.mutate({
         workspaceId: workspaceId,
         projectId: projectId,
         taskId: task._id,
-        task: { status: newStatus }
+        // task: { status: newStatus }
+        task: formData,
       })
     }
 
