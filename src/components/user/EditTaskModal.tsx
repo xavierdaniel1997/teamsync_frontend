@@ -27,13 +27,17 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const { useUpdateTask, useDeleteTask } = useProject();
 
-  const handleMoveTask = (newSprintId: string | null) => {
+  const handleMoveTask = (sprintId: string | null) => {
     if (workspaceId && projectId && taskId) {
+      const formData = new FormData();
+      console.log("from handleMoveTask sprintId checking", sprintId );
+      formData.append("sprint", sprintId || "");
       useUpdateTask.mutate({
         workspaceId: workspaceId,
         projectId: projectId,
         taskId,
-        task: { sprint: newSprintId }
+        // task: { sprint: newSprintId }
+        task: formData,
       })
     }
   };
@@ -82,7 +86,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#2a2a2a] cursor-pointer"
-              onClick={handleEditTask}
+                onClick={handleEditTask}
               >
                 Edit Backlog Task
               </li>
@@ -109,7 +113,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
               </li>
               <li
                 className="px-4 py-2 hover:bg-[#2a2a2a] cursor-pointer"
-              onClick={handleEditTask}
+                onClick={handleEditTask}
               >
                 Edit Sprint Task
               </li>

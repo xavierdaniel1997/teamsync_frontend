@@ -50,11 +50,19 @@ export const getEpicsByProjectApi = async (projectId: string) => {
 }
 
 
-export const updateTaskApi = async (workspaceId: string, projectId: string, taskId: string, task: Partial<ITask>) => {
-    const response = await api.put(`project/update-task/${workspaceId}/${projectId}/${taskId}`, task)
+// export const updateTaskApi = async (workspaceId: string, projectId: string, taskId: string, task: Partial<ITask>) => {
+//     const response = await api.put(`project/update-task/${workspaceId}/${projectId}/${taskId}`, task)
+//     return response.data;
+// }
+
+export const updateTaskApi = async (workspaceId: string, projectId: string, taskId: string, task: FormData) => {
+    const response = await api.put(`project/update-task/${workspaceId}/${projectId}/${taskId}`, task, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+    })
     return response.data;
 }
-
 
 export const deleteTaskApi = async (workspaceId: string, projectId: string, taskId: string) => {
     const response = await api.delete(`project/delete-task/${workspaceId}/${projectId}/${taskId}`)
@@ -79,7 +87,7 @@ export const getAllTaskByProjectsApi = async (workspaceId: string, projectId: st
             epics: epics?.join(",")
         }
     })
-    console.log("response form the getAllTasksByProjectApi", response.data)
+    // console.log("response form the getAllTasksByProjectApi", response.data)
     return response.data;
 }
 

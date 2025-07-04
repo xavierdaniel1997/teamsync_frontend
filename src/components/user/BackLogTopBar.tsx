@@ -5,6 +5,12 @@ import { FiSettings } from 'react-icons/fi';
 import UserAvatar from '../globa/UserAvatar';
 import { getInitials, getRandomColor } from '../../utils/userHelpers';
 import { IUser } from '../../types/users';
+import { useState } from 'react';
+import InviteTeamModal from './InviteTeamModal';
+import { useProject } from '../../hooks/useProject';
+import { RootState } from '../../redux/store';
+import { useSelector } from 'react-redux';
+import { toast } from 'sonner';
 
 interface Props {
     showEpic: boolean;
@@ -16,8 +22,25 @@ interface Props {
 
 const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedUserIds, handleSelectUser}) => {
 
+  const [openInviteModal, setOpenInviteModal] = useState(false)
+    const { useInviteMember} = useProject()
+    const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
+    const project = useSelector((state: RootState) => state.project.selectedProject)
   const isSelected = (userId: string) => selectedUserIds?.includes(userId);
-
+  
+      const handleInviteMembers = (emails: string[]) => {
+      if (!project?._id || !workspaceId) {
+        toast.error("Project ID or Workspace ID is missing");
+        return;
+      }
+      useInviteMember.mutate({
+        projectId: project._id,
+        workspaceId,
+        emails
+      }
+      )
+      setOpenInviteModal(false)
+    };
  
   return (
     <div className="flex items-center justify-between px-4 py-2 w-full">
@@ -47,7 +70,8 @@ const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedU
           </div>
 
           {/* Add Member Button */}
-          <div className="ml-2 bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center text-white hover:bg-gray-600 cursor-pointer">
+          <div className="ml-2 bg-gray-700 rounded-full w-8 h-8 flex items-center justify-center text-white hover:bg-gray-600 cursor-pointer"
+          onClick={() => setOpenInviteModal(!openInviteModal)}>
             <FaUserPlus />
           </div>
         </div>
@@ -72,6 +96,9 @@ const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedU
           <span className="text-sm">View settings</span>
         </button>
       </div>
+        <InviteTeamModal isOpen={openInviteModal} onClose={() => setOpenInviteModal(false)}
+          onInvite={handleInviteMembers}
+        />
     </div>
   )
 }

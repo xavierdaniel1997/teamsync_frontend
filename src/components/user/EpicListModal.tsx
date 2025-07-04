@@ -25,7 +25,7 @@ const EpicListModal: React.FC<EpicListModalProps> = ({ epicDetails, onSelectEpic
           className="w-full bg-[#2A2A2A] text-sm text-white rounded-sm px-9 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400"
         />
       </div>
-      <div className="max-h-60 overflow-y-auto">
+      <div className="max-h-60 overflow-y-auto custom-scrollbar">
         
         {epicDetails?.length ? (
           epicDetails.map((epic) => (

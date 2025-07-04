@@ -5,7 +5,7 @@ import { getInitials, getRandomColor } from "../../utils/userHelpers";
 import { FaUserCircle } from "react-icons/fa";
 
 interface AssignMemberProps {
-    members: any[]
+    members: any[];
     onSelectMember: (userId: string | null) => void;
 }
 
@@ -24,7 +24,7 @@ const AssignMembers: React.FC<AssignMemberProps> = ({ members, onSelectMember })
 
             </div>
             {members?.map((member) => (
-                <div className="py-1 flex gap-2 items-center cursor-pointer"
+                <div className="py-1 flex gap-2 items-center cursor-pointer hover:bg-[#2A2A2A]"
                     onClick={() => onSelectMember(member.user._id)}>
                     <div className="flex-shrink-0">
 

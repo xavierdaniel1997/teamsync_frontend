@@ -90,20 +90,45 @@ export const useProject = () => {
     }
   })
 
+  // const useUpdateTask = useMutation({
+  //   mutationFn: ({ workspaceId, projectId, taskId, task }: { workspaceId: string, projectId: string, taskId: string; task: Partial<ITask> }) =>
+  //     updateTaskApi(workspaceId, projectId, taskId, task),
+  //   onSuccess: (response) => {
+  //     console.log("task updated successfully", response);
+  //     queryClient.invalidateQueries({ queryKey: ["project"] });
+  //     queryClient.invalidateQueries({ queryKey: ["task"] });
+  //     queryClient.invalidateQueries({ queryKey: ["activeTask"] });
+  //   },
+  //   onError: (error: any) => {
+  //     console.log("failed to update the task", error);
+  //     toast.error(error?.response?.data?.message || "Failed to update task");
+  //   },
+  // })
+
   const useUpdateTask = useMutation({
-    mutationFn: ({ workspaceId, projectId, taskId, task }: { workspaceId: string, projectId: string, taskId: string; task: Partial<ITask> }) =>
-      updateTaskApi(workspaceId, projectId, taskId, task),
+    mutationFn: ({
+      workspaceId,
+      projectId,
+      taskId,
+      task,
+    }: {
+      workspaceId: string;
+      projectId: string;
+      taskId: string;
+      task: FormData;
+    }) => updateTaskApi(workspaceId, projectId, taskId, task),
     onSuccess: (response) => {
-      console.log("task updated successfully", response);
+      console.log("Task updated successfully", response);
       queryClient.invalidateQueries({ queryKey: ["project"] });
       queryClient.invalidateQueries({ queryKey: ["task"] });
       queryClient.invalidateQueries({ queryKey: ["activeTask"] });
+      toast.success("Task updated successfully");
     },
     onError: (error: any) => {
-      console.log("failed to update the task", error);
+      console.error("Failed to update the task", error);
       toast.error(error?.response?.data?.message || "Failed to update task");
     },
-  })
+  });
 
   const useDeleteTask = useMutation({
     mutationFn: ({ workspaceId, projectId, taskId }: { workspaceId: string, projectId: string, taskId: string }) =>

@@ -71,14 +71,13 @@ const EpicSection: React.FC<Props> = ({ isLoading, showEpic, setShowEpic, epicHe
         ) : (epicHeading ?? []).length > 0 ? (
           <div className="flex flex-col gap-1">
             {epicHeading?.map((epic) => (
-              // <button onClick={() => handleSelectedEpic(epic._id)}>
                 <EpicBlock key={epic._id} title={epic.title} epicId={epic._id} taskCount={epic.taskKey ?? 0}
                   isSelected={selectedEpicId === epic._id}
                   onSelect={() => setSelectedEpicId(epic._id)}
                   selectedEpics={isSelectedEpics(epic._id)}
                   handleSelectedEpic={handleSelectedEpic}
+                  taskDetails={epic}
                 />
-              // </button>
             ))}
           </div>
         ) : (

@@ -50,7 +50,8 @@ export enum TaskType {
     storyPoints?: number;
     files?: IFile;
     startDate: string;
-    dueDate: string;
+    endDate: string;
+    webLinks: { url: string; linkText: string }[];
     taskStatus?: string;
     createdAt: string;
     updatedAt: string;

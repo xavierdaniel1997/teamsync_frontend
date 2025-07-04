@@ -32,7 +32,6 @@ const Backlog: React.FC = () => {
   const epicTitle = epicData?.data;
   const { data: taskData } = useGetTasksByProject(workspaceId || "", projectId || "", selectedUserIds, selectedEpics);
 
-
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -103,12 +102,16 @@ const Backlog: React.FC = () => {
     );
 
     if (workspaceId && projectId) {
+      const formData = new FormData();
+      if (sprintId) formData.append("sprint", sprintId);
+      else formData.append("sprint", "");
       useUpdateTask.mutate(
         {
           workspaceId,
           projectId,
           taskId,
-          task: { sprint: sprintId },
+          // task: { sprint: sprintId },
+          task: formData,
         },
       );
     }
@@ -138,7 +141,6 @@ const Backlog: React.FC = () => {
   const sprintTasks = (sprintId: string) => localTasks.filter((task) => task.sprint === sprintId);
   const backlogTasks = localTasks.filter((task) => !task.sprint);
 
-  console.log("selected userssssssssssssssssssssss", selectedUserIds, "selected epics", selectedEpics)
 
 
   return (

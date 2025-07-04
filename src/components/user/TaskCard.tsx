@@ -60,7 +60,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
       containerId,
       sprintId: task.sprint || '',
     },
-    
+
     disabled: editTitle || openAssigneMember || showEpicList || openEditTaskModal || sprintStatus === "ACTIVE",
   });
 
@@ -70,11 +70,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     const newStatus = event.target.value as TaskStatus;
     setStatus(newStatus);
     if (workspaceId && projectId) {
+      const formData = new FormData();
+      formData.append("status", newStatus);
       useUpdateTask.mutate({
         workspaceId: workspaceId,
         projectId: projectId,
         taskId: taskId,
-        task: { status: newStatus }
+        // task: { status: formData}
+        task: formData,
       })
     }
   };
@@ -82,11 +85,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
 
   const handleAssigneeChange = (userId: string | null) => {
     if (workspaceId && projectId) {
+      const formData = new FormData();
+      if (userId) formData.append("assignee", userId);
+      else formData.append("assignee", "");
       useUpdateTask.mutate({
         workspaceId: workspaceId,
         projectId: projectId,
         taskId: task._id,
-        task: { assignee: userId }
+        // task: { assignee: userId }
+        task: formData,
       }, {
         onSuccess: () => setOpenAssigneMember(false)
       })
@@ -96,11 +103,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
 
   const handleAddEpic = (epicId: string | null) => {
     if (workspaceId && projectId) {
+      const formData = new FormData();
+      if (epicId) formData.append("epicId", epicId);
+      else formData.append("epicId", "");
       useUpdateTask.mutate({
         workspaceId: workspaceId,
         projectId: projectId,
         taskId: task._id,
-        task: { epicId }
+        // task: { epicId }
+        task: formData,
       },
         {
           onSuccess: () => setShowEpicList(false)
@@ -113,11 +124,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
   const handleBlurTitle = (event: React.FocusEvent<HTMLInputElement>) => {
     event.stopPropagation();
     if (workspaceId && projectId) {
+      const formData = new FormData();
+      formData.append("title", newTitle.trim());
       useUpdateTask.mutate({
         workspaceId: workspaceId,
         projectId: projectId,
         taskId: task._id,
-        task: { title: newTitle }
+        // task: { title: newTitle }
+        task: formData,
       }, {
         onSuccess: () => setEditTitle(false),
       })
@@ -126,14 +140,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     }
   }
 
-    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => { 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter' && newTitle.trim()) {
       event.preventDefault();
-      handleBlurTitle(event as any); 
+      handleBlurTitle(event as any);
     } else if (event.key === 'Escape') {
       event.preventDefault();
-      setNewTitle(task.title); 
-      setEditTitle(false); 
+      setNewTitle(task.title);
+      setEditTitle(false);
     }
   };
 
@@ -175,7 +189,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     console.log("click handle etit task button click")
   };
 
-
+  // console.log("task from the task card checking", task) 
 
   return (
     <div
@@ -209,7 +223,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
               onChange={(e) => setNewTitle(e.target.value)}
               onBlur={handleBlurTitle}
               onClick={handleInputClick}
-              onKeyDown={handleKeyDown} 
+              onKeyDown={handleKeyDown}
               className="w-64 text-sm font-medium text-white border-none focus:outline-none focus:ring-1 focus:ring-gray-500 rounded-xs p-1"
               autoFocus
             />
@@ -307,6 +321,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
                   projectId={projectId || ''}
                   closeOpenEditTaskModal={() => setOpenEditTaskModal(!openEditTaskModal)}
                   openTaskModal={() => setIsTaskModalOpen(true)}
+                  
                 />
               </div>}
             </div>
@@ -316,6 +331,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
       <TaskModal
         isOpen={isTaskModalOpen}
         onClose={() => setIsTaskModalOpen(false)}
+        parentTask={task.epic?.title}
+        epicTitle={task.title}
+        isTask={true}
+        assignedMember={typeof task.assignee === 'object' && task.assignee !== null ? task.assignee : undefined}
+        members={project?.members as [] || []}
+        reporter={task.reporter}
+        taskId={task._id}
+        task={task}
       />
     </div>
   );
