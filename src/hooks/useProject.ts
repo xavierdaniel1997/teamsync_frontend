@@ -113,7 +113,7 @@ export const useProject = () => {
       task,
     }: {
       workspaceId: string;
-      projectId: string;
+      projectId: string; 
       taskId: string;
       task: FormData;
     }) => updateTaskApi(workspaceId, projectId, taskId, task),
@@ -122,7 +122,7 @@ export const useProject = () => {
       queryClient.invalidateQueries({ queryKey: ["project"] });
       queryClient.invalidateQueries({ queryKey: ["task"] });
       queryClient.invalidateQueries({ queryKey: ["activeTask"] });
-      toast.success("Task updated successfully");
+      // toast.success("Task updated successfully");
     },
     onError: (error: any) => {
       console.error("Failed to update the task", error);

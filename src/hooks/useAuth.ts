@@ -84,9 +84,7 @@ export const useAuthMutations = () => {
         return;
       }
       try {
-        // console.log("check workspace")
         await handleWorkspaceSelection(dispatch, navigate);
-        // console.log("checked workspace")
       } catch (error) {
         console.log("Failed to fetch the workspace", error);
         navigate("/create-work-space");

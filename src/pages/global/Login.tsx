@@ -16,6 +16,8 @@ interface LoginFormProps {
   forgotPasswordLink?: string;
   onSuccessRedirect?: () => void; 
   isAdmin: boolean;
+  // isLoading: boolean;
+  // isGoogleLoading?: boolean;
 }
 
 const validationSchema = Yup.object({
@@ -33,7 +35,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   signUpLink,
   forgotPasswordLink = "/forgot-password",
   onSuccessRedirect,
-  isAdmin
+  isAdmin,
 }) => {
   const formik = useFormik({
     initialValues: {
@@ -62,6 +64,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
       }
     },
   });
+
+  console.log("checking the isloading pending....", )
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
