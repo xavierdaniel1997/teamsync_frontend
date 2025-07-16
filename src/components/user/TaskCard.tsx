@@ -250,8 +250,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
       <div className="flex items-center gap-8 ">
         <div className="relative">
           {task?.epic ?
-            <button className="font-semibold text-xs bg-violet-600/20 px-1.5 py-0.5 rounded-sm cursor-pointer relative"
+            <button className={`font-semibold text-xs  px-1.5 py-0.5 rounded-sm cursor-pointer relative`}
               // onClick={() => setShowEpicList(!showEpicList)}
+              style={{backgroundColor: project?.color.hex}}
               onClick={handleEpicButtonClick}
             >{task.epic.title}</button>
             :

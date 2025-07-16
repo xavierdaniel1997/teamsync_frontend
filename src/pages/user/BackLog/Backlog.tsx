@@ -142,7 +142,6 @@ const Backlog: React.FC = () => {
   const backlogTasks = localTasks.filter((task) => !task.sprint);
 
 
-
   return (
     <div className="p-5 bg-[#191919] min-h-[93vh] h-auto">
       <div className="m-5">

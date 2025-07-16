@@ -27,6 +27,7 @@ export interface IProject {
     title: string;
     description: string;
     projectCoverImg: string;
+    color: { class: string, hex: string };
     workspace: {
       _id: string;
       name: string;

@@ -12,7 +12,7 @@ interface KanbanColumnProps {
 }
 
 
-const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, taskLoading }) => {
+const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, taskLoading }) => { 
   const { setNodeRef, isOver } = useDroppable({
     id: status,
     data: { type: 'status', id: status },

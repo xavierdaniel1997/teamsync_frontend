@@ -11,6 +11,30 @@ import { Tailspin } from 'ldrs/react'
 
 
 
+// const colorOptions = [
+//   'bg-blue-600',    // #0052CC-ish
+//   'bg-green-500',   // #36B37E-ish
+//   'bg-red-500',     // #FF5630-ish
+//   'bg-purple-600',  // #6554C0-ish
+//   'bg-cyan-500',    // #00B8D9-ish
+//   'bg-fuchsia-600', // #9C27B0-ish
+//   'bg-indigo-600',  // #3F51B5-ish
+//   'bg-emerald-500', // #4CAF50-ish
+// ];
+
+const colorOptions = [
+  { class: 'bg-blue-600', hex: '#0052CC' },
+  { class: 'bg-green-500', hex: '#36B37E' },
+  { class: 'bg-red-500', hex: '#FF5630' },
+  { class: 'bg-purple-600', hex: '#6554C0' },
+  { class: 'bg-cyan-500', hex: '#00B8D9' },
+  { class: 'bg-fuchsia-600', hex: '#9C27B0' },
+  { class: 'bg-indigo-600', hex: '#3F51B5' },
+  { class: 'bg-emerald-500', hex: '#4CAF50' },
+];
+
+
+
 const AddProjectForm: React.FC = () => {
   const { useCreateProjectWithTeam } = useProject()
   const { useGetWorkSpace } = useWorkSpaceMutation();
@@ -20,7 +44,7 @@ const AddProjectForm: React.FC = () => {
 
   // console.log("workspace detials", workspace)
 
-  
+
   const handleAddEmail = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && e.currentTarget.value.trim()) {
       const email = e.currentTarget.value.trim();
@@ -44,6 +68,7 @@ const AddProjectForm: React.FC = () => {
       name: '',
       projectkey: '',
       title: '',
+      color: { class: '', hex: '' },
       workspaceId: workspace?.data?.data?._id || '',
       emails: [] as string[],
     },
@@ -75,17 +100,17 @@ const AddProjectForm: React.FC = () => {
       {/* Header with back button */}
       <form onSubmit={formik.handleSubmit}>
         <div className="mb-10">
-          <Link to="/project" className="flex items-center text-gray-400 hover:text-white">
-            <FaArrowLeft className="mr-2" />
+          <Link to="/project" className="flex gap-2 mr-8 mt-5 items-center text-gray-400 hover:text-white">
+            <FaArrowLeft/>
             <span>Back to project</span>
           </Link>
         </div>
 
         {/* Main content container */}
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 justify-center border-b border-[#5A6060] py-6">
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 justify-center border-b border-[#5A6060]/30 py-6">
           {/* Left side - Form */}
           <div>
-            <h1 className="text-3xl font-medium mb-3">Add project details</h1>
+            <h1 className="text-3xl font-medium mb-3 text-gray-400">Add project details</h1>
             <p className="text-gray-400 mb-6">
               Explore what's possible when you collaborate with your team. Edit project
               details anytime in project settings.
@@ -157,6 +182,28 @@ const AddProjectForm: React.FC = () => {
 
             </div>
 
+
+
+             <div className='mb-4'>
+              <label className="flex items-center gap-1 mb-2">
+                Color<span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-3 flex-wrap">
+                {colorOptions.map((color) => (
+                  <div
+                    key={color.class}
+                    className={`w-10 h-10 rounded-md cursor-pointer border-1 transition-all duration-150  ${formik.values.color.class === color.class
+                        ? 'border-gray-400 scale-110'
+                        : 'border-transparent opacity-80'
+                      } ${color.class}`}
+                    onClick={() => formik.setFieldValue('color', color)}
+                  />
+                ))}
+              </div>
+            </div>
+
+            
+
             {/* Team Members Field */}
             <div className="mb-4">
               <label className="block mb-2">
@@ -191,16 +238,16 @@ const AddProjectForm: React.FC = () => {
 
         {/* Footer buttons */}
         <div className="mt-4 flex justify-end max-w-4xl mx-auto">
-          <button className="bg-[#2E3033] text-white px-4 py-2 rounded mr-4 hover:bg-[#3E4043]">
+          <Link to="/project" className="bg-[#2E3033] text-white px-4 py-2 rounded mr-4 hover:bg-[#3E4043]">
             Cancel
-          </button>
+          </Link>
           <button className="bg-[#0052CC] text-white px-4 py-2 rounded hover:bg-[#0065FF]"
             type='submit'>
             {/* Create project */}
 
             {useCreateProjectWithTeam.isPending ? (
               <>
-               Creating...
+                Creating...
                 <Tailspin
                   size="20"
                   stroke="3"

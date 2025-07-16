@@ -8,6 +8,8 @@ interface Project {
     projectCoverImg: string;
     description: string;
     workspace: any;
+    // color: string;
+    color: { class: string, hex: string };
     owner: any;
     members: any[];
     createdAt: string;

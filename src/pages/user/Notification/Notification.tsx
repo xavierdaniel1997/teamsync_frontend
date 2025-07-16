@@ -39,7 +39,7 @@ const Notification: React.FC = () => {
 
 
     socket.on('notification', (notification: INotification) => {
-      console.log("Received notification:", notification);
+      console.log("Received notification:", notification); 
       setNotifications((prev) => {
         if (prev.some((n) => n._id === notification._id)) {
           return prev;

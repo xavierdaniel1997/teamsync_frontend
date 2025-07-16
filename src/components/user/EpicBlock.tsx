@@ -28,7 +28,7 @@ const EpicBlock: React.FC<EpicBlockProps> = ({ epicId, title, statusColor = '#32
     setIsTaskModalOpen(true);
   };
 
-  // console.log("taskDetailsssssssssssssssssssssss taskDetails endDate", taskDetails.endData)
+  console.log("taskDetailsssssssssssssssssssssss taskDetails endDate projectDetails", projectDetails)
 
 
   return (
@@ -38,7 +38,7 @@ const EpicBlock: React.FC<EpicBlockProps> = ({ epicId, title, statusColor = '#32
           {/* <FiChevronRight size={16} className="text-gray-300" /> */}
           {openEpicDetails ? <MdKeyboardArrowDown size={16} className="text-gray-300" /> : <FiChevronRight size={16} className="text-gray-300" />}
         </button>
-        <div className="w-5 h-5 bg-purple-500 rounded-sm" onClick={() => handleSelectedEpic(epicId)} />
+        <div className={`w-5 h-5 ${projectDetails?.color.class} rounded-sm`} onClick={() => handleSelectedEpic(epicId)} />
         <span className="text-sm font-medium truncate">{title}</span>
       </div>
       {/* Status bar */}
