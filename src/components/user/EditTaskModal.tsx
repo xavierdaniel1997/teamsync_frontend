@@ -143,7 +143,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ taskType,
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
         title="Delete sprint"
-        message={`Are you sure you want to delete sprint SCRUM ${taskName}?`}
+        message={`Are you sure you want to delete sprint SCRUM ${taskName}? it will be permanently removed.`}
       />
     </>
   )

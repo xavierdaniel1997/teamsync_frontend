@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteSprintApi, deleteTaskApi, getActiveSprintTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, startSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
+import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteProjectApi, deleteSprintApi, deleteTaskApi, getActiveSprintTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, startSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
 import { ProjectResponse } from "../types/project"
 import { TaskResponse } from "../types/task"
-import { setSelectProject } from "../redux/projectSlice"
+import { setSelectProject, setSelectProjectId } from "../redux/projectSlice"
 import { useDispatch } from "react-redux"
 import { IStartSprint } from "../types/sprint"
 
@@ -74,6 +74,19 @@ export const useProject = () => {
     },
   })
 
+  const useDeleteProject = useMutation({
+    mutationFn: ({projectId, workspaceId}: {projectId: string, workspaceId: string}) => deleteProjectApi(projectId, workspaceId),
+    onSuccess: (response) => {
+      toast.success(response.message || "Project deleted successfully")
+      queryClient.invalidateQueries({ queryKey: ["project"] });
+      queryClient.invalidateQueries({ queryKey: ["projectById"] });
+      dispatch(setSelectProject(null))
+      dispatch(setSelectProjectId(null))
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || "Failed to delete the project")
+    }
+  })
 
   //task related api's
 
@@ -241,6 +254,7 @@ export const useProject = () => {
     useUpdateProject,
     useGetProjects,
     useGetProjectById,
+    useDeleteProject,
     useCreateTask,
     useDeleteTask,
     useGetEpic,

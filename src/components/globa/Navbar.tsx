@@ -90,7 +90,7 @@ const Navbar: React.FC<NavbarProps> = ({ isAdmin }) => {
 
         {!isAdmin && (
           <div className="flex items-center space-x-6">
-            <Link to="/workspace-setting" className="text-white text-sm hover:text-blue-400">
+            <Link to="/manage-workspace" className="text-white text-sm hover:text-blue-400">
               Workspaces
             </Link>
             <div className="relative" ref={projectDropdownRef}>

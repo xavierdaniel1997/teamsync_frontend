@@ -10,18 +10,6 @@ import { useWorkSpaceMutation } from '../../../hooks/useWorkSpace';
 import { Tailspin } from 'ldrs/react'
 
 
-
-// const colorOptions = [
-//   'bg-blue-600',    // #0052CC-ish
-//   'bg-green-500',   // #36B37E-ish
-//   'bg-red-500',     // #FF5630-ish
-//   'bg-purple-600',  // #6554C0-ish
-//   'bg-cyan-500',    // #00B8D9-ish
-//   'bg-fuchsia-600', // #9C27B0-ish
-//   'bg-indigo-600',  // #3F51B5-ish
-//   'bg-emerald-500', // #4CAF50-ish
-// ];
-
 const colorOptions = [
   { class: 'bg-blue-600', hex: '#0052CC' },
   { class: 'bg-green-500', hex: '#36B37E' },
@@ -116,11 +104,6 @@ const AddProjectForm: React.FC = () => {
               details anytime in project settings.
             </p>
 
-            {/* <div className="mb-4">
-            <p className="text-sm text-gray-400">
-              Required fields are marked with an asterisk <span className="text-red-500">*</span>
-            </p>
-          </div> */}
 
             {/* Name field */}
             <div className="mb-4">

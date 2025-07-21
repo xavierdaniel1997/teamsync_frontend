@@ -64,6 +64,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
 
   const { useUpdateTask, useGetEpic } = useProject()
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
+  const project = useSelector((state: RootState) => state.project.selectedProject)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
   const { data: epicData } = useGetEpic(projectId || "")
 
@@ -417,7 +418,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
 
                         {epicTask ? (<p>{epicTask}</p>) : selectedEpicId === null ? <p>Add Epic</p> : <p>Add parent</p>}
                         <div className='absolute bottom-11 right-0'>
-                          {isTask && openEpicModal && <EpicListModal epicDetails={epicData?.data} onSelectEpic={handleSelectEpic} hasEpic={!!task.epic} />}
+                          {isTask && openEpicModal && <EpicListModal epicDetails={epicData?.data} onSelectEpic={handleSelectEpic} hasEpic={!!task.epic} projectColor={project?.color.hex || ""}/>}
                         </div>
                       </div>
                     </div>

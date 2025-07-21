@@ -165,7 +165,7 @@ const WorkSpaceSetting: React.FC = () => {
                 </div>
               </div>
               <div className="flex flex-col items-center">
-                <h3 className="font-semibold">{selectedWorkspace?.name}</h3>
+                <h3 className="font-semibold">{selectedWorkspace?.name}</h3> 
                 <p className="text-gray-400 text-sm">
                   Created{" "}
                   {selectedWorkspace?.createdAt

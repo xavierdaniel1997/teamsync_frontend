@@ -189,7 +189,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     console.log("click handle etit task button click")
   };
 
-  // console.log("task from the task card checking", task) 
+  console.log("task from the task card checking projects", project) 
 
   return (
     <div
@@ -250,7 +250,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
       <div className="flex items-center gap-8 ">
         <div className="relative">
           {task?.epic ?
-            <button className={`font-semibold text-xs  px-1.5 py-0.5 rounded-sm cursor-pointer relative`}
+            <button className={`font-semibold text-gray-200 text-xs  px-1.5 py-0.5 rounded-sm cursor-pointer relative`}
               // onClick={() => setShowEpicList(!showEpicList)}
               style={{backgroundColor: project?.color.hex}}
               onClick={handleEpicButtonClick}
@@ -267,7 +267,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
 
           {showEpicList &&
             (<div className="absolute right-0 top-6 w-auto z-50">
-              <EpicListModal epicDetails={epicData.data} onSelectEpic={handleAddEpic} hasEpic={!!task.epic} />
+              <EpicListModal epicDetails={epicData.data} onSelectEpic={handleAddEpic} hasEpic={!!task.epic} projectColor={project?.color.hex || ""}/>
             </div>)}
         </div>
 

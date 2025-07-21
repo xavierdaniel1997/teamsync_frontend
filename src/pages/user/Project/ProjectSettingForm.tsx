@@ -4,19 +4,23 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useFormik } from "formik";
 import { useProject } from "../../../hooks/useProject";
+import { MdKeyboardArrowRight, MdKeyboardArrowUp } from "react-icons/md";
+import DeleteItemsModal from "../../../components/user/DeleteItemsModal";
 
 const ProjectSettingForm: React.FC = () => {
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
   const project = useSelector((state: RootState) => state.project.selectedProject)
-  const {useUpdateProject} = useProject()
+  const { useUpdateProject, useDeleteProject } = useProject()
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
+  const [showDeleteBtn, setShowDeleteBtn] = useState<boolean>(false)
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  
+
 
   const formik = useFormik({
     initialValues: {
       name: project?.name || '',
-      projectkey: project?.projectkey ||'',
+      projectkey: project?.projectkey || '',
       title: project?.title || '',
       description: project?.description || '',
       projectCoverImg: null as File | null,
@@ -54,23 +58,31 @@ const ProjectSettingForm: React.FC = () => {
     }
   };
 
-      useEffect(() => {
-          if (formik.values.projectCoverImg instanceof File) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                  setCoverPreview(reader.result as string);
-              };
-              reader.readAsDataURL(formik.values.projectCoverImg);
-          } else {
-              setCoverPreview(project?.projectCoverImg || null);
-          }
-      }, [formik.values.projectCoverImg, project?.projectCoverImg]);
+  useEffect(() => {
+    if (formik.values.projectCoverImg instanceof File) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverPreview(reader.result as string);
+      };
+      reader.readAsDataURL(formik.values.projectCoverImg);
+    } else {
+      setCoverPreview(project?.projectCoverImg || null);
+    }
+  }, [formik.values.projectCoverImg, project?.projectCoverImg]);
+
+  const handleDeleteConfirm = () => {
+    if (!project?._id || !workspaceId) {
+      return;
+    }
+    useDeleteProject.mutate({ projectId: project._id, workspaceId })
+    setIsModalOpen(false)
+  };
 
 
   return (
-    <div className="bg-[#191919] text-gray-300 min-h-[93vh] h-auto p-6">
+    <div className="bg-[#191919] text-gray-300 min-h-[93vh] h-auto p-6 px-10">
       {/* Cover Image with Overlaid Header */}
-      <div className="relative h-48 bg-cover bg-center rounded-md overflow-hidden">
+      <div className="relative h-64 bg-cover bg-center rounded-xl overflow-hidden">
         <img
           src={coverPreview || "https://images.unsplash.com/photo-1568952433726-3896e3881c65?q=80&w=2070&auto=format&fit=crop"}
           alt="Project cover"
@@ -106,7 +118,7 @@ const ProjectSettingForm: React.FC = () => {
             type="text"
             name="name"
             defaultValue="TeamSync"
-            className="w-full border border-[#3a3a3a] p-2 rounded"
+            className="w-full border border-[#3a3a3a] p-2 rounded bg-[#2b2b2b] focus:bg-[#131313] focus:outline-none focus:ring-1 focus:ring-blue-500"
             value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -118,7 +130,7 @@ const ProjectSettingForm: React.FC = () => {
           <label className="block mb-1 text-sm">Description</label>
           <textarea
             defaultValue="A project management software"
-            className="w-full border border-[#3a3a3a] p-2 rounded"
+            className="w-full border border-[#3a3a3a] p-2 rounded bg-[#2b2b2b] focus:bg-[#131313] focus:outline-none focus:ring-1 focus:ring-blue-500"
             name="description"
             value={formik.values.description}
             onChange={formik.handleChange}
@@ -133,7 +145,7 @@ const ProjectSettingForm: React.FC = () => {
             <input
               type="text"
               defaultValue="TeamSync"
-              className="w-full border border-[#3a3a3a] p-2 rounded"
+              className="w-full border border-[#3a3a3a] p-2 rounded bg-[#2b2b2b] focus:bg-[#131313] focus:outline-none focus:ring-1 focus:ring-blue-500"
               name="title"
               value={formik.values.title}
               onChange={formik.handleChange}
@@ -143,8 +155,8 @@ const ProjectSettingForm: React.FC = () => {
 
           <div>
             <label className="block mb-1 text-sm">Project ID</label>
-            <div className="flex items-center border border-[#3a3a3a] rounded p-2">
-              <span className="mr-2 font-bold">{project?._id}</span>
+            <div className="flex items-center border border-[#3a3a3a] rounded p-2 bg-[#2b2b2b] focus:bg-[#131313] focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <span className="mr-2">{project?._id}</span>
               <FaInfoCircle className="text-gray-400 ml-auto" />
             </div>
           </div>
@@ -153,28 +165,47 @@ const ProjectSettingForm: React.FC = () => {
         {/* Timezone */}
         <div>
           <label className="block mb-1 text-sm">Project Timezone</label>
-          <select className="w-full border border-[#3a3a3a] p-2 rounded">
+          <select className="w-full border border-[#3a3a3a] p-2 rounded bg-[#2b2b2b] focus:bg-[#131313] focus:outline-none focus:ring-1 focus:ring-blue-500">
             <option>UTC</option>
           </select>
         </div>
 
         {/* Update Button */}
-        <button className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded"
-         type="submit"
-         disabled={useUpdateProject.isPending}
-         >
-          {useUpdateProject.isPending ? 'Saving...' : 'Save changes'}
-        </button>
+        <div className="flex justify-between items-center mb-8">
+          <button className="text-gray-400 bg-blue-600/50 hover:bg-blue-700 px-3 py-1 rounded"
+            type="submit"
+            disabled={useUpdateProject.isPending}
+          >
+            {useUpdateProject.isPending ? 'Saving...' : 'Save changes'}
+          </button>
 
-        {/* Meta info */}
-        <p className="text-sm text-gray-500 mt-2">Created on Apr 12, 2025</p>
-
-        {/* Archive / Delete actions */}
-        <div className="pt-6 border-t border-[#333] space-y-4">
-          <button className="w-full text-left text-white hover:underline">Archive project</button>
-          <button className="w-full text-left text-red-500 hover:underline">Delete project</button>
+          {/* Meta info */}
+          <p className="text-sm text-gray-500">Created on Apr 12, 2025</p>
         </div>
       </form>
+      {/* Archive / Delete actions */}
+      <div className="pt-6 border-t border-[#333] space-y-3">
+        <div className="flex justify-between items-center"
+          onClick={() => setShowDeleteBtn(!showDeleteBtn)}>
+          <button className="w-full text-left text-gray-400  text-lg font-semibold">Delete project</button>
+          <button className="text-gray-400 cursor-pointer"
+          >
+            {showDeleteBtn ? <MdKeyboardArrowUp size={22} /> : <MdKeyboardArrowRight size={22} />}
+          </button>
+        </div>
+        {showDeleteBtn && <div className="space-y-3">
+          <p className="text-gray-400">When deleting a project, all of the data and resources within that project will be permanently removed and cannot be recovered.</p>
+          <button className="text-gray-400 tw-fit bg-red-500/50 px-3 py-1 rounded-sm cursor-pointer"
+            onClick={() => setIsModalOpen(true)}>Delete my project</button>
+        </div>}
+      </div>
+
+      <DeleteItemsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        projectName={project?.name || ""}
+        onDelete={handleDeleteConfirm}
+      />
     </div>
   );
 };

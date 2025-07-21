@@ -8,9 +8,10 @@ interface EpicListModalProps {
   epicDetails: ITask[];
   onSelectEpic: (epicId: string | null) => void;
   hasEpic: boolean
+  projectColor: string;
 }
 
-const EpicListModal: React.FC<EpicListModalProps> = ({ epicDetails, onSelectEpic, hasEpic }) => {
+const EpicListModal: React.FC<EpicListModalProps> = ({ epicDetails, onSelectEpic, hasEpic, projectColor }) => {
   console.log('epicDetails from the EpicListModal', epicDetails);
 
   return (
@@ -35,7 +36,7 @@ const EpicListModal: React.FC<EpicListModalProps> = ({ epicDetails, onSelectEpic
               onClick={() => onSelectEpic(epic._id)}
             >
               <span>
-                <AiOutlineThunderbolt size={20} className="text-violet-600" />
+                <AiOutlineThunderbolt size={20} style={{color: projectColor}} />
               </span>
               <p className="text-sm text-gray-200">{epic.taskKey}</p>
               <p className="text-sm text-gray-200 flex-1 truncate">{epic.title}</p>

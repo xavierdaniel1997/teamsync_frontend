@@ -33,6 +33,11 @@ export const inviteMemeberToProjectApi = async (projectId: string, workspaceId: 
     return response.data;
 }
 
+export const deleteProjectApi = async (projectId: string, workspaceId: string) => {
+    const response = await api.delete(`project/delete-project/${projectId}/${workspaceId}`);
+    return response.data;
+}
+
 
 
 //task related apis

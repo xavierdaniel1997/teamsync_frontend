@@ -28,8 +28,6 @@ const EpicBlock: React.FC<EpicBlockProps> = ({ epicId, title, statusColor = '#32
     setIsTaskModalOpen(true);
   };
 
-  console.log("taskDetailsssssssssssssssssssssss taskDetails endDate projectDetails", projectDetails)
-
 
   return (
     <div className={`flex flex-col gap-3  text-white p-3 rounded-md hover:bg-[#2a2a2a] transition-colors cursor-pointer ${selectedEpics ? "bg-[#2a2a2a]" : "bg-[#1a1a1a]"}`} onClick={onSelect}>

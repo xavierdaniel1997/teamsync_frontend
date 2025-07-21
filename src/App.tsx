@@ -26,7 +26,7 @@ import Success from "./pages/user/Subscription/Success";
 import PageNotFound from "./components/globa/PageNotFound";
 import AcceptInvitation from "./pages/user/TeamAndInvitation/AcceptInvitation";
 import TeamMembers from "./pages/user/TeamAndInvitation/TeamMembers";
-import WorkSpaceSetting from "./pages/user/WorkSpace/WorkSpaceSetting";
+// import WorkSpaceSetting from "./pages/user/WorkSpace/WorkSpaceSetting";
 import UserDetials from "./pages/admin/UserManagment/UserDetials";
 import UserSettings from "./pages/user/UserSettings/UserSettings";
 import ProjectSetting from "./pages/user/Project/ProjectSetting";
@@ -36,6 +36,7 @@ import Chat from "./pages/user/ChatRoom/Chat";
 import Meeting from "./pages/user/Meeting/Meeting";
 import { CallProvider } from "./context/CallContext";
 import GlobalCallNotification from "./components/user/GlobalCallNotification";
+import ManageWorkSpace from "./pages/user/WorkSpace/ManageWorkSpace";
 // import GlobalCallNotification from "./components/user/GlobalCallNotification";
 
 
@@ -70,7 +71,8 @@ const App: React.FC = () => {
           <Route path="/success" element={<Success/>}/>
           <Route path="/cancel" element={<PaymentCancel/>}/>
           <Route path="/create-work-space" element={<WorkSpace />} />
-          <Route path="/workspace-setting" element={<WorkSpaceSetting/>} />
+          {/* <Route path="/workspace-setting" element={<WorkSpaceSetting/>} /> */}
+          <Route path="/manage-workspace" element={<ManageWorkSpace/>} />
           <Route path="/create-project" element={<AddProjectForm/>} />
           <Route path="/project" element={<UserLayout />} >
             <Route index element={<Dashboard />} />
