@@ -20,16 +20,16 @@ const LoginWithThirdParty: React.FC = () => {
         <div>
             <div className="relative mt-2">
                 <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-300"></div>
+                    <div className="w-full border-t border-gray-400"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                    <span className="bg-white px-3 text-gray-500">Or continue with:</span>
+                    <span className="bg-[#1d1d1d] px-2 text-gray-400">Or continue with:</span>
                 </div>
             </div>
 
             {/* Social login buttons with larger icons and reduced width */}
             <div className="mt-3 space-y-2 flex flex-col items-center">
-                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-200 hover:shadow-md"
+                <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-200 bg-gray-300 px-3 py-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-gray-200 hover:shadow-md"
                 onClick={() => googleLogin()}
                 >
                     <FcGoogle className="mr-2 h-6 w-6" />

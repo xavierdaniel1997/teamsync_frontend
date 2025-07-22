@@ -68,7 +68,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   console.log("checking the isloading pending....", )
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
+    <div className="flex min-h-screen items-center justify-center bg-[#191919]  px-2 py-8 sm:px-4 lg:px-6 relative">
       <img
         src={leftVector}
         alt="Left Vector"
@@ -80,12 +80,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
         className="absolute bottom-0 right-0 w-90 h-auto z-0"
       />
 
-      <div className="w-full max-w-sm space-y-4 rounded-md bg-white shadow-md sm:p-6 z-10">
+      <div className="w-full max-w-sm space-y-4 rounded-md bg-[#1d1d1d] shadow-md sm:p-6 z-10">
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center justify-center text-sky-950">
             <img className="w-16 h-16" src={logImage} alt="TeamSync Logo" />
           </div>
-          <h2 className="mt-1 text-center text-xl font-semibold text-gray-800">
+          <h2 className="mt-1 text-center text-xl font-semibold text-gray-300">
             {title}
           </h2>
         </div>
@@ -97,7 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <div className="w-11/12 space-y-1">
               <input
                 type="email"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Email address"
                 name="email"
                 onChange={formik.handleChange}
@@ -116,7 +116,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <div className="w-11/12 space-y-1">
               <input
                 type="password"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Password"
                 name="password"
                 onChange={formik.handleChange}
@@ -140,7 +140,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-11/12 rounded-md bg-blue-600 px-2 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-gray-400"
+              className="w-11/12 rounded-md bg-blue-600/50 px-2 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-gray-400"
               disabled={formik.isSubmitting || loginMutation.isPending}
             >
               {loginMutation.isPending ? "Logging in..." : "Log in"}
@@ -151,16 +151,16 @@ const LoginForm: React.FC<LoginFormProps> = ({
         {!isAdmin && <LoginWithThirdParty />}
 
         <div className="mt-4 text-center text-sm">
-          <span className="text-gray-600">Don't have an account?</span>{" "}
+          <span className="text-gray-300">Don't have an account?</span>{" "}
           <Link to={signUpLink} className="text-blue-500 hover:underline">
             Sign up
           </Link>
         </div>
 
-        <div className="mt-6 border-t border-gray-200 pt-4">
+        <div className="mt-6 border-t border-gray-400 pt-4">
           <div className="flex flex-col items-center justify-center">
-            <div className="text-gray-500">TEAMSYNC</div>
-            <p className="mt-1 text-center text-xs text-gray-500">
+            <div className="text-gray-400">TEAMSYNC</div>
+            <p className="mt-1 text-center text-xs text-gray-400">
               By logging in, you acknowledge that you understand and agree to
               the application terms.
               <a href="#" className="text-blue-500 hover:underline">

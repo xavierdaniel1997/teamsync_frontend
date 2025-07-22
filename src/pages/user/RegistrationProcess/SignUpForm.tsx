@@ -58,7 +58,7 @@ const SignUpForm: React.FC = () => {
 
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
+    <div className="flex min-h-screen items-center justify-center bg-[#191919] px-2 py-8 sm:px-4 lg:px-6 relative">
       <img
         src={leftVector}
         alt="Left Vector"
@@ -71,13 +71,13 @@ const SignUpForm: React.FC = () => {
         className="absolute bottom-0 right-0 w-90 h-auto z-0"
       />
 
-      <div className="w-full max-w-sm space-y-3 rounded-b-md bg-white shadow-md sm:p-6 z-10">
+      <div className="w-full max-w-sm space-y-3 rounded-b-md bg-[#1d1d1d] shadow-md sm:p-6 z-10">
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center justify-center text-sky-950">
             <img className="w-16 h-16" src={logImage} alt="TeamSync Logo" />
           </div>
 
-          <h2 className="mt-1 text-center text-xl font-semibold text-gray-800">
+          <h2 className="mt-1 text-center text-xl font-semibold text-gray-300">
             Sign up to continue
           </h2>
         </div>
@@ -102,7 +102,7 @@ const SignUpForm: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-xs text-gray-600 px-3">
+          <div className="text-xs text-gray-400 px-3">
             Use an organization email to easily collaborate with teammates.
           </div>
 
@@ -110,7 +110,7 @@ const SignUpForm: React.FC = () => {
             <button
               type="submit"
               disabled={formik.isSubmitting}
-              className={`w-11/12 flex items-center justify-center rounded-sm px-4 py-2 font-medium text-white ${formik.isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              className={`w-11/12 flex items-center justify-center rounded-sm px-4 py-2 font-medium text-white ${formik.isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600/50 hover:bg-blue-700"
                 }`}
             >
               {formik.isSubmitting ? (
@@ -127,7 +127,7 @@ const SignUpForm: React.FC = () => {
         <LoginWithThirdParty />
 
         <div className="mt-4 text-center text-sm">
-          <span className="text-gray-600">
+          <span className="text-gray-400">
             Already have an Teamsync account?
           </span>{" "}
           <Link to="/login" className="text-blue-500 hover:underline">
@@ -135,10 +135,10 @@ const SignUpForm: React.FC = () => {
           </Link>
         </div>
 
-        <div className="mt-6 border-t border-gray-200 pt-4">
+        <div className="mt-6 border-t border-gray-400 pt-4">
           <div className="flex flex-col items-center justify-center">
-            <div className="text-gray-500">TEAMSYNC</div>
-            <p className="mt-1 text-center text-xs text-gray-500">
+            <div className="text-gray-400">TEAMSYNC</div>
+            <p className="mt-1 text-center text-xs text-gray-400">
               Your name and photo are displayed to users who invite you to a
               workspace using your email. By continuing, you acknowledge that
               you understand and agree to the application.

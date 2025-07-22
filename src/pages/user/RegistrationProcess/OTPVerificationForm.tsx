@@ -21,19 +21,6 @@ const OTPVerificationForm: React.FC = () => {
   const { validateOtp, resendOtp } = useAuthMutations()
   const navigate = useNavigate()
 
-  console.log(canResend)
-
-
-  // useEffect(() => {
-  //   if (timer > 0) {
-  //     const interval = setInterval(() => {
-  //       setTimer(prev => prev - 1);
-  //     }, 1000);
-  //     return () => clearInterval(interval);
-  //   } else {
-  //     setCanResend(true);
-  //   }
-  // }, [timer]);
 
   const startTimer = () => {
     const interval = setInterval(() => {
@@ -208,7 +195,7 @@ const OTPVerificationForm: React.FC = () => {
 
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
+    <div className="flex min-h-screen items-center justify-center bg-[#191919] px-2 py-8 sm:px-4 lg:px-6 relative">
       <img
         src={leftVector}
         alt="Left Vector"
@@ -220,18 +207,18 @@ const OTPVerificationForm: React.FC = () => {
         className="absolute bottom-0 right-0 w-90 h-auto z-0"
       />
 
-      <div className="w-full max-w-sm space-y-4 rounded-md bg-white shadow-md sm:p-6 z-10">
+      <div className="w-full max-w-sm space-y-4 rounded-md bg-[#1d1d1d] shadow-md sm:p-6 z-10">
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center justify-center text-sky-950">
             <img className="w-16 h-16" src={logImage} alt="TeamSync Logo" />
           </div>
-          <h2 className="mt-1 text-center text-xl font-semibold text-gray-800">
+          <h2 className="mt-1 text-center text-xl font-semibold text-gray-300">
             Verify your email
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-gray-300">
             We've sent a verification code to
           </p>
-          <p className="text-center text-sm font-medium text-gray-800">
+          <p className="text-center text-sm font-medium text-gray-300">
             {userEmail}
           </p>
         </div>
@@ -249,7 +236,7 @@ const OTPVerificationForm: React.FC = () => {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => handleChange(index, e.target.value)}
                 onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => handleKeyDown(index, e)}
                 onPaste={index === 0 ? handlePaste : undefined}
-                className="w-12 h-12 text-center rounded-md border border-gray-300 text-gray-900 text-xl font-semibold focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-12 h-12 text-center rounded-md border border-gray-300 text-gray-300 text-xl font-semibold focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 autoFocus={index === 0}
               />
             ))}
@@ -258,7 +245,7 @@ const OTPVerificationForm: React.FC = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-11/12 rounded-md bg-blue-600 px-4 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-blue-300"
+              className="w-11/12 rounded-md bg-blue-600/50 px-4 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 disabled:bg-blue-300"
               disabled={otp.join("").length !== 6}
             >
               Verify
@@ -268,13 +255,13 @@ const OTPVerificationForm: React.FC = () => {
 
         {/* Timer and Resend */}
         <div className="flex flex-col items-center mt-4">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-300">
             {timer > 0 ? (
   <>Resend code in <span className="font-medium">{timer}s</span></>
 ) : resendOtp.isPending ? (
   <div className="flex items-center gap-2 text-blue-600">
     <DotStream size={26} speed={2.5} color="gray" />
-    <span className="text-gray-600">Sending...</span>
+    <span className="text-gray-400">Sending...</span>
   </div>
 ) : (
   <button
@@ -289,10 +276,10 @@ const OTPVerificationForm: React.FC = () => {
         </div>
 
         {/* Footer */}
-        <div className="mt-6 border-t border-gray-200 pt-4">
+        <div className="mt-6 border-t border-gray-400 pt-4">
           <div className="flex flex-col items-center justify-center">
-            <div className="text-gray-500">TEAMSYNC</div>
-            <p className="mt-1 text-center text-xs text-gray-500">
+            <div className="text-gray-300">TEAMSYNC</div>
+            <p className="mt-1 text-center text-xs text-gray-300">
               This verification is used to secure your account. By continuing, you acknowledge that you understand and agree to the application.
               <a href="#" className="text-blue-500 hover:underline"> more</a>.
             </p>
