@@ -8,6 +8,9 @@ import {
   RiArrowRightLine 
 } from 'react-icons/ri';
 import { Link } from "react-router-dom";
+import taskboard from "../../assets/taskboard.png";
+import backlog from "../../assets/backlog.png"
+
 
 const LandingPage: React.FC = () => {
   return (
@@ -69,13 +72,13 @@ const LandingPage: React.FC = () => {
 
             {/* Right Side - Dashboard Preview */}
             <div className="flex-1 w-full">
-              <div className="bg-gray-800 rounded-xl shadow-lg p-4 transform hover:scale-[1.01] transition-transform duration-200">
+              {/* <div className=" transform hover:scale-[1.01] transition-transform duration-200"> */}
                 <img 
-                  src="https://placehold.co/800x500?text=Dashboard+Preview" 
+                  src={taskboard} 
                   alt="TeamSync Dashboard"
-                  className="w-full rounded-lg"
+                  className="rounded-lg w-full"
                 />
-              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>
@@ -127,9 +130,9 @@ const LandingPage: React.FC = () => {
             Perfect for every team
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex items-center gap-6 hover:bg-gray-800 p-4 rounded-xl transition-all duration-200">
+            <div className="flex items-center gap-6 p-4 rounded-xl transition-all duration-200">
               <img 
-                src="https://placehold.co/300x200?text=Software+Development"
+                src={backlog}
                 alt="Software Development"
                 className="w-1/2 rounded-lg shadow-sm"
               />
@@ -140,9 +143,9 @@ const LandingPage: React.FC = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center gap-6 hover:bg-gray-800 p-4 rounded-xl transition-all duration-200">
+            <div className="flex items-center gap-6 p-4 rounded-xl transition-all duration-200">
               <img 
-                src="https://placehold.co/300x200?text=Marketing+Teams"
+                src={taskboard}
                 alt="Marketing Teams"
                 className="w-1/2 rounded-lg shadow-sm"
               />

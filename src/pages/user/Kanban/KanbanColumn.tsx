@@ -9,10 +9,11 @@ interface KanbanColumnProps {
   bgColor?: string;
   task?: ITask[];
   taskLoading?: boolean;
+  projectColor: string;
 }
 
 
-const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, taskLoading }) => { 
+const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, taskLoading, projectColor }) => { 
   const { setNodeRef, isOver } = useDroppable({
     id: status,
     data: { type: 'status', id: status },
@@ -28,7 +29,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, task
       </div>
       <div
         ref={setNodeRef}
-        className={`min-h-[500px] ${isOver ? 'bg-[#2a2a2a]' : ''} rounded-md transition-colors duration-150`}
+        className={`${isOver ? 'bg-[#2a2a2a]' : ''} rounded-md transition-colors duration-150`}
       >
         <div className="flex flex-col gap-1.5">
 
@@ -38,7 +39,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, task
           ))
         ) : (
           task?.map((currentTask) => (
-            <KanbanTaskCard key={currentTask._id} task={currentTask}/>
+            <KanbanTaskCard key={currentTask._id} task={currentTask} projectColor={projectColor}/>
           ))
         )}
         </div>

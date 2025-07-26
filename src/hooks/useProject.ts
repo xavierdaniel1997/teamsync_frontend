@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteProjectApi, deleteSprintApi, deleteTaskApi, getActiveSprintTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, startSprintApi, updateProjectApi, updateTaskApi } from "../services/projectService"
+import { createProjectWithTeamApi, createSprintApi, createTaskApi, deleteProjectApi, deleteSprintApi, deleteTaskApi, getActiveSprintTaskApi, getAllProjectsApi, getAllTaskByProjectsApi, getBacklogTasksApi, getEpicsByProjectApi, getKanbanTaskApi, getProjectByIdApi, getSprintApi, getTaskFromSprintApi, inviteMemeberToProjectApi, startSprintApi, updateKanbanTaskApi, updateProjectApi, updateTaskApi } from "../services/projectService"
 import { toast } from "sonner"
 import { ProjectResponse } from "../types/project"
 import { TaskResponse } from "../types/task"
@@ -199,6 +199,49 @@ export const useProject = () => {
     })
   }
 
+  const useGetKanbanTasks = (workspaceId: string, projectId: string, assignees?: string[], epics?: string[]) => {
+    return useQuery<TaskResponse>({
+      queryKey: ['activeTask', workspaceId, projectId, assignees, epics],
+      queryFn: () => getKanbanTaskApi(workspaceId, projectId, assignees, epics),
+      enabled: !!workspaceId && !!projectId
+    })
+  }
+
+
+  const useUpdateKanbanTask = useMutation({
+    mutationFn: ({workspaceId, projectId, taskId, taskstatus}: {workspaceId: string, projectId: string, taskId: string, taskstatus: string}) => 
+      updateKanbanTaskApi(workspaceId, projectId, taskId, taskstatus),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["activeTask"] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message)
+    }
+  })
+
+//   const useUpdateKanbanTask = useMutation({
+//   mutationFn: ({ workspaceId, projectId, taskId, taskstatus }: {workspaceId: string, projectId: string, taskId: string, taskstatus: string}) => 
+//     updateKanbanTaskApi(workspaceId, projectId, taskId, taskstatus),
+//   onMutate: async ({ workspaceId, projectId, taskId, taskstatus }) => {
+//     await queryClient.cancelQueries({ queryKey: ["activeTask"] });
+//     const previousTasks = queryClient.getQueryData(["activeTask"]);
+//     queryClient.setQueryData(["activeTask"], (old: any) => ({
+//       ...old,
+//       tasks: old.tasks.map((task: any) =>
+//         task.id === taskId ? { ...task, status: taskstatus } : task
+//       ),
+//     }));
+//     return { previousTasks };
+//   },
+//   onError: (error: any, variables, context) => {
+//     queryClient.setQueryData(["activeTask"], context?.previousTasks);
+//     toast.error(error?.response?.data?.message ?? "Failed to update task");
+//   },
+//   onSettled: () => {
+//     queryClient.invalidateQueries({ queryKey: ["activeTask"] });
+//   },
+// });
+
   //sprint section
 
   const useCreateSprint = useMutation({
@@ -267,6 +310,8 @@ export const useProject = () => {
     useGetSprintTasks,
     useGetTasksByProject,
     useStartSprint,
-    useGetActiveSprintTask
+    useGetActiveSprintTask,
+    useGetKanbanTasks,
+    useUpdateKanbanTask
   }
 }

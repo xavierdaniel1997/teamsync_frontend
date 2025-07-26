@@ -216,7 +216,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
     }
   };
 
-  console.log("selected epic checkinggggggggg epicTask subtasks", subtasks)
+  console.log("from the taskModal", subtasks)
 
   return (
     <Dialog

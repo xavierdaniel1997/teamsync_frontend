@@ -70,8 +70,8 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({
         <button className="text-gray-200">
           <ImEnlarge2 size={15}/>
         </button>
-        <button className={`text-gray-200 bg-${buttonBg} p-1 rounded-xs`}>
-          <BsThreeDots size={16}/>
+        <button className={`text-gray-200 bg-[#323232c7] p-1.5 rounded-xs`}>
+          <BsThreeDots size={18}/>
         </button>
       </div>}
     </div>

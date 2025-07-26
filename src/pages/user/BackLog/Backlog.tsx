@@ -129,7 +129,7 @@ const Backlog: React.FC = () => {
   };
 
   const handleSelectEpics = (epicId: string) => {
-    if (!epicData?.data?.some((epic: any) => epic._id === epicId)) {
+    if (!epicData?.data.some((epic: any) => epic._id === epicId)) {
       console.warn(`Invalid epic ID selected: ${epicId}`);
       return;
     }
@@ -141,6 +141,8 @@ const Backlog: React.FC = () => {
   const sprintTasks = (sprintId: string) => localTasks.filter((task) => task.sprint === sprintId);
   const backlogTasks = localTasks.filter((task) => !task.sprint);
 
+
+  // console.log("epic details.......................", epicTitle)
 
   return (
     <div className="p-5 bg-[#191919] min-h-[93vh] h-auto">
@@ -157,6 +159,8 @@ const Backlog: React.FC = () => {
         projectMembers={project?.members}
         selectedUserIds={selectedUserIds}
         handleSelectUser={handleSelectUser}
+        epicHeading={epicTitle}
+        handleSelectedEpic={handleSelectEpics}
       />
       <DndContext
         sensors={sensors}

@@ -92,12 +92,27 @@ export const getAllTaskByProjectsApi = async (workspaceId: string, projectId: st
             epics: epics?.join(",")
         }
     })
-    // console.log("response form the getAllTasksByProjectApi", response.data)
     return response.data;
 }
 
+//kanban task listing
 export const getActiveSprintTaskApi = async (workspaceId: string, projectId: string) => {
     const response = await api.get(`project/active-tasks/${workspaceId}/${projectId}`)
+    return response.data;
+}
+
+export const getKanbanTaskApi = async (workspaceId: string, projectId: string, assignees?: string[], epics?: string[]) => {
+    const response = await api.get(`project/kanban-tasks/${workspaceId}/${projectId}`, {
+         params: {
+            assignees: assignees?.join(","),
+            epics: epics?.join(",")
+        }
+    })
+    return response.data;
+}
+
+export const updateKanbanTaskApi = async (workspaceId: string, projectId: string, taskId: string, taskstatus: string) => {
+    const response = await api.put(`project/update-kanban-task/${workspaceId}/${projectId}/${taskId}`, { status: taskstatus })
     return response.data;
 }
 

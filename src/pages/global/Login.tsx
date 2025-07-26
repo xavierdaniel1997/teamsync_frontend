@@ -97,7 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <div className="w-11/12 space-y-1">
               <input
                 type="email"
-                className="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-300 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Email address"
                 name="email"
                 onChange={formik.handleChange}
@@ -116,7 +116,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
             <div className="w-11/12 space-y-1">
               <input
                 type="password"
-                className="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-400 px-3 py-2 text-gray-300 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Password"
                 name="password"
                 onChange={formik.handleChange}
@@ -157,7 +157,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
           </Link>
         </div>
 
-        <div className="mt-6 border-t border-gray-400 pt-4">
+        <div className="mt-6 border-t border-gray-600 pt-4">
           <div className="flex flex-col items-center justify-center">
             <div className="text-gray-400">TEAMSYNC</div>
             <p className="mt-1 text-center text-xs text-gray-400">

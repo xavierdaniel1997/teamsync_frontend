@@ -75,7 +75,7 @@ const BacklogSection: React.FC<BacklogSectionProps> = ({ epicId, backlogTasks, b
           </div>
           
           <button 
-            className="bg-gray-700 hover:bg-gray-600 px-3 py-1 rounded text-sm"
+            className="bg-[#333] hover:bg-gray-600 px-3 py-1 rounded text-sm"
             onClick={handleCreateSprint}
           >
             Create sprint

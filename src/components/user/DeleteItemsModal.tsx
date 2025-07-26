@@ -35,13 +35,11 @@ const DeleteItemsModal: React.FC<ProjectManageModalProps> = ({
           <h2 className="text-lg font-semibold text-gray-300">Delete project</h2>
         </div>
         <p className="text-gray-400 mb-4">
-          Are you sure you want to delete project
-           {projectName}
-           ? All of the data related to the project will be permanently removed. This action cannot be undone.
+          Are you sure you want to delete project <span> {projectName} </span> ? All of the data related to the project will be permanently removed. This action cannot be undone.
         </p>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm text-gray-400 mb-1">Enter the project name {projectName} to continue:</label>
+            <label className="block text-sm text-gray-400 mb-1">Enter the project name <span className='text-sm'>" {projectName} "</span>  to continue:</label>
             <input
               type="text"
               className="w-full bg-[#2B2B2B] border border-[#333] px-2 py-1.5 rounded text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -50,7 +48,7 @@ const DeleteItemsModal: React.FC<ProjectManageModalProps> = ({
             />
           </div>
           <div>
-            <label className="block text-sm text-gray-400 mb-1">To confirm, type "delete my project" below:</label>
+            <label className="block text-sm text-gray-400 mb-1">To confirm, type <span className='text-sm'> "delete my project" </span>  below:</label>
             <input
               type="text"
               className="w-full bg-[#2B2B2B] border border-[#333] px-2 py-1.5 rounded text-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"

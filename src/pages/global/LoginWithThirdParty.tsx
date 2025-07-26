@@ -20,7 +20,7 @@ const LoginWithThirdParty: React.FC = () => {
         <div>
             <div className="relative mt-2">
                 <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-400"></div>
+                    <div className="w-full border-t border-gray-600"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
                     <span className="bg-[#1d1d1d] px-2 text-gray-400">Or continue with:</span>
@@ -35,10 +35,6 @@ const LoginWithThirdParty: React.FC = () => {
                     <FcGoogle className="mr-2 h-6 w-6" />
                     Google
                 </button>
-                {/* <button className="flex w-11/12 items-center justify-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200 hover:shadow-2xl">
-                <FaGithub className='mr-2 h-6 w-6'/>
-                    Github
-                </button> */}
             </div>
 
         </div>

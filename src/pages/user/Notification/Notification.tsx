@@ -75,15 +75,15 @@ const Notification: React.FC = () => {
       </div>
       <div className='mx-5 flex items-center gap-2'>
         <button
-        className={`px-3 py-1 rounded text-sm ${filter === 'all' ? 'bg-gray-600' : 'bg-gray-700/50 hover:bg-gray-600'}`}
+        className={`px-3 py-1 rounded text-sm ${filter === 'all' ? 'bg-[#333]' : 'bg-[#252525] hover:bg-gray-600'}`}
           onClick={() => setFilter('all')}
           >All</button>
          <button
-         className={`px-3 py-1 rounded text-sm ${filter === 'read' ? 'bg-gray-600' : 'bg-gray-700/50 hover:bg-gray-600'}`}
+         className={`px-3 py-1 rounded text-sm ${filter === 'read' ? 'bg-[#333]' : 'bg-[#252525] hover:bg-gray-600'}`}
           onClick={() => setFilter('read')}
           >Readed</button>
           <button
-          className={`px-3 py-1 rounded text-sm ${filter === 'unread' ? 'bg-gray-600' : 'bg-gray-700/50 hover:bg-gray-600'}`}
+          className={`px-3 py-1 rounded text-sm ${filter === 'unread' ? 'bg-[#333]' : 'bg-[#252525] hover:bg-gray-600'}`}
           onClick={() => setFilter('unread')}
           >UnReaded</button>
       </div>

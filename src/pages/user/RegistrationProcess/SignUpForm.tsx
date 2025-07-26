@@ -87,7 +87,7 @@ const SignUpForm: React.FC = () => {
             <div className="w-11/12">
               <input
                 type="email"
-                className={`w-full rounded-sm border px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500 ${formik.touched.email && formik.errors.email
+                className={`w-full rounded-sm border px-3 py-2 text-gray-300 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500 ${formik.touched.email && formik.errors.email
                     ? "border-red-500"
                     : "border-gray-300"
                   }`}

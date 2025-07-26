@@ -68,7 +68,7 @@ const ProfileSetupForm: React.FC = () => {
   })
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-2 py-8 sm:px-4 lg:px-6 relative">
+    <div className="flex min-h-screen items-center justify-center bg-[#191919] px-2 py-8 sm:px-4 lg:px-6 relative">
       {/* Background vectors */}
       <img
         src={leftVector}
@@ -81,13 +81,13 @@ const ProfileSetupForm: React.FC = () => {
         className="absolute bottom-0 right-0 w-90 h-auto z-0"
       />
 
-      <div className="w-full max-w-sm space-y-4 rounded-md bg-white shadow-md sm:p-6 z-10">
+      <div className="w-full max-w-sm space-y-4 rounded-md bg-[#1d1d1d] shadow-md sm:p-6 z-10">
         {/* Logo */}
         <div className="flex flex-col items-center justify-center">
           <div className="flex items-center justify-center text-sky-950">
             <img className="w-16 h-16" src={logImage} alt="TeamSync Logo" />
           </div>
-          <h2 className="mt-1 text-center text-xl font-semibold text-gray-800">
+          <h2 className="mt-1 text-center text-xl font-semibold text-gray-300">
             Complete your profile
           </h2>
         </div>
@@ -101,7 +101,7 @@ const ProfileSetupForm: React.FC = () => {
             <div className="w-11/12 space-y-1">
               <input
                 type="text"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-300 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Full Name"
                 name="fullName"
                 onChange={formik.handleChange}
@@ -119,7 +119,7 @@ const ProfileSetupForm: React.FC = () => {
             <div className="w-11/12 space-y-1">
               <input
                 type="password"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-300 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Create Password"
                 name="password"
                 onChange={formik.handleChange}
@@ -137,7 +137,7 @@ const ProfileSetupForm: React.FC = () => {
             <div className="w-11/12 space-y-1">
               <input
                 type="password"
-                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-300 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                 placeholder="Confirm Password"
                 name="cpassword"
                 onChange={formik.handleChange}
@@ -153,7 +153,7 @@ const ProfileSetupForm: React.FC = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-11/12 rounded-md bg-blue-600 px-4 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2"
+              className="w-11/12 rounded-md bg-blue-600/50 px-4 py-2 text-center font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2"
               disabled={formik.isSubmitting}
             >
               Create Account
@@ -166,17 +166,17 @@ const ProfileSetupForm: React.FC = () => {
 
         {/* Login link */}
         <div className="mt-4 text-center text-sm">
-          <span className="text-gray-600">Already have an Teamsync account?</span>{' '}
+          <span className="text-gray-500">Already have an Teamsync account?</span>{' '}
           <Link to="/login" className="text-blue-500 hover:underline">
             Log in
           </Link>
         </div>
 
         {/* Footer */}
-        <div className="mt-6 border-t border-gray-200 pt-4">
+        <div className="mt-6 border-t border-gray-500 pt-4">
           <div className="flex flex-col items-center justify-center">
-            <div className="text-gray-500">TEAMSYNC</div>
-            <p className="mt-1 text-center text-xs text-gray-500">
+            <div className="text-gray-400">TEAMSYNC</div>
+            <p className="mt-1 text-center text-xs text-gray-400">
               Your profile information is used to enhance your experience. By continuing, you acknowledge that you understand and agree to the application.
               <a href="#" className="text-blue-500 hover:underline"> more</a>.
             </p>

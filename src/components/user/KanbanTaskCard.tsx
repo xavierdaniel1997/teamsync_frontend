@@ -17,9 +17,10 @@ const issueTypes = [
 
 interface KanbanTaskCardPrope{
   task: ITask;
+  projectColor: string;
 }
 
-const KanbanTaskCard: React.FC<KanbanTaskCardPrope> = ({task}) => {
+const KanbanTaskCard: React.FC<KanbanTaskCardPrope> = ({task, projectColor}) => {
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task._id, 
@@ -36,6 +37,8 @@ const KanbanTaskCard: React.FC<KanbanTaskCardPrope> = ({task}) => {
       }
     : {};
 
+    console.log("kanbanTaskCard from the card", projectColor)
+
   return (
     <div 
     ref={setNodeRef}
@@ -45,16 +48,21 @@ const KanbanTaskCard: React.FC<KanbanTaskCardPrope> = ({task}) => {
       className="bg-[#191919] p-3 rounded-sm text-gray-400 min-h-[110px] max-h-[150px] cursor-grab"
     >  
         <div className='flex justify-between'>
-           <div className='flex flex-col justify-between gap-3'>
-             <p className='truncate max-w-[100px]'  title={task.title}>{task.title}</p>
-             {task.epic && <p className='font-semibold text-xs bg-violet-600/20 px-1.5 py-0.5 rounded-sm w-fit'>{task.epic.title}</p>}
+           <div className='flex flex-col justify-between gap-2'>
+             <p className='truncate max-w-60'  title={task.title}>{task.title}</p>
+             {task.epic && 
+             <p className={`font-semibold text-xs px-1.5 py-0.5 rounded-sm w-fit`}
+             style={{ backgroundColor: projectColor }}
+            >
+              {task.epic.title}
+              </p>}
              <div className='flex items-center gap-2'>
               <span>{issueType?.icon}</span>
               <span>{task.taskKey}</span>
              </div>
            </div>
            <div className='flex flex-col justify-between'>
-            <span><PiDotsThreeBold size={20} /></span>
+            <span className='cursor-pointer'><PiDotsThreeBold size={20} /></span>
              {task.assignee && typeof task.assignee === "object" ? (
                   <UserAvatar user={task.assignee} width={6} height={6} getRandomColor={getRandomColor} getInitials={getInitials} />
                 ) : (

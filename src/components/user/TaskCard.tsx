@@ -189,8 +189,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     console.log("click handle etit task button click")
   };
 
-  console.log("task from the task card checking projects", project) 
-
   return (
     <div
       ref={setNodeRef}
