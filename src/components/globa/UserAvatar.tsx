@@ -17,7 +17,7 @@ interface UserAvatarProps {
   selectedUser?: boolean;
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({ user, getRandomColor, getInitials, width=8, height=8, selectedUser }) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({ user, getRandomColor, getInitials, width=10, height=10, selectedUser }) => {
 
   if (user && user.fullName) {
     if (user.avatar) {

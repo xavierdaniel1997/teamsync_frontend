@@ -1,3 +1,4 @@
+import { ISprint } from "./sprint";
 import { IUser } from "./users";
 
 
@@ -42,11 +43,11 @@ export enum TaskType {
     status: TaskStatus;
     priority: TaskPriority;
     assignee?: string | IUser | null;
-    reporter?: string;
+    reporter?: string | IUser | null;
     epicId?: string | null;
     epic?: { _id: string; title: string; taskKey: string }
     parent?: string;
-    sprint?: string | null;
+    sprint?: string | null | ISprint;
     storyPoints?: number;
     files?: IFile;
     startDate: string;
@@ -78,4 +79,9 @@ export interface KanbanResponse {
   status: number;
   message: string;
   data: KanbanData;
+}
+
+export interface IKanbanColumn {
+  status: TaskStatus;
+  tasks: ITask[];
 }

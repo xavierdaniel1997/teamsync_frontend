@@ -137,7 +137,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
   };
 
   const handleSelectEpic = (epicId: string | null) => {
-    if(!epicId){
+    if (!epicId) {
       setSelectedEpicId(null)
     }
     const selectedEpic = epicData?.data.find((epic: ITask) => epic._id === epicId)
@@ -216,7 +216,6 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
     }
   };
 
-  console.log("from the taskModal", subtasks)
 
   return (
     <Dialog
@@ -241,11 +240,19 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
           {/* Header */}
           {error && <div className="text-red-500 text-sm mb-2">{error}</div>}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="bg-purple-500 rounded-sm p-1">
-                <BiSolidCheckboxMinus size={18} />
+            <div className="flex items-center gap-1">
+              <div className="rounded-sm p-1">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M13 2L6 13H11L11 22L18 11H13L13 2Z"
+                    stroke={project?.color.hex}
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
               </div>
-              <span>{taskCount}</span>
+              <span className='text-gray-400'>{task.epic?.taskKey} {task.epic?.taskKey && <span>/ </span>} {task.taskKey}</span>
             </div>
             <button
               className="text-gray-300 hover:text-white transition-colors"
@@ -354,35 +361,17 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
                 {/* attachment area */}
 
 
-             
-                <AttachmentPreview 
-                files={files}
-                handleRemoveFile={handleRemoveFile}
-                taskFiles={task.files ? (Array.isArray(task.files) ? task.files : [task.files]) : undefined}
-                 />
+
+                <AttachmentPreview
+                  files={files}
+                  handleRemoveFile={handleRemoveFile}
+                  taskFiles={task.files ? (Array.isArray(task.files) ? task.files : [task.files]) : undefined}
+                  isNotUpload={true}
+                />
 
 
-                {/* Web Link */}
-
-                {/* <div>
-                  <div>
-                    <div className='flex items-center justify-between text-gray-400 mt-1'>
-                    <p className="">Web Link</p>
-                    <button onClick={(event) => {event.stopPropagation(); setOpenWebLink(true)}}><IoAdd/></button>
-                    </div>
-                    {task.webLinks.map((webLink) => (
-                      <div className='flex items-center gap-2 text-gray-400 mt-1 mb-1'>
-                        <p className='w-full p-2 border border-[#3a3a3a] rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500'>{webLink.url}</p>
-                        <p className='w-full p-2 border border-[#3a3a3a] rounded-sm focus:outline-none focus:ring-1 focus:ring-blue-500'>{webLink.linkText}</p>
-                        <button className='p-2 bg-[#6f6f6f45]/30 rounded-sm'><IoMdClose size={22} /></button>
-                      </div>
-                    ))}
-                  </div>
-                  {openWebLink && <OpenWebLinkModal toggleModale={() => setOpenWebLink(false)} onAddWebLink={handleAddWebLink} />}
-                </div> */}
-
-                <WebLinkPreview webLinks={task.webLinks} webLinkList={true}/>
-                {webLinks && <WebLinkPreview webLinks={webLinks}/>}  
+                <WebLinkPreview webLinks={task.webLinks} webLinkList={true} />
+                {webLinks && <WebLinkPreview webLinks={webLinks} />}
                 {openWebLink && <OpenWebLinkModal toggleModale={() => setOpenWebLink(false)} onAddWebLink={handleAddWebLink} />}
 
                 {/* child issue */}
@@ -418,7 +407,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
 
                         {epicTask ? (<p>{epicTask}</p>) : selectedEpicId === null ? <p>Add Epic</p> : <p>Add parent</p>}
                         <div className='absolute bottom-11 right-0'>
-                          {isTask && openEpicModal && <EpicListModal epicDetails={epicData?.data} onSelectEpic={handleSelectEpic} hasEpic={!!task.epic} projectColor={project?.color.hex || ""}/>}
+                          {isTask && openEpicModal && <EpicListModal epicDetails={epicData?.data} onSelectEpic={handleSelectEpic} hasEpic={!!task.epic} projectColor={project?.color.hex || ""} />}
                         </div>
                       </div>
                     </div>

@@ -47,7 +47,7 @@ const App: React.FC = () => {
   return (
     <BrowserRouter>
     <CallProvider>
-      <Toaster position="bottom-left" richColors theme="dark" />
+      <Toaster position="bottom-left" theme="dark" />
        <GlobalCallNotification/>
       <Routes>
         <Route path="*" element={<PageNotFound/>}/>

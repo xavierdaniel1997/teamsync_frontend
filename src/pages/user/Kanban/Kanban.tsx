@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import KanbanColumn from './KanbanColumn';
 import { useProject } from '../../../hooks/useProject';
-import { ITask, TaskStatus } from '../../../types/task';
+import { IKanbanColumn, ITask, TaskStatus } from '../../../types/task';
 
 const taskStatus = [{ _id: "TO_DO", status: "TO_DO" }, { _id: "IN_PROGRESS", status: "IN_PROGRESS" }, { _id: "IN_REVIEW", status: "IN_REVIEW" }, { _id: "DONE", status: "DONE" }]
 
@@ -129,7 +129,6 @@ const Kanban: React.FC = () => {
 
 
 
-
    const handleSelectEpics = (epicId: string) => {
     if (!epicData?.data.some((epic: any) => epic._id === epicId)) {
       console.warn(`Invalid epic ID selected: ${epicId}`);
@@ -139,6 +138,7 @@ const Kanban: React.FC = () => {
       prev.includes(epicId) ? prev.filter((id) => id !== epicId) : [...prev, epicId]
     );
   };
+
 
   return (
     <div className="p-5 bg-[#191919] min-h-[93vh] h-auto">
@@ -172,7 +172,7 @@ const Kanban: React.FC = () => {
                 {taskStatus.map((column: any) => (<KanbanColumn key={column._id} status={column.status} taskLoading={taskLoading} projectColor={project?.color.hex || ""} />))}
               </>
             ) : (<>
-              {kanbanTasks.map((column: any) => (
+              {kanbanTasks.map((column: IKanbanColumn) => (
                 <KanbanColumn status={column.status} task={column?.tasks} projectColor={project?.color.hex || ""} />
               ))}
             </>)}

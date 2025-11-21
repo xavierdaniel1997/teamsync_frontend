@@ -142,7 +142,7 @@ const Backlog: React.FC = () => {
   const backlogTasks = localTasks.filter((task) => !task.sprint);
 
 
-  // console.log("epic details.......................", epicTitle)
+  console.log("task  details weblink.......................", taskData)
 
   return (
     <div className="p-5 bg-[#191919] min-h-[93vh] h-auto">

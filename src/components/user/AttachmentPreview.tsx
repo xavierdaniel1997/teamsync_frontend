@@ -17,13 +17,16 @@ interface IFile {
 
 interface AttachmentProp {
   files: File[];
-  handleRemoveFile: (index: number) => void;
+  handleRemoveFile?: (index: number) => void;
   taskFiles?: IFile[] | undefined;
+  isNotUpload?: boolean;
+  width?:number;
+  height?:number;
 }
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
 
-const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, taskFiles }) => {
+const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, taskFiles, isNotUpload, width="28", height="28" }) => {
 
   // if (files.length === 0) return null;
   if (files.length === 0 && (!taskFiles || taskFiles.length === 0)) return null;
@@ -52,7 +55,7 @@ const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, 
   return (
     <div className="text-gray-400">
       <h4 className="text-sm font-semibold">Uploaded Files</h4>
-      <ul className="mt-1 flex items-center gap-2">
+      <ul className="mt-2 flex items-center gap-2">
 
         {allFiles?.map((file, index) => (
   <li key={index} className="flex items-center justify-between text-sm">
@@ -62,7 +65,7 @@ const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, 
           <img
             src={file.url}
             alt={file.fileName}
-            className="w-28 h-28 object-cover rounded-sm border border-[#3a3a3a]"
+            className={`w-52 h-40 object-fill rounded-sm border border-[#3a3a3a]`}
           />
           <div
             className="text-xs truncate max-w-20 cursor-pointer"
@@ -72,9 +75,9 @@ const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, 
           </div>
           <button
             className="absolute top-0 right-0 text-gray-500/30 hover:text-gray-700"
-            onClick={() => handleRemoveFile(index)}
+            onClick={() => handleRemoveFile && handleRemoveFile(index)}
           >
-            <IoMdCloseCircle size={18} />
+            {isNotUpload && <IoMdCloseCircle size={18} />}
           </button>
         </div>
       ) : file.fileType === 'application/pdf' ? (
@@ -83,9 +86,9 @@ const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, 
             href={file.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center w-28 h-28 border border-[#3a3a3a] rounded-sm"
+            className={`flex items-center justify-center w-40 h-40 border border-[#3a3a3a] rounded-sm`}
           >
-            <FaFilePdf className="text-red-500 w-16 h-16" /> {/* PDF icon */}
+            <FaFilePdf className="text-red-500/60 w-16 h-16" /> {/* PDF icon */}
           </a>
           <div
             className="text-xs truncate max-w-20 cursor-pointer"
@@ -95,9 +98,9 @@ const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, 
           </div>
           <button
             className="absolute top-0 right-0 text-gray-500/30 hover:text-gray-700"
-            onClick={() => handleRemoveFile(index)}
+            onClick={() => handleRemoveFile && handleRemoveFile(index)}
           >
-            <IoMdCloseCircle size={18} />
+           {isNotUpload && <IoMdCloseCircle size={18} />}
           </button>
         </div>
       ) : (
@@ -111,7 +114,7 @@ const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, 
           </div>
           <button  
             className="absolute top-0 right-0 text-gray-500/30 hover:text-gray-700"
-            onClick={() => handleRemoveFile(index)}
+            onClick={() => handleRemoveFile && handleRemoveFile(index)}
           >
             <IoMdCloseCircle size={18} />
           </button>

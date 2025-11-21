@@ -108,8 +108,7 @@ const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedU
           <MdInsights />
           <span className="text-sm">Insights</span>
         </button>}
-        {isKanban ? (<button className="flex items-center space-x-1 bg-blue-600/80 hover:bg-blue-500  text-gray-300 px-3 py-1 rounded">
-          {/* <FiSettings /> */}
+        {isKanban ? (<button className="flex items-center space-x-1 bg-blue-600/80 hover:bg-blue-500  text-gray-300 px-3 py-1 rounded text-sm">
         Complete sprint
         </button>) : 
         (<button className="flex items-center space-x-1 bg-[#323232c7]  text-white px-3 py-1 rounded">

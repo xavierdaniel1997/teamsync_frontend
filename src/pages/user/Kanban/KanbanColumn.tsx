@@ -19,6 +19,8 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, task
     data: { type: 'status', id: status },
   });
 
+  console.log("make the type task", task)
+  
   return (
     <div className="flex-1 bg-[#202020] rounded-md p-3 min-w-[250px] max-w-[380px]">
       <div className="flex items-center justify-between mb-4">
@@ -38,7 +40,7 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, task
             <ShimmerKanbanTaskCard key={index}/>
           ))
         ) : (
-          task?.map((currentTask) => (
+          task?.map((currentTask: ITask) => (
             <KanbanTaskCard key={currentTask._id} task={currentTask} projectColor={projectColor}/>
           ))
         )}

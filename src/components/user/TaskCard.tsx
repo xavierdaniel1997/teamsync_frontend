@@ -189,6 +189,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     console.log("click handle etit task button click")
   };
 
+  console.log("task details form the task card", task)
+
+
   return (
     <div
       ref={setNodeRef}
@@ -315,7 +318,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
                   taskType={taskType}
                   taskId={task._id}
                   taskName={task.taskKey}
-                  sprintId={task.sprint}
+                  sprintId={typeof task?.sprint === 'string' || task?.sprint == null ? task?.sprint : task?.sprint._id}
                   workspaceId={workspaceId || ''}
                   projectId={projectId || ''}
                   closeOpenEditTaskModal={() => setOpenEditTaskModal(!openEditTaskModal)}

@@ -36,7 +36,10 @@ const EpicListModal: React.FC<EpicListModalProps> = ({ epicDetails, onSelectEpic
               onClick={() => onSelectEpic(epic._id)}
             >
               <span>
-                <AiOutlineThunderbolt size={20} style={{color: projectColor}} />
+                 <svg width="23" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L6 13H11L11 22L18 11H13L13 2Z" stroke={projectColor} stroke-width="2"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+                     </svg>
               </span>
               <p className="text-sm text-gray-200">{epic.taskKey}</p>
               <p className="text-sm text-gray-200 flex-1 truncate">{epic.title}</p>

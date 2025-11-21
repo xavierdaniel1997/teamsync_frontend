@@ -14,7 +14,9 @@ const WebLinkPreview: React.FC<WebLinkPreviewProps> = ({
   webLinks,
   webLinkList,
 }) => {
-  if (!webLinks) return null;
+  // if (!webLinks) return null;
+
+  console.log("weblinks form the weblink preview", webLinks)
 
   return (
     <div className="">

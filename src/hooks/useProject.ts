@@ -191,13 +191,15 @@ export const useProject = () => {
     })
   }
 
-  const useGetActiveSprintTask = (workspaceId: string, projectId: string) => {
-    return useQuery<TaskResponse>({
-      queryKey: ['activeTask', workspaceId, projectId],
-      queryFn: () => getActiveSprintTaskApi(workspaceId, projectId),
-      enabled: !!workspaceId && !!projectId
-    })
-  }
+  // const useGetActiveSprintTask = (workspaceId: string, projectId: string) => {
+  //   return useQuery<TaskResponse>({
+  //     queryKey: ['activeTask', workspaceId, projectId],
+  //     queryFn: () => getActiveSprintTaskApi(workspaceId, projectId),
+  //     enabled: !!workspaceId && !!projectId
+  //   })
+  // }
+
+  // kanban section
 
   const useGetKanbanTasks = (workspaceId: string, projectId: string, assignees?: string[], epics?: string[]) => {
     return useQuery<TaskResponse>({
@@ -270,7 +272,7 @@ export const useProject = () => {
     mutationFn: ({workspaceId, projectId, sprintId}: {workspaceId: string, projectId: string, sprintId: string}) => deleteSprintApi(workspaceId, projectId, sprintId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sprints'] });
-      queryClient.invalidateQueries({queryKey: ['task']})
+      queryClient.invalidateQueries({ queryKey: ['task'] });
       toast.success('Sprint deleted successfully');
     },
     onError: (error: any) => {
@@ -310,7 +312,7 @@ export const useProject = () => {
     useGetSprintTasks,
     useGetTasksByProject,
     useStartSprint,
-    useGetActiveSprintTask,
+    // useGetActiveSprintTask,
     useGetKanbanTasks,
     useUpdateKanbanTask
   }
