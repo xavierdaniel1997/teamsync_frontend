@@ -26,7 +26,7 @@ interface AttachmentProp {
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
 
-const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, taskFiles, isNotUpload, width="28", height="28" }) => {
+const AttachmentPreview: React.FC<AttachmentProp> = ({ files, handleRemoveFile, taskFiles, isNotUpload }) => {
 
   // if (files.length === 0) return null;
   if (files.length === 0 && (!taskFiles || taskFiles.length === 0)) return null;

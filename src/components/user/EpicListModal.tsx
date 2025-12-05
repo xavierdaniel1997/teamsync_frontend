@@ -1,6 +1,5 @@
 import React from 'react';
 import { ITask } from '../../types/task';
-import { AiOutlineThunderbolt } from 'react-icons/ai';
 import { FiSearch } from 'react-icons/fi';
 import { IoRemoveCircleOutline } from 'react-icons/io5';
 

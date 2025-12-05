@@ -3,7 +3,6 @@ import { IoAdd, IoClose } from 'react-icons/io5';
 import { BsLink45Deg } from 'react-icons/bs';
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { TbSubtask } from "react-icons/tb";
-import { BiSolidCheckboxMinus } from 'react-icons/bi';
 import { FaPaperclip } from 'react-icons/fa';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -60,7 +59,7 @@ const validationSchema = Yup.object({
   linkText: Yup.string().optional(),
 });
 
-const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskCount, members, parentTask, isTask, assignedMember, reporter, taskId, task }) => {
+const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, members, parentTask, isTask, assignedMember, reporter, taskId, task }) => {
 
   const { useUpdateTask, useGetEpic } = useProject()
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
@@ -215,6 +214,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, taskC
       console.error('Submission error:', error);
     }
   };
+
+  console.log("subtasks form the taskModal", subtasks)
 
 
   return (

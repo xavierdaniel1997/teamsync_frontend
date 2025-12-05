@@ -1,6 +1,5 @@
 import { Dialog, DialogContent } from '@mui/material'
 import React from 'react'
-import { BiSolidCheckboxMinus } from 'react-icons/bi'
 import { IoClose } from 'react-icons/io5';
 import { ITask } from '../../types/task';
 import { RootState } from '../../redux/store';
