@@ -76,6 +76,7 @@ export const useAuthMutations = () => {
   const loginUser = useMutation({
     mutationFn: (data: LoginData) => authService.loginUser(data),
     onSuccess: async (response) => {
+      console.log("user login details", response)
       const { userData, accessToken } = response.data;
       dispatch(setCredentials({ user: userData, accessToken }));
       const inviteToken = sessionStorage.getItem("inviteToken");

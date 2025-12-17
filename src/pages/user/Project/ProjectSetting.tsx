@@ -10,7 +10,7 @@ const tabOptions = [
   { label: "Team & Members", value: "members" },
   { label: "Invited Peoples", value: "invitedPeoples" },
   { label: "My Projects", value: "myProjects" },
-  { label: "Project States", value: "projectStates" },
+  // { label: "Project States", value: "projectStates" },
 ];
 
 const ProjectSetting: React.FC = () => {
@@ -26,8 +26,8 @@ const ProjectSetting: React.FC = () => {
         return <InvitedMembers />;
       case "myProjects":
         return <MyProjects />;
-      case "projectStates":
-        return <div>Project States content coming soon...</div>;
+      // case "projectStates":
+      //   return <div>Project States content coming soon...</div>;
       default:
         return <div>Select a tab to view content</div>;
     }
