@@ -65,7 +65,6 @@ const LoginForm: React.FC<LoginFormProps> = ({
     },
   });
 
-  console.log("checking the isloading pending....", )
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#191919]  px-2 py-8 sm:px-4 lg:px-6 relative">

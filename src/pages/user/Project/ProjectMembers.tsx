@@ -49,8 +49,8 @@ const ProjectMembers: React.FC = () => {
     const memberData = project?.members.map((member: any) => ({
       fullName: (
         <div className="flex items-center">
-          <div className="w-8 h-8 rounded-full bg-[#444] mr-3 overflow-hidden">
-            <UserAvatar user={member.user || undefined} getRandomColor={getRandomColor} getInitials={getInitials} />
+          <div className="w-8 h-8 rounded-full text-center bg-[#444] mr-3 overflow-hidden">
+            <UserAvatar user={member.user || undefined} getRandomColor={getRandomColor} getInitials={getInitials} width={9} height={9}/>
           </div>
           <span>{`${member.user.fullName}${member.user.secondName ? ` ${member.user.secondName}` : ''}`}</span>
         </div>

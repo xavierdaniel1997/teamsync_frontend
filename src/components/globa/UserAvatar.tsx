@@ -1,13 +1,6 @@
 import React from "react";
 import { IUser } from "../../types/users";
 
-// interface User {
-//   _id?: string;
-//   fullName?: string;
-//   secondName?: string;
-//   avatar?: string;
-// }
-
 interface UserAvatarProps {
   user?: IUser;
   getRandomColor: (id: string) => string;

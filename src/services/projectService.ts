@@ -13,7 +13,7 @@ export const updateProjectApi = async (projectId: string, workspaceId: string, d
         headers: {
             'Content-Type': 'multipart/form-data',
           },
-    })
+    }) 
     return response.data;
 }
 

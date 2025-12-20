@@ -42,14 +42,25 @@ export const useProject = () => {
 
 
 
+  // const useGetProjects = (workspaceId?: string) => {
+  //   return useQuery<ProjectResponse, Error>({
+  //     queryKey: ["project", workspaceId],
+  //     queryFn: () =>
+  //       workspaceId ? getAllProjectsApi(workspaceId) : Promise.resolve({ data: [], message: "", status: 200, success: true }),
+  //     enabled: !!workspaceId,
+  //   }); 
+  // };
+
+
   const useGetProjects = (workspaceId?: string) => {
-    return useQuery<ProjectResponse, Error>({
-      queryKey: ["project", workspaceId],
-      queryFn: () =>
-        workspaceId ? getAllProjectsApi(workspaceId) : Promise.resolve({ data: [], message: "", status: 200, success: true }),
-      enabled: !!workspaceId,
-    });
-  };
+  return useQuery<ProjectResponse, Error>({
+    queryKey: ["projects", workspaceId],
+    queryFn: () => getAllProjectsApi(workspaceId!),
+    enabled: !!workspaceId,
+  });
+};
+
+
 
   const useGetProjectById = (projectId: string | null) => {
     return useQuery({
