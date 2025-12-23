@@ -49,6 +49,9 @@ const MyProjects = () => {
     owner: project.owner.fullName,
   }))
 
+  if(isLoading) <div>Loading...</div>
+  if(isError) <div>Error</div>
+
   return (
     <div className='p-6'>
       <div className='flex justify-between items-center'>
