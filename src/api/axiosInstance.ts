@@ -210,19 +210,33 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const { data } = await api.post("/auth/refresh-token");
+        const response = await api.post("/auth/refresh-token");
 
-        const newToken = data?.accessToken;
-        if (!newToken) throw new Error("No access token from refresh");
+        // ✅ CORRECT PATH
+        const newToken = response.data?.data?.accessToken;
+        if (!newToken) {
+          throw new Error("No access token in refresh response");
+        }
 
+        // ✅ persist token
         localStorage.setItem("accessToken", newToken);
+
+        // ✅ update redux (THIS WAS MISSING)
+        const user = store.getState().auth.user;
+        if (user) {
+          store.dispatch(setCredentials({ user, accessToken: newToken }));
+        }
+
         processQueue(null, newToken);
 
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
         return api(originalRequest);
       } catch (err) {
         processQueue(err, null);
+
+        // ❗ logout ONLY if refresh truly fails
         store.dispatch(logout());
+        window.location.href = "/login";
         return Promise.reject(err);
       } finally {
         isRefreshing = false;
@@ -232,5 +246,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
 
 export default api;
