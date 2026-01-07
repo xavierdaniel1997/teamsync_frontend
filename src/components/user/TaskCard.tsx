@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { PiDotsThreeBold } from "react-icons/pi";
-import { ITask, TaskType, TaskStatus } from "../../types/task";
+import { ITask, TaskType } from "../../types/task";
 import { BsBookmarkCheck } from "react-icons/bs";
 import { RiPencilFill, RiTaskLine, RiDraggable } from "react-icons/ri";
 import { BiBug } from "react-icons/bi";
@@ -36,7 +36,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
   const project = useSelector((state: RootState) => state.project.selectedProject)
   const projectId = useSelector((state: RootState) => state.project.selectedProjectId)
   const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId)
-  const [status, setStatus] = useState<TaskStatus>(task.status)
+  // const [status, setStatus] = useState<TaskStatus>(task.status)
   const [openAssigneMember, setOpenAssigneMember] = useState<boolean>(false)
   const [isTaskModalOpen, setIsTaskModalOpen] = useState<boolean>(false);
   const [editTitle, setEditTitle] = useState<boolean>(false)
@@ -65,22 +65,22 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
   });
 
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>, taskId: string) => {
-    event.stopPropagation();
-    const newStatus = event.target.value as TaskStatus;
-    setStatus(newStatus);
-    if (workspaceId && projectId) {
-      const formData = new FormData();
-      formData.append("status", newStatus);
-      useUpdateTask.mutate({
-        workspaceId: workspaceId,
-        projectId: projectId,
-        taskId: taskId,
-        // task: { status: formData}
-        task: formData,
-      })
-    }
-  };
+  // const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>, taskId: string) => {
+  //   event.stopPropagation();
+  //   const newStatus = event.target.value as TaskStatus;
+  //   setStatus(newStatus);
+  //   if (workspaceId && projectId) {
+  //     const formData = new FormData();
+  //     formData.append("status", newStatus);
+  //     useUpdateTask.mutate({
+  //       workspaceId: workspaceId,
+  //       projectId: projectId,
+  //       taskId: taskId,
+  //       // task: { status: formData}
+  //       task: formData,
+  //     })
+  //   }
+  // };
 
 
   const handleAssigneeChange = (userId: string | null) => {
