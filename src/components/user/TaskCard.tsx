@@ -199,7 +199,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
       {...attributes}
       className={`task-card cursor-grab group flex items-center justify-between px-6 py-2 bg-[#1a1a1a] border-b border-[#2E2E2E] hover:bg-[#2a2a2a] transition-colors duration-150 text-gray-400 ${isDragging ? 'dragging' : ''}`}
     >
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <input
           type="checkbox"
           className="w-3 h-3 bg-gray-400 accent-gray-600 rounded border-gray-600"
@@ -274,7 +274,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
 
 
         <div>
-          <select
+          {/* <select
             value={status}
             onChange={(event) => handleStatusChange(event, task._id)}
             className={`appearance-none p-0.5 px-1 text-center rounded-sm text-xs font-medium ${currentStatus?.bgColor} ${currentStatus?.textColor}`}
@@ -284,7 +284,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
                 {status.label}
               </option>
             ))}
-          </select>
+          </select> */}
+          <button  className={`appearance-none w-20 px-2 py-0.5 text-center rounded-sm text-xs font-medium ${currentStatus?.bgColor} ${currentStatus?.textColor}`}
+          >{task.status}</button>
         </div>
         <div className="rounded-full flex items-center justify-center">
           <div className="flex items-center gap-3">

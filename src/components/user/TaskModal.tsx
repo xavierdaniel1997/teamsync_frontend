@@ -21,6 +21,7 @@ import { ITask } from '../../types/task';
 import { format } from 'date-fns';
 import EpicListModal from './EpicListModal';
 import WebLinkPreview from './WebLinkPreview';
+import { statusTypes } from '../../utils/taskConfing';
 
 // Define interfaces for type safety
 interface TaskModalProps {
@@ -82,6 +83,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, membe
   const [webLinks, setWebLinks] = useState<{ url: string; linkText: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
+    const currentStatus = statusTypes.find((statusTypes) => statusTypes.id === task.status)
 
 
   const initialValues: FormValues = {
@@ -331,7 +333,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, membe
 
                   {/* Status Dropdown */}
                   <div className="relative">
-                    <Field
+                    {/* <Field
                       as="select"
                       name="status"
                       className="px-2 py-1 border border-[#3a3a3a] rounded-sm bg-[#131313] focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -340,7 +342,8 @@ const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, epicTitle, membe
                       <option value="IN PROGRESS">IN PROGRESS</option>
                       <option value="DONE">DONE</option>
                     </Field>
-                    <ErrorMessage name="status" component="div" className="text-red-500 text-sm mt-1" />
+                    <ErrorMessage name="status" component="div" className="text-red-500 text-sm mt-1" /> */}
+                    <button className={`appearance-none px-2.5 py-2 text-center rounded-sm text-xs font-medium ${currentStatus?.bgColor} ${currentStatus?.textColor}`}>{task.status}</button>
                   </div>
                 </div>
 
