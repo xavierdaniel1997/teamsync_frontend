@@ -34,9 +34,9 @@ const StartSprintModal: React.FC<StartSprintModalProps> = ({ isOpen, onClose, sp
                 useStartSprint.mutate({ workspaceId, projectId, sprintId, data: values },
                     {
                         onSuccess: () => {
-                            resetForm(),
-                                onClose()
-                                navigte("/project/board")
+                            resetForm();
+                            onClose();
+                            navigte("/project/board");
                         },
                         onError: () => {
                             console.log("failed to start the sprint")

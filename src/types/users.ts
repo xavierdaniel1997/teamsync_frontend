@@ -5,6 +5,7 @@ export interface IUser {
   secondName?: string;
   avatar?: string;
   role?: string;
+  completedIssues?: number;
 }
 
 

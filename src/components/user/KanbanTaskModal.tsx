@@ -24,7 +24,6 @@ const KanbanTaskModal: React.FC<KanbanTaskModalProps> = ({ isOpen, onClose, task
 
     const currentStatus = statusTypes.find((statusType) => statusType.id === taskDetails.status)
 
-    console.log("form the kanbanTaskModal", taskDetails)
     return (
         <Dialog
             open={isOpen}

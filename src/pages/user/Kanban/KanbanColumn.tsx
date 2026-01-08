@@ -18,8 +18,6 @@ const KanbanColumn: React.FC<KanbanColumnProps> = ({ status, bgColor, task, task
     id: status,
     data: { type: 'status', id: status },
   });
-
-  console.log("make the type task", task)
   
   return (
     <div className="flex-1 bg-[#202020] rounded-md p-3 min-w-[250px] max-w-[380px]">

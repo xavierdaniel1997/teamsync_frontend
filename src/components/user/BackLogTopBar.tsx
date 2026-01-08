@@ -21,9 +21,10 @@ interface Props {
   handleSelectedEpic: (epicId: string) => void
   epicHeading?: { _id: string; title: string; taskKey?: number }[];
   isKanban?: boolean;
+   onCompleteSprint?: () => void;
 }
 
-const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedUserIds, handleSelectUser, epicHeading, handleSelectedEpic, isKanban}) => {
+const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedUserIds, handleSelectUser, epicHeading, handleSelectedEpic, isKanban, onCompleteSprint}) => {
 
   const [openInviteModal, setOpenInviteModal] = useState(false)
   const [openEpics, setOpenEpics] = useState(false)
@@ -108,7 +109,9 @@ const BackLogTopBar: React.FC<Props> = ({ setShowEpic, projectMembers, selectedU
           <MdInsights />
           <span className="text-sm">Insights</span>
         </button>}
-        {isKanban ? (<button className="flex items-center space-x-1 bg-blue-600/80 hover:bg-blue-500  text-gray-300 px-3 py-1 rounded text-sm">
+        {isKanban ? (<button className="flex items-center space-x-1 bg-blue-600/80 hover:bg-blue-500  text-gray-300 px-3 py-1 rounded text-sm cursor-pointer"
+        onClick={onCompleteSprint}
+        >
         Complete sprint
         </button>) : 
         (<button className="flex items-center space-x-1 bg-[#323232c7]  text-white px-3 py-1 rounded">

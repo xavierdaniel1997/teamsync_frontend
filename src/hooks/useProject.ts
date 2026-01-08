@@ -395,6 +395,7 @@ export const useProject = () => {
     },
     onError: (error: any) => {
       console.log("failed to start the sprint", error);
+      toast.error(error.response.data.message)
     },
   });
 
