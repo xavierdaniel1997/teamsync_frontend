@@ -189,7 +189,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
     console.log("click handle etit task button click")
   };
 
-  console.log("task details form the task card", task)
 
 
   return (
@@ -199,21 +198,19 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
       {...attributes}
       className={`task-card cursor-grab group flex items-center justify-between px-6 py-2 bg-[#1a1a1a] border-b border-[#2E2E2E] hover:bg-[#2a2a2a] transition-colors duration-150 text-gray-400 ${isDragging ? 'dragging' : ''}`}
     >
+
       <div className="flex items-center gap-6">
         <input
           type="checkbox"
-          className="w-3 h-3 bg-gray-400 accent-gray-600 rounded border-gray-600"
+          className="accent-gray-600 rounded border-gray-600"
         />
-        <div className="cursor-grab"
-        //  {...listeners} {...attributes}
-        >
+        <div className="cursor-grab">
           <RiDraggable size={20} />
         </div>
         {issueType?.icon}
         <div className="flex flex-col">
           <span className="text-xs text-gray-400">{task.taskKey}</span>
         </div>
-
 
         <div className="flex items-center">
           {editTitle ? (

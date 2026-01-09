@@ -254,7 +254,7 @@ export const useProject = () => {
     workspaceId: string,
     projectId: string,
     assignees?: string[],
-    epics?: string[]
+    epics?: string[],
   ) => {
     return useQuery<TaskResponse>({
       queryKey: ["task", workspaceId, projectId, assignees, epics],
@@ -263,6 +263,9 @@ export const useProject = () => {
       enabled: !!workspaceId && !!projectId,
     });
   };
+
+
+
 
   // const useGetActiveSprintTask = (workspaceId: string, projectId: string) => {
   //   return useQuery<TaskResponse>({
