@@ -29,3 +29,8 @@ export interface IStartSprint {
   endDate: string;
   sprintGoal: string;
 }
+
+export interface CompleteSprintPayload {
+  moveIncompleteTo: "BACKLOG" | "NEXT_SPRINT";
+  targetSprintId?: string;
+};

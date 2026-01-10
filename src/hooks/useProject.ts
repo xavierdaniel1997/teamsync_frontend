@@ -5,6 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import {
+  completeSprintApi,
   createProjectWithTeamApi,
   createSprintApi,
   createTaskApi,
@@ -402,6 +403,21 @@ export const useProject = () => {
     },
   });
 
+
+  const useCompleteSprint = useMutation({
+    mutationFn: ({workspaceId, projectId, sprintId,   moveIncompleteTo,
+    targetSprintId,}: {workspaceId: string; projectId: string; sprintId: string,   moveIncompleteTo: "BACKLOG" | "NEXT_SPRINT";
+    targetSprintId?: string;}) => completeSprintApi(workspaceId, projectId, sprintId,  { moveIncompleteTo, targetSprintId }),
+    onSuccess : () => {
+      queryClient.invalidateQueries({ queryKey: ["sprints"] });
+       queryClient.invalidateQueries({ queryKey: ["kanban"] });
+    },
+    onError : (error: any) => {
+       console.log("failed to complete the sprint", error);
+      toast.error(error.response.data.message)
+    }
+  })
+
   return {
     useCreateProjectWithTeam,
     useUpdateProject,
@@ -423,5 +439,6 @@ export const useProject = () => {
     // useGetActiveSprintTask,
     useGetKanbanTasks,
     useUpdateKanbanTask,
+    useCompleteSprint,
   };
 };

@@ -269,6 +269,7 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
       <CompleteSprintModal
         isOpen={openCompleteSprintModal}
         onClose={() => setOpenCompleteSprintModal(false)}
+        sprintId={activeSprint?._id}
         sprintName={activeSprint?.sprintName}
         startDate={formatDate(activeSprint?.startDate)}
         endDate={formatDate(activeSprint?.endDate)}
@@ -276,10 +277,9 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
         doneIssues={doneIssues}
         notDoneIssues={notDoneIssues}
         assigneeSummary={assigneeSummary}
-        hasNextSprint={true} // compute properly later
-        onConfirm={(moveIncompleteTo) => {
-          // call complete sprint mutation here
-          console.log("Complete sprint with option:", moveIncompleteTo);
+        hasNextSprint={true} 
+        sprintData={sprintData?.data}
+        onConfirm={() => {
           setOpenCompleteSprintModal(false);
         }}
       />

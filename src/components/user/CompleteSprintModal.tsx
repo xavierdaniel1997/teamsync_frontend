@@ -4,11 +4,17 @@ import React, { useState } from "react";
 import { IUser } from "../../types/users";
 import UserAvatar from "../globa/UserAvatar";
 import { getInitials, getRandomColor } from "../../utils/userHelpers";
+import { ISprint } from "../../types/sprint";
+import { useProject } from "../../hooks/useProject";
+import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface CompleteSprintModalProps {
   isOpen: boolean;
   onClose: () => void;
 
+  sprintId: string;
   sprintName: string;
   startDate: string;
   endDate: string;
@@ -18,6 +24,7 @@ interface CompleteSprintModalProps {
   notDoneIssues: number;
 
   assigneeSummary?: IUser[];
+  sprintData: ISprint[];
 
   hasNextSprint: boolean;
   onConfirm: (moveIncompleteTo: "BACKLOG" | "NEXT_SPRINT") => void;
@@ -26,6 +33,7 @@ interface CompleteSprintModalProps {
 const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
   isOpen,
   onClose,
+  sprintId,
   sprintName,
   startDate,
   endDate,
@@ -34,11 +42,40 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
   notDoneIssues,
   assigneeSummary = [],
   hasNextSprint,
+  sprintData,
   onConfirm,
 }) => {
   const [moveOption, setMoveOption] = useState<"BACKLOG" | "NEXT_SPRINT">(
     hasNextSprint ? "NEXT_SPRINT" : "BACKLOG"
   );
+  const [selectedSprintId, setSelectedSprintId] = useState<string | null>(null);
+  const workspaceId = useSelector((state: RootState) => state.workspace.selectWorkspaceId);
+  const projectId = useSelector((state: RootState) => state.project.selectedProjectId);
+
+  const { useCompleteSprint } = useProject();
+
+  const handleCompleteSprint = () => {
+  if (moveOption === "NEXT_SPRINT" && !selectedSprintId) {
+    toast.error("Please select a sprint");
+    return;
+  }
+
+  if(!workspaceId || !projectId || !sprintId){
+    return;
+  }
+
+  useCompleteSprint.mutate({
+    workspaceId,
+    projectId,
+    sprintId,
+    moveIncompleteTo: moveOption,
+    targetSprintId:
+      moveOption === "NEXT_SPRINT" ? selectedSprintId! : undefined,
+  });
+
+  onClose();
+};
+
 
   return (
     <Dialog
@@ -108,14 +145,14 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
                     className="flex justify-between text-sm bg-[#131313] border border-[#2f2f2f] rounded px-3 py-2"
                   >
                     <div className="flex items-center gap-2">
-                    <UserAvatar
-                      user={user || null}
-                      width={6}
-                      height={6}
-                      getRandomColor={getRandomColor}
-                      getInitials={getInitials}
-                    />
-                    <span>{user.fullName}</span>
+                      <UserAvatar
+                        user={user || null}
+                        width={6}
+                        height={6}
+                        getRandomColor={getRandomColor}
+                        getInitials={getInitials}
+                      />
+                      <span>{user.fullName}</span>
                     </div>
                     <span className="text-green-400">
                       {user.completedIssues} done
@@ -140,7 +177,7 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
                     checked={moveOption === "BACKLOG"}
                     onChange={() => setMoveOption("BACKLOG")}
                   />
-                  <span>Backlog</span>
+                  <span className="text-sm">Backlog</span>
                 </label>
 
                 <label
@@ -154,9 +191,25 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
                     checked={moveOption === "NEXT_SPRINT"}
                     onChange={() => setMoveOption("NEXT_SPRINT")}
                   />
-                  <span>Next sprint</span>
+                  <span className="text-sm">Next sprint</span>
                 </label>
               </div>
+
+              {moveOption === "NEXT_SPRINT" && (
+                <div className="flex items-center gap-3 text-xs">
+                  {sprintData.filter((sprint) => sprint.status === "PLANNED").map((sprint: ISprint) => (
+                    <div key={sprint._id} className="flex flex-row gap-2">
+                      <input
+                        type="radio"
+                        className="accent-gray-600 rounded border-gray-600"
+                        checked={selectedSprintId === sprint._id}
+                        onChange={() => setSelectedSprintId(sprint._id)}
+                      />
+                      <p>{sprint.sprintName}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -170,7 +223,8 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
             </button>
 
             <button
-              onClick={() => onConfirm(moveOption)}
+              // onClick={() => onConfirm(moveOption)}
+              onClick={handleCompleteSprint}
               className="flex items-center space-x-1 bg-red-500/50 hover:bg-red-500/80  text-gray-300 px-3 py-1 rounded text-sm cursor-pointer"
             >
               Complete Sprint
