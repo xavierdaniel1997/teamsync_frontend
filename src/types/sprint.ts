@@ -30,7 +30,13 @@ export interface IStartSprint {
   sprintGoal: string;
 }
 
-export interface CompleteSprintPayload {
-  moveIncompleteTo: "BACKLOG" | "NEXT_SPRINT";
+export type CompleteSprintPayload = {
+  moveIncompleteTo?: "BACKLOG" | "NEXT_SPRINT";
   targetSprintId?: string;
 };
+
+export type CompleteSprintInput = {
+  workspaceId: string;
+  projectId: string;
+  sprintId: string;
+} & CompleteSprintPayload;

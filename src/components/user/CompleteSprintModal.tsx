@@ -43,7 +43,6 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
   assigneeSummary = [],
   hasNextSprint,
   sprintData,
-  onConfirm,
 }) => {
   const [moveOption, setMoveOption] = useState<"BACKLOG" | "NEXT_SPRINT">(
     hasNextSprint ? "NEXT_SPRINT" : "BACKLOG"
@@ -54,27 +53,61 @@ const CompleteSprintModal: React.FC<CompleteSprintModalProps> = ({
 
   const { useCompleteSprint } = useProject();
 
-  const handleCompleteSprint = () => {
-  if (moveOption === "NEXT_SPRINT" && !selectedSprintId) {
-    toast.error("Please select a sprint");
-    return;
-  }
+//   const handleCompleteSprint = () => {
+//   if (moveOption === "NEXT_SPRINT" && !selectedSprintId) {
+//     toast.error("Please select a sprint");
+//     return;
+//   }
 
-  if(!workspaceId || !projectId || !sprintId){
-    return;
-  }
+//   if(!workspaceId || !projectId || !sprintId){
+//     return;
+//   }
 
-  useCompleteSprint.mutate({
+//   useCompleteSprint.mutate({
+//     workspaceId,
+//     projectId,
+//     sprintId,
+//     moveIncompleteTo: moveOption,
+//     targetSprintId:
+//       moveOption === "NEXT_SPRINT" ? selectedSprintId! : undefined,
+//   });
+
+//   onClose();
+// };
+
+
+const handleCompleteSprint = () => {
+  if (!workspaceId || !projectId || !sprintId) return;
+
+  const payload: {
+    workspaceId: string;
+    projectId: string;
+    sprintId: string;
+    moveIncompleteTo?: "BACKLOG" | "NEXT_SPRINT";
+    targetSprintId?: string;
+  } = {
     workspaceId,
     projectId,
     sprintId,
-    moveIncompleteTo: moveOption,
-    targetSprintId:
-      moveOption === "NEXT_SPRINT" ? selectedSprintId! : undefined,
-  });
+  };
 
+  if (notDoneIssues > 0) {
+    if (moveOption === "NEXT_SPRINT" && !selectedSprintId) {
+      toast.error("Please select a sprint");
+      return;
+    }
+
+    payload.moveIncompleteTo = moveOption;
+
+    if (moveOption === "NEXT_SPRINT") {
+      payload.targetSprintId = selectedSprintId!;
+    }
+  }
+
+  useCompleteSprint.mutate(payload);
   onClose();
 };
+
 
 
   return (

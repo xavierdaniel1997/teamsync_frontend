@@ -31,11 +31,13 @@ import { ProjectResponse } from "../types/project";
 import { TaskResponse } from "../types/task";
 import { setSelectProject, setSelectProjectId } from "../redux/projectSlice";
 import { useDispatch } from "react-redux";
-import { IStartSprint } from "../types/sprint";
+import { CompleteSprintInput, IStartSprint } from "../types/sprint";
+import { useNavigate } from "react-router-dom";
 
 export const useProject = () => {
   const queryClient = useQueryClient();
   const dispatch = useDispatch();
+  const navigate = useNavigate()
 
   const useCreateProjectWithTeam = useMutation({
     mutationFn: createProjectWithTeamApi,
@@ -72,14 +74,7 @@ export const useProject = () => {
     },
   });
 
-  // const useGetProjects = (workspaceId?: string) => {
-  //   return useQuery<ProjectResponse, Error>({
-  //     queryKey: ["project", workspaceId],
-  //     queryFn: () =>
-  //       workspaceId ? getAllProjectsApi(workspaceId) : Promise.resolve({ data: [], message: "", status: 200, success: true }),
-  //     enabled: !!workspaceId,
-  //   });
-  // };
+
 
   const useGetProjects = (workspaceId?: string) => {
     return useQuery<ProjectResponse, Error>({
@@ -160,20 +155,7 @@ export const useProject = () => {
     },
   });
 
-  // const useUpdateTask = useMutation({
-  //   mutationFn: ({ workspaceId, projectId, taskId, task }: { workspaceId: string, projectId: string, taskId: string; task: Partial<ITask> }) =>
-  //     updateTaskApi(workspaceId, projectId, taskId, task),
-  //   onSuccess: (response) => {
-  //     console.log("task updated successfully", response);
-  //     queryClient.invalidateQueries({ queryKey: ["project"] });
-  //     queryClient.invalidateQueries({ queryKey: ["task"] });
-  //     queryClient.invalidateQueries({ queryKey: ["activeTask"] });
-  //   },
-  //   onError: (error: any) => {
-  //     console.log("failed to update the task", error);
-  //     toast.error(error?.response?.data?.message || "Failed to update task");
-  //   },
-  // })
+
 
   const useUpdateTask = useMutation({
     mutationFn: ({
@@ -268,16 +250,6 @@ export const useProject = () => {
 
 
 
-  // const useGetActiveSprintTask = (workspaceId: string, projectId: string) => {
-  //   return useQuery<TaskResponse>({
-  //     queryKey: ['activeTask', workspaceId, projectId],
-  //     queryFn: () => getActiveSprintTaskApi(workspaceId, projectId),
-  //     enabled: !!workspaceId && !!projectId
-  //   })
-  // }
-
-  // kanban section
-
   const useGetKanbanTasks = (
     workspaceId: string,
     projectId: string,
@@ -315,30 +287,9 @@ export const useProject = () => {
     },
   });
 
-  //   const useUpdateKanbanTask = useMutation({
-  //   mutationFn: ({ workspaceId, projectId, taskId, taskstatus }: {workspaceId: string, projectId: string, taskId: string, taskstatus: string}) =>
-  //     updateKanbanTaskApi(workspaceId, projectId, taskId, taskstatus),
-  //   onMutate: async ({ workspaceId, projectId, taskId, taskstatus }) => {
-  //     await queryClient.cancelQueries({ queryKey: ["activeTask"] });
-  //     const previousTasks = queryClient.getQueryData(["activeTask"]);
-  //     queryClient.setQueryData(["activeTask"], (old: any) => ({
-  //       ...old,
-  //       tasks: old.tasks.map((task: any) =>
-  //         task.id === taskId ? { ...task, status: taskstatus } : task
-  //       ),
-  //     }));
-  //     return { previousTasks };
-  //   },
-  //   onError: (error: any, variables, context) => {
-  //     queryClient.setQueryData(["activeTask"], context?.previousTasks);
-  //     toast.error(error?.response?.data?.message ?? "Failed to update task");
-  //   },
-  //   onSettled: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["activeTask"] });
-  //   },
-  // });
 
-  //sprint section
+  
+
 
   const useCreateSprint = useMutation({
     mutationFn: createSprintApi,
@@ -406,11 +357,13 @@ export const useProject = () => {
 
   const useCompleteSprint = useMutation({
     mutationFn: ({workspaceId, projectId, sprintId,   moveIncompleteTo,
-    targetSprintId,}: {workspaceId: string; projectId: string; sprintId: string,   moveIncompleteTo: "BACKLOG" | "NEXT_SPRINT";
-    targetSprintId?: string;}) => completeSprintApi(workspaceId, projectId, sprintId,  { moveIncompleteTo, targetSprintId }),
-    onSuccess : () => {
+    targetSprintId,}:  CompleteSprintInput) => completeSprintApi(workspaceId, projectId, sprintId,  { moveIncompleteTo, targetSprintId }),
+    onSuccess : (res) => {
       queryClient.invalidateQueries({ queryKey: ["sprints"] });
-       queryClient.invalidateQueries({ queryKey: ["kanban"] });
+      queryClient.invalidateQueries({ queryKey: ["kanbanTasks"] });
+      navigate("/project/backlog")
+
+      console.log("onSuccess of the complete sprint", res)
     },
     onError : (error: any) => {
        console.log("failed to complete the sprint", error);

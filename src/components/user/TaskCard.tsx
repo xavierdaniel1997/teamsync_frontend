@@ -282,7 +282,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, taskType, containerId, sprint
               </option>
             ))}
           </select> */}
-          <button  className={`appearance-none w-20 px-2 py-0.5 text-center rounded-sm text-xs font-medium ${currentStatus?.bgColor} ${currentStatus?.textColor}`}
+          <button  className={`appearance-none w-24 px-2 py-0.5 text-center rounded-sm text-xs font-medium ${currentStatus?.bgColor} ${currentStatus?.textColor}`}
           >{task.status}</button>
         </div>
         <div className="rounded-full flex items-center justify-center">

@@ -27,6 +27,7 @@ const taskStatus = [
 ];
 
 const Kanban: React.FC = () => {
+
   const [showEpic, setShowEpic] = useState<boolean>(true);
   const boardRef = useRef<HTMLDivElement>(null);
   const project = useSelector(
@@ -58,6 +59,7 @@ const Kanban: React.FC = () => {
 
   
   const activeSprint = sprintData?.data?.find((sprint: ISprint) => sprint.status === "ACTIVE")
+
 
 
 
@@ -107,10 +109,7 @@ const assigneeSummary = React.useMemo(() => {
   return Array.from(map.values());
 }, [kanbanTasks]);
 
-console.log("checking the active sprint tasks.........in the kanban board", assigneeSummary)
 
-  // const { data: activeTask, isLoading: taskLoading } = useGetActiveSprintTask(workspaceId || "", projectId || "")
-  // const [selectedUserIds, setSelectedUserIds] = useState<string[]>([]);
 
   useEffect(() => {
     if (activeTask?.data) {
@@ -150,7 +149,6 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
 
     if (!task || !newStatus || task.status === newStatus) return;
 
-    // Optimistically update local state
     setKanbanTasks((prevState) => {
       const newState = prevState.map((column) => {
         if (column.status === task.status) {
@@ -169,7 +167,6 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
       return newState;
     });
 
-    // Trigger backend update
     useUpdateKanbanTask.mutate(
       {
         workspaceId: workspaceId!,
@@ -178,7 +175,7 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
         taskstatus: newStatus,
       },
       {
-        // Revert if API fails
+
         onError: () => {
           setKanbanTasks((prevState) => {
             const reverted = prevState.map((column) => {
@@ -201,6 +198,9 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
       }
     );
   };
+
+
+
 
   const handleSelectEpics = (epicId: string) => {
     if (!epicData?.data.some((epic: any) => epic._id === epicId)) {
@@ -256,6 +256,7 @@ console.log("checking the active sprint tasks.........in the kanban board", assi
               <>
                 {kanbanTasks.map((column: IKanbanColumn) => (
                   <KanbanColumn
+                    key={column.status}
                     status={column.status}
                     task={column?.tasks}
                     projectColor={project?.color.hex || ""}
